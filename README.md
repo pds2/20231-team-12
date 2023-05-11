@@ -13,6 +13,6 @@ Como gerenciador do sistema, eu desejo administrar as contas de usuários e bibl
 
 # Integrantes:
 - Carolina Moya Pilla
-- Layla Raíssa
-- Manoel 
-- Thaíssa Malaquias 
+- Layla Raissa Silva Pereira
+- Manuel Junio Ferraz Cardoso   
+- Thaíssa Malaquias Couto
