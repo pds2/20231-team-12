@@ -12,7 +12,7 @@ Como usuário, eu quero poder consultar se um livro tem exemplares disponíveis 
 Como gerenciador do sistema, eu desejo administrar as contas de usuários e bibliotecários para poder apagá-las e adicioná-las quando for necessário.
 
 # Integrantes:
-Carolina Moya Pilla
-Layla Raíssa
-Manoel 
-Thaíssa Malaquias 
+- Carolina Moya Pilla
+- Layla Raíssa
+- Manoel 
+- Thaíssa Malaquias 
