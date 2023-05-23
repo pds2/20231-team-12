@@ -15,4 +15,4 @@ Como gerenciador do sistema, eu desejo administrar as contas de usuários e bibl
 - Carolina Moya Pilla
 - Layla Raissa Silva Pereira
 - Manuel Junio Ferraz Cardoso   
-- Thaíssa Malaquias Couto
+- Thaissa Malaquias Couto
