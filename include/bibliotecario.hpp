@@ -6,8 +6,10 @@ class Bibliotecario : public Perfil_usuario
 {
 public:
     /*
+    //MUDAR OS TIPOS RECEBIDOS QUANDO A LAYLA FIZER OS ACERVOS
+
     void adicionar_acervo(Acervo); // adiciona um acervo preenchendo todos os campos
-    //caso tenha um exemplar, entra em adicionar_exemplar
+    //caso tenha um exemplar com o bibliotecario e ele queira adicionar, entra em adicionar_exemplar
 
     void adicionar_exemplar(Exemplar);
 
