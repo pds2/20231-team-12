@@ -1,6 +1,6 @@
 #include "acervo.h"
 
-Acervo::Acervo(std::string autor, int anoPublicacao, std::string titulo, std::string genero, std::string codigo)
+Acervo::Acervo(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo)
     : autor(autor), anoPublicacao(anoPublicacao), titulo(titulo), genero(genero), codigo(codigo) {
 }
 
@@ -23,6 +23,6 @@ std::string Acervo::getGenero() const {
     return genero;
 }
 
-std::string Acervo::getCodigo() const {
+float Acervo::getCodigo() const {
     return codigo;
 }
