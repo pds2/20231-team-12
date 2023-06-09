@@ -7,7 +7,7 @@ using namespace std;
 class Acervo {
 public:
     //Construtor
-    Acervo(string autor, int anoPublicacao, string titulo, string genero,string codigo);
+    Acervo(string autor, int anoPublicacao, string titulo, string genero,float codigo);
     virtual ~Acervo();
 
     //getters
@@ -15,14 +15,14 @@ public:
     int getAnoPublicacao() const;
     string getTitulo() const;
     string getGenero() const;
-    string getCodigo() const;
+    float getCodigo() const;
 
     //setters
-    string setAutor() const;
+    /*string setAutor() const;
     int setAnoPublicacao() const;
     string setTitulo() const;
     string setGenero() const;
-    string setCodigo() const;
+    float setCodigo() const;*/
 
 
 private:
@@ -30,7 +30,7 @@ private:
     int anoPublicacao;
     string titulo;
     string genero;
-    string codigo;
+    float codigo;
 };
 
 #endif  // ACERVO_H
