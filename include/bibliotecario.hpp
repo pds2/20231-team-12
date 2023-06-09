@@ -12,7 +12,6 @@ class Bibliotecario : public Perfil_usuario
 public:
 
     virtual Papel_do_usuario set_papel_usuario() override;
-    virtual Papel_do_usuario get_papel_usuario() override;
 
     // MUDAR OS TIPOS RECEBIDOS QUANDO A LAYLA FIZER OS ACERVOS
 

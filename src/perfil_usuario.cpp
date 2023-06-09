@@ -16,6 +16,11 @@ Perfil_usuario::Perfil_usuario(unsigned int ID, std::string email, int senha, Pa
     _papel = papel;
 }
 
+Papel_do_usuario Perfil_usuario::get_papel_usuario()
+{
+    return _papel;
+}
+
 unsigned int Perfil_usuario::get_ID_perfil_usuario()
 {
     return _ID_perfil_usuario;

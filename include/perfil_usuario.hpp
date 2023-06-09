@@ -37,7 +37,7 @@ public:
     // essa é virtual pura, cada classe que herda vai declarar uma coisa diferente
     // nao pode criar um usuario sem papel
     virtual Papel_do_usuario set_papel_usuario() = 0;
-    virtual Papel_do_usuario get_papel_usuario() = 0;
+    Papel_do_usuario get_papel_usuario();
 
     // destrutor
     ~Perfil_usuario();
