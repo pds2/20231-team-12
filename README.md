@@ -16,3 +16,9 @@ Como gerenciador do sistema, eu desejo administrar as contas de usuários e bibl
 - Layla Raissa Silva Pereira
 - Manuel Junio Ferraz Cardoso   
 - Thaissa Malaquias Couto
+
+# Persistence:
+  Para compilar maincpp eh necessario incluir sqlite3.dll no codigo de compilacao:
+  g++ main.cpp -o main sqlite3.dll
+
+  
