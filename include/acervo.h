@@ -3,34 +3,37 @@
 
 #include <string>
 
-using namespace std;
-class Acervo {
-public:
-    //Construtor
-    Acervo(string autor, int anoPublicacao, string titulo, string genero,string codigo);
-    virtual ~Acervo();
+// criar os codigos especificos de cada genero em um arquivo separado
 
-    //getters
+using namespace std;
+class Acervo
+{
+public:
+    // Construtor
+    Acervo(string autor, int anoPublicacao, string titulo, int genero, int codigo);
+
+    // getters
     string getAutor() const;
     int getAnoPublicacao() const;
     string getTitulo() const;
-    string getGenero() const;
-    string getCodigo() const;
+    int getGenero() const;
+    int getCodigo() const;
 
-    //setters
+    // setters - nao precisa !!
+    /*
     string setAutor() const;
     int setAnoPublicacao() const;
     string setTitulo() const;
     string setGenero() const;
     string setCodigo() const;
-
+    */
 
 private:
     string autor;
     int anoPublicacao;
     string titulo;
-    string genero;
-    string codigo;
+    int genero;
+    int codigo;
 };
 
-#endif  // ACERVO_H
+#endif // ACERVO_H
