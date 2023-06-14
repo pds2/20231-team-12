@@ -3,6 +3,7 @@
 
 #include "acervo.h"
 
+
 class Exemplar : public Acervo {
 public:
     Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,
@@ -13,6 +14,10 @@ public:
     int getDataAquisicao() const;
     int getCodigoEspecifico() const;
     int getDataDevolucao() const;
+
+    //métodos
+    void mostraMulta(int dataAtual) const;
+    int calculaMulta(int dataAtual) const;
 
 
 private:
