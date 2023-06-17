@@ -7,6 +7,10 @@
 #include "exemplar.h"
 #include "perfil_usuario.hpp"
 
+class aluno_com_multa_e {};
+class ja_possui_mutos_livros_e {};
+class nao_possui_esse_livro_e {};
+
 class Aluno : public Perfil_usuario {
     private:
         std::list<Exemplar> exemplares;
@@ -17,9 +21,9 @@ class Aluno : public Perfil_usuario {
          */
         Aluno(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
         /*
-         * @brief Retorna o papel do Aluno.
+         * Destroi o aluno.
          */
-        Papel_do_usuario get_papel_usuario() override;
+        ~Aluno();
         /*
          * @brief Mostra todos os livros emprestados.
          */
@@ -31,7 +35,7 @@ class Aluno : public Perfil_usuario {
         /*
          * @brief Empresta um livro ao aluno.
          */
-        void emprestar_livro(Exemplar livro);
+        void emprestar_livro(Exemplar livro, int data);
         /*
          * @brief Devolve um livro do aluno.
          */
@@ -43,7 +47,7 @@ class Aluno : public Perfil_usuario {
         /*
          * @brief Consulta a multa de um livro pelo codigo.
          */
-        double consultar_multa(int codigo);
+        double consultar_multa(int codigo, int data);
 };
 
 #endif
