@@ -58,20 +58,32 @@ if (anoAtual > anoDevolucao || (anoAtual == anoDevolucao && mesAtual > mesDevolu
         devolucao_time.tm_mon = mesDevolucao - 1;
         devolucao_time.tm_year = anoDevolucao - 1900;
 
+        /*std::mktime() é uma função da biblioteca <ctime> que converte uma estrutura std::tm em um valor de 
+        tempo (std::time_t). Nesse caso, estamos convertendo a estrutura devolucao_time que contém a data de 
+        devolução para um valor de tempo.*/
         std::time_t devolucao_timestamp = std::mktime(&devolucao_time);
 
+        /*Aqui, estamos criando uma estrutura std::tm chamada atual_time e inicializando todos os seus campos como zero.*/
         std::tm atual_time = { 0 };
         atual_time.tm_mday = diaAtual;
         atual_time.tm_mon = mesAtual - 1;
         atual_time.tm_year = anoAtual - 1900;
 
+        /*Da mesma forma que fizemos para a data de devolução, estamos convertendo a estrutura atual_time, que 
+        contém a data atual, em um valor de tempo std::time_t.*/
         std::time_t atual_timestamp = std::mktime(&atual_time);
 
         // Calcula a diferença em segundos entre as datas
         std::time_t diff_seconds = std::difftime(atual_timestamp, devolucao_timestamp);
+        /*std::difftime() é uma função da biblioteca <ctime> que calcula a diferença de tempo entre dois valores de tempo (std::time_t) em segundos.*/
+
 
         // Converte a diferença em segundos para dias
         diasAtraso = static_cast<int>(diff_seconds) / (60 * 60 * 24);
+        /*Estamos convertendo a diferença de tempo em segundos (diff_seconds) para dias, dividindo-a por 60 segundos
+         (para obter minutos), depois por 60 minutos (para obter horas) e finalmente por 24 horas (para obter dias).
+         O static_cast<int> é usado para converter o valor resultante em um número inteiro, pois estamos interessados
+         apenas nos dias inteiros de atraso.*/
     }
    
     if (diasAtraso > 0) {
