@@ -11,6 +11,7 @@ class Acervo
 public:
     // Construtor
     Acervo(string autor, int anoPublicacao, string titulo, int genero, int codigo);
+    ~Acervo();
 
     // getters
     string getAutor() const;
