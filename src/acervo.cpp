@@ -1,4 +1,4 @@
-#include "acervo.h"
+#include "../include/acervo.h"
 
 Acervo::Acervo(std::string autor, int anoPublicacao, std::string titulo, std::string genero, int codigo)
     : autor(autor), anoPublicacao(anoPublicacao), titulo(titulo), genero(genero), codigo(codigo) {
