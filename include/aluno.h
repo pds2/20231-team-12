@@ -47,7 +47,11 @@ class Aluno : public Perfil_usuario {
         /*
          * @brief Consulta a multa de um livro pelo codigo.
          */
-        double consultar_multa(int codigo, int data);
+        void consultar_multa(int codigo);
+        /*
+         * @brief Consulta a multa de todos os livros emprestados.
+         */
+        void consultar_multa_total();
 };
 
 #endif
