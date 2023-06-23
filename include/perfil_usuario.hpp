@@ -2,6 +2,7 @@
 #define PERFIL_USUARIO_H
 
 #include <iostream>
+#include "perfil_usuario.hpp"
 
 // TODOS os tipos de usuarios tem os mesmos atributos. o que muda sao os metodos que cada um pode fazer/tem acesso
 // nao sei onde a gente usaria virtual e override, talvez para retornar livros visiveis para bibliotecarios mas ocultos
