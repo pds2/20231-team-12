@@ -34,6 +34,12 @@ int main(){
 
     dados.bd_acessar_tabela_usuarios(file);
 
+    Exemplar md1("Kenneth H. Rosen", 1995, "Matematica Discreta e suas Aplicacoes", "Matematica", 6109, true, 10012021, 347609, 20032021);
+
+    dados.bd_inserir_tabela_exemplares(file, md1);
+
+    dados.bd_acessar_tabela_exemplares(file);
+
 
 
 

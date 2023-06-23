@@ -124,7 +124,6 @@ int BD::bd_inserir_tabela_acervos(const char* f, Acervo livro){
     sqlite3_close(bibdb);
 }
 
-
 int BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
 
     sqlite3* bibdb;
@@ -142,6 +141,37 @@ int BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
     rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
     if (rsp!=SQLITE_OK){
         cerr << "ERRO AO INSERIR EM USUARIOS: " << msgerr << endl;
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+}
+
+int BD::bd_inserir_tabela_exemplares(const char* f, Exemplar item){
+
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    string autor = item.getAutor(); 
+    int anopub = item.getAnoPublicacao(); 
+    string titulo = item.getTitulo(); 
+    string genero = item.getGenero();
+    int codigo = item.getCodigo();
+    int emprestado = item.isEmprestado(); 
+    int dataaquisicao = item.getDataAquisicao();
+    int codigoespecifico = item.getCodigoEspecifico();
+    int datadevolucao = item.getDataDevolucao();
+
+    string sql_comando = "INSERT INTO Exemplares VALUES('"+autor+"',"+to_string(anopub)+",'"+titulo+"','"+genero+"',"+
+    to_string(codigo)+","+to_string(emprestado)+","+to_string(dataaquisicao)+","+to_string(codigoespecifico)+","+
+    to_string(datadevolucao)+");";
+
+    char* msgerr;
+    int rsp = 0;
+
+    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if (rsp != SQLITE_OK){
+        cerr << "ERRO AO INSERIR EM EXEMPLARES: " << msgerr << endl;
     }
 
     sqlite3_free(msgerr);
@@ -222,4 +252,47 @@ int BD::bd_acessar_tabela_usuarios(const char* f){
     sqlite3_free(stmt);
     sqlite3_close(bibdb);
 
+}
+
+int BD::bd_acessar_tabela_exemplares(const char* f){
+
+    sqlite3* bibdb;
+    sqlite3_open(f, & bibdb);
+    sqlite3_stmt* stmt;
+
+    string sql_consulta = "SELECT * FROM Exemplares;";
+
+    sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
+
+    const unsigned char* autor;
+    const unsigned char* titulo;
+    const unsigned char* genero;
+    int emprestado, anopub, dataaquisicao, datadevolucao, codigo, codigospecifico;
+    
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+
+        autor = sqlite3_column_text(stmt, 0);
+        anopub = sqlite3_column_int(stmt, 1);
+        titulo = sqlite3_column_text(stmt, 2);
+        genero = sqlite3_column_text(stmt, 3);
+        codigo = sqlite3_column_int(stmt, 4);
+        emprestado = sqlite3_column_int(stmt, 5);
+        dataaquisicao = sqlite3_column_int(stmt, 6);
+        codigospecifico = sqlite3_column_int(stmt, 7);
+        datadevolucao = sqlite3_column_int(stmt,8);
+
+        cout << "Novo Exemplar: " << endl;
+        cout << "autor: " << autor << endl;
+        cout << "ano de publicacao: " << anopub << endl;
+        cout << "titulo: " << titulo << endl;
+        cout << "genero: " << genero << endl;
+        cout << "codigo: " << codigo << endl;
+        cout << "data de aquisicao: " << dataaquisicao << endl; 
+        cout << "emprestado: " << emprestado << endl;
+        cout << "data de devolucao: " << datadevolucao << endl;
+        cout << "\n";
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(bibdb);
 }
