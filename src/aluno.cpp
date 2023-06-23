@@ -1,4 +1,4 @@
-#include "aluno.h"
+#include "../include/aluno.h"
 
 #include <iostream>
 

@@ -122,8 +122,32 @@ int BD::bd_inserir_tabela_acervos(const char* f, Acervo livro){
 
     sqlite3_free(msgerr);
     sqlite3_close(bibdb);
-
 }
+
+
+int BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
+
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    string email = user.get_email_perfil_usuario();
+    int id = user.get_ID_perfil_usuario();
+    int senha = user.get_senha_perfil_usuario();
+
+    string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+");";
+
+    char* msgerr;
+    int rsp = 0;
+
+    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if (rsp!=SQLITE_OK){
+        cerr << "ERRO AO INSERIR EM USUARIOS: " << msgerr << endl;
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+}
+
 
 int BD::bd_acessar_tebela_acervos(const char* f){
     
@@ -165,4 +189,37 @@ int BD::bd_acessar_tebela_acervos(const char* f){
 
     sqlite3_finalize(stmt);
     sqlite3_close(bibdb);
+}
+
+int BD::bd_acessar_tabela_usuarios(const char* f){
+    
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+    sqlite3_stmt* stmt;
+
+    string sql_comando = "SELECT * FROM Usuarios;";
+
+    sqlite3_prepare_v2(bibdb, sql_comando.c_str(), -1, &stmt, 0);
+
+    int id;
+    const unsigned char* email;
+    int senha;
+
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        
+        id = sqlite3_column_int(stmt, 0);
+        email = sqlite3_column_text(stmt, 1);
+        senha = sqlite3_column_int(stmt, 2);
+
+        cout << "Novo Usuario: " << endl;
+        cout << "id: " << id << endl;
+        cout << "email: " << email << endl;
+        cout << "senha: " << senha << endl;
+        cout << "\n";
+
+    }
+
+    sqlite3_free(stmt);
+    sqlite3_close(bibdb);
+
 }

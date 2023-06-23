@@ -28,6 +28,14 @@ int main(){
 
     dados.bd_acessar_tebela_acervos(file);
 
+    Perfil_usuario tha(12,"thaissa@example.com", 123456);
+
+    dados.bd_inserir_tabela_usuarios(file, tha);
+
+    dados.bd_acessar_tabela_usuarios(file);
+
+
+
 
     return 0;
 

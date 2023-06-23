@@ -1,4 +1,4 @@
-#include "exemplar.h"
+#include "../include/exemplar.h"
 #include <iostream>
 
 Exemplar::Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,

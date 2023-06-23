@@ -1,4 +1,4 @@
-#include "admin.h"
+#include "../include/admin.h"
 
 Admin::Admin(unsigned int id, std::string email, int senha): Perfil_usuario(id, email, senha) {
 }
