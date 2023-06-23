@@ -1,9 +1,9 @@
 #include "../include/acervo.h"
 
-Acervo::Acervo(std::string autor, int anoPublicacao, std::string titulo, CODIGOS_GENEROS_ACERVO genero, int codigo)
+Acervo::Acervo(std::string autor, int ano_publicacao, std::string titulo, CODIGOS_GENEROS_ACERVO genero, int codigo)
 {
     _autor = autor;
-    _ano_publicacao = anoPublicacao;
+    _ano_publicacao = ano_publicacao;
     _titulo = titulo;
     _genero = genero;
     _codigo = codigo;

@@ -6,14 +6,38 @@ Exemplar::Exemplar(std::string autor, int ano_publicacao, std::string titulo, CO
 {
 
     _emprestado = 0;
-    dia_emprestado = 0;
     _multa = 0;
 };
 
-bool get_emprestado();
-time_t get_dia_emprestado();
-int get_codigo_exemplar();
-
-void incrementar_multa();
+bool Exemplar::get_emprestado()
+{
+    return _emprestado;
 }
-;
+
+tm Exemplar::get_dia_emprestado()
+{
+    return _dia_emprestado;
+}
+
+CODIGOS_SUBGENEROS_EXEMPLARES Exemplar::get_codigo_exemplar()
+{
+    return _codigo_exemplar;
+}
+
+void Exemplar::emprestar_exemplar()
+{
+    time_t dia_hoje = time(NULL);
+    _dia_emprestado = *localtime(&dia_hoje);
+
+    _emprestado = 1;
+}
+void Exemplar::incrementar_multa()
+{
+    time_t dia_atual = time(NULL);
+    struct tm dia_atual_comparacao = *localtime(&dia_atual);
+
+    if (dia_atual_comparacao.tm_mday - _dia_emprestado.tm_mday >= 5)
+    { // COMPARAR O MES TAMBEM
+        _multa += 2;
+    }
+}

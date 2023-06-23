@@ -17,14 +17,18 @@ class Exemplar : public Acervo
 {
 private:
     bool _emprestado;
-    time_t dia_emprestado;
+    float _multa;
+    struct tm _dia_emprestado;
     CODIGOS_SUBGENEROS_EXEMPLARES _codigo_exemplar;
 
 public:
-    Exemplar(std::string autor, int anoPublicacao, std::string titulo, CODIGOS_GENEROS_ACERVO genero, int codigo, CODIGOS_SUBGENEROS_EXEMPLARES _codigo_exemplar);
+    Exemplar(std::string autor, int ano_publicacao, std::string titulo, CODIGOS_GENEROS_ACERVO genero, int codigo, CODIGOS_SUBGENEROS_EXEMPLARES _codigo_exemplar);
     bool get_emprestado();
-    time_t get_dia_emprestado;
-    int get_codigo_exemplar();
+    tm get_dia_emprestado();
+    CODIGOS_SUBGENEROS_EXEMPLARES get_codigo_exemplar();
+
+    void emprestar_exemplar();
+    void incrementar_multa();
 };
 
 #endif

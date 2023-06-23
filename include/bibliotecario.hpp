@@ -10,7 +10,6 @@
 class Bibliotecario : public Perfil_usuario
 {
 public:
-
     virtual Papel_do_usuario set_papel_usuario() override;
 
     // MUDAR OS TIPOS RECEBIDOS QUANDO A LAYLA FIZER OS ACERVOS
@@ -24,8 +23,9 @@ public:
 
     void remover_exemplar(Exemplar); // remove do um dos exemplares de um acervo
 
-    std::vector consulta_geral_acervos(Biblioteca); // nao precisa ser um vector, mas vai ser uma lista de todos os livros
+    std::vector consulta_geral_acervos(Exemplar); // nao precisa ser um vector, mas vai ser uma lista de todos os livros
     // usar esse metodo pra deletar em massa? pessoa digita 1, 3, 4 etc e deleta ali os da lista
+    // integrar com o bd
 
     void emprestimo_de_exemplar(Exemplar); // empresta um exemplar especifico a um aluno
 
