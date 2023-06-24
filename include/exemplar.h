@@ -17,7 +17,7 @@ public:
 
     //métodos
     //void mostraMulta(int dataAtual) const;
-    void calculaMulta() const;
+    int calculaMulta() const;
 
 
 private:

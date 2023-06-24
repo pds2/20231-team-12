@@ -27,13 +27,14 @@ int Exemplar::getDataDevolucao() const{
     return dataDevolucao;
 }
 
-void Exemplar::calculaMulta() const {
+int Exemplar::calculaMulta() const {
 
     //pega a data de devolucao que devera estar em formato 18/06/2023 -> 18062023
     int dataDevolucao = getDataDevolucao();
 
     int diaDevolucao, mesDevolucao, anoDevolucao;
     int diasAtraso = 0; 
+    int multa = 0;
 
 
 //utilizando biblioteca "ctime"
@@ -87,9 +88,11 @@ if (anoAtual > anoDevolucao || (anoAtual == anoDevolucao && mesAtual > mesDevolu
     }
    
     if (diasAtraso > 0) {
-        float multa = diasAtraso;
-         std::cout << "Multa de: R$ " << multa << std::endl;
+        multa = diasAtraso;
+        std::cout << "Multa de: R$ " << multa << std::endl;
     } else {
          std::cout << "Nenhuma multa!" << std::endl;;
     }
+    
+    return multa;
 }
