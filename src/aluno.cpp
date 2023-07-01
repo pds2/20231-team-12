@@ -64,4 +64,5 @@ void Aluno::consultar_multa_total() {
         if(m!=0) std::cout << "A multa de " << l.getTitulo() << " é de R$" << m << "." << std::endl;
     }
     if(total!=0) std::cout << "O total da(s) multa(s) de todos os livros é R$" << total << "." << std::endl;
+    else std::cout << "Não há nenhuma multa no nome do aluno." << std::endl;
 }
