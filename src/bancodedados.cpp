@@ -6,8 +6,6 @@
 
 using namespace std;
 
-BD::BD() {}
-
 // a mesma logica para todos os metodos bd_criar_tabela_.
 int BD::bd_criar_tabela_acervos(const char* f){
     
