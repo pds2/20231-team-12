@@ -14,7 +14,7 @@ int main(){
 
     const char* file = "biblioteca.db";
 
-    BD dados = BD();
+    BD dados;
 
     dados.bd_criar_tabela_acervos(file);
     dados.bd_criar_tabela_usuarios(file);

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <exception>
 
 #include "../include/bancodedados.h"
 

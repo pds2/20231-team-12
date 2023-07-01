@@ -1,0 +1,12 @@
+Como compilar sqlite windows
+
+1- cd sqlite
+gcc -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION shell.c sqlite3.c -o sqlite3
+
+2- cd ..
+gcc -shared sqlite/sqlite3.c -o sqlite3.dll
+
+3- g++ src/*.cpp main.cpp -o main sqlite3.dll
+
+agora eh so executar o main, a saber:
+./main.exe
