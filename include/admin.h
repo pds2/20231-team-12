@@ -18,20 +18,14 @@ class Admin : public Perfil_usuario {
          * Constroi um admin.
          */
         Admin(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
-        
         /*
          * @brief Cadastra um novo usuário no sistema.
          */
         void adicionar_usuario(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
         /*
-         * @brief Deleta um aluno pelo id.
+         * @brief Deleta um usuario pelo id.
          */
-        void deletar_aluno(unsigned int id);
-        /*
-         * @brief Deleta um bibliotecario pelo id.
-         */
-        void deletar_bibliotecario(unsigned int id);
-        
+        void deletar_usuario(unsigned int id);
         /*
          * Destroi o admin.
          */

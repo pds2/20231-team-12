@@ -2,7 +2,7 @@
 
 Admin::Admin(unsigned int id, std::string email, int senha, Papel_do_usuario papel):
     Perfil_usuario(id, email, senha, papel) {
-        std::cout << "Admim criado" << std::endl;
+        std::cout << "Admin criado." << std::endl;
 }
 
 void Admin::adicionar_usuario(unsigned int id, std::string email, int senha, Papel_do_usuario papel) {
@@ -10,6 +10,10 @@ void Admin::adicionar_usuario(unsigned int id, std::string email, int senha, Pap
     /*
     Verifica se o email e id são novos ou já estão cadastrados com outro usuario. Se estiver,
     lançar alguma das exceções: email_ja_cadastrado_e e id_ja_cadastrado_e
+    for(todos os usuarios do bd) {
+        if(id==id do usuario) throw id_ja_cadastrado_e();
+        if(email==email do usuario) throw email_ja_cadastrado_e();
+    }
     */
     if(papel==ALUNO) {
         Aluno a(id,email,senha,papel);
@@ -22,22 +26,20 @@ void Admin::adicionar_usuario(unsigned int id, std::string email, int senha, Pap
     
 }
 
-void Admin::deletar_aluno(unsigned int id) {
+void Admin::deletar_usuario (unsigned int id) {
+    //verifica se o id não é do próprio admin, e depois se existe algum usuario com esse id
     if(get_ID_perfil_usuario()==id) throw id_invalido_e();
     bool b = true;
-    //for( *verifica os usuarios* ) if(usuario.get_ID_perfil_usuario()==id) b = false;
+    //for(*todos os usuario do bd*) if(usuario.get_ID_perfil_usuario()==id) b = false;
     if(b) throw id_nao_existe_e();
     
-    std::cout << "Aluno deletado." << std::endl;
+    /*for(*todos os usuario do bd*) {
+        if(id do usuario == id) {
+            if(usuario for aluno) devolver todos os livros que estão com o aluno
+            deletar o usuario
+        }
+    }*/
+    
 }
 
-void Admin::deletar_bibliotecario(unsigned int id) {
-    if(get_ID_perfil_usuario()==id) throw id_invalido_e();
-    bool b = true;
-    //for( *verifica os usuarios* ) if(usuario.get_ID_perfil_usuario()==id) b = false;
-    if(b) throw id_nao_existe_e();
-    
-    std::cout << "Bibliotecario deletado." << std::endl;
-}
-Admin::~Admin() {
-}
+Admin::~Admin() {}
