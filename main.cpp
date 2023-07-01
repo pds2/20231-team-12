@@ -40,8 +40,13 @@ int main(){
 
     dados.bd_acessar_tabela_exemplares(file);
 
+    // dados.bd_destruir_tabela_acervos(file);
 
+    // dados.bd_remover_acervo(file, calc);
 
+    // dados.bd_remover_usuario(file,tha);
+
+    // dados.bd_remover_exemplar(file, md1);
 
     return 0;
 

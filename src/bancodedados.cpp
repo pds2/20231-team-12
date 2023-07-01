@@ -7,7 +7,7 @@
 using namespace std;
 
 // a mesma logica para todos os metodos bd_criar_tabela_.
-int BD::bd_criar_tabela_acervos(const char* f){
+void BD::bd_criar_tabela_acervos(const char* f){
     
     //criando uma conexao com o banco de dados.
     sqlite3* bibdb;
@@ -39,7 +39,7 @@ int BD::bd_criar_tabela_acervos(const char* f){
 }
 
 // a mesma logica para todos os metodos bd_criar_tabela_.
-int BD::bd_criar_tabela_usuarios(const char* f){
+void BD::bd_criar_tabela_usuarios(const char* f){
     
     sqlite3* bibdb;
     
@@ -63,7 +63,7 @@ int BD::bd_criar_tabela_usuarios(const char* f){
 }
 
 // a mesma logica para todos os metodos bd_criar_tabela_.
-int BD::bd_criar_tabela_exemplares(const char* f){
+void BD::bd_criar_tabela_exemplares(const char* f){
     
     sqlite3* bibdb;
     
@@ -93,7 +93,7 @@ int BD::bd_criar_tabela_exemplares(const char* f){
 }
 
 //a mesma logica para todos os metodos bd_inserir_tabela_.
-int BD::bd_inserir_tabela_acervos(const char* f, Acervo livro){
+void BD::bd_inserir_tabela_acervos(const char* f, Acervo livro){
     
     //criando conexao e abrindo o banco de dados.
     sqlite3* bibdb;
@@ -123,7 +123,7 @@ int BD::bd_inserir_tabela_acervos(const char* f, Acervo livro){
     sqlite3_close(bibdb);
 }
 
-int BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
+void BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
 
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
@@ -146,7 +146,7 @@ int BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
     sqlite3_close(bibdb);
 }
 
-int BD::bd_inserir_tabela_exemplares(const char* f, Exemplar item){
+void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar item){
 
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
@@ -178,7 +178,7 @@ int BD::bd_inserir_tabela_exemplares(const char* f, Exemplar item){
 }
 
 
-int BD::bd_acessar_tebela_acervos(const char* f){
+void BD::bd_acessar_tebela_acervos(const char* f){
     
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
@@ -220,7 +220,7 @@ int BD::bd_acessar_tebela_acervos(const char* f){
     sqlite3_close(bibdb);
 }
 
-int BD::bd_acessar_tabela_usuarios(const char* f){
+void BD::bd_acessar_tabela_usuarios(const char* f){
     
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
@@ -253,7 +253,7 @@ int BD::bd_acessar_tabela_usuarios(const char* f){
 
 }
 
-int BD::bd_acessar_tabela_exemplares(const char* f){
+void BD::bd_acessar_tabela_exemplares(const char* f){
 
     sqlite3* bibdb;
     sqlite3_open(f, & bibdb);
@@ -293,5 +293,114 @@ int BD::bd_acessar_tabela_exemplares(const char* f){
     }
 
     sqlite3_finalize(stmt);
+    sqlite3_close(bibdb);
+}
+
+//metodos para destruir tabelas
+void BD::bd_destruir_tabela_acervos(const char* f){
+    sqlite3* bibdb;
+    sqlite3_open(f,&bibdb);
+
+    string sql_comando = "Drop Table Acervos;";
+    char* msgerr;
+    
+    int rsp = 0;
+    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(rsp!=SQLITE_OK){
+        cerr << "ERRO AO DESTRUIR TABELA ACERVOS: " << msgerr << endl;
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+}
+
+void BD::bd_destruir_tabela_usuarios(const char* f){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    string sql_comando = "Drop Table Usuarios;";
+    char* msgerr;
+    int resp = 0;
+
+    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(resp!=SQLITE_OK){
+        cerr << "ERRO AO DESTRUIR TABELA USUARIOS: " << msgerr << endl;
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+}
+
+void BD::bd_destruir_tabela_exemplares(const char* f){
+    
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    string sql_comando = "Drop Table Exemplares; ";
+    char* msgerr;
+    int resp = 0;
+
+    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(resp!=SQLITE_OK){
+        cerr << "ERRO AO DESTRUIR TABELA EXEMPLARES: " << endl;
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+}
+
+//metodos para remover
+void BD::bd_remover_acervo(const char* f, Acervo livro){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+    sqlite3_stmt* stmt;
+
+    int codigoacervo = livro.getCodigo();
+
+    string sql_comando = "Delete from Acervos where codigo="+to_string(codigoacervo)+"; ";
+    char* msgerr;
+    int rsp = 0;
+    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(rsp!=SQLITE_OK){
+        cerr << "ERRO AO REMOVER ACERVO: " << msgerr << endl; 
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+}
+
+void BD::bd_remover_usuario(const char* f, Perfil_usuario user){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    int iduser = user.get_ID_perfil_usuario();
+    string sql_comando = "Delete from Usuarios where ID="+to_string(iduser)+"; ";
+    char* msgerr;
+    int resp = 0;
+
+    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(resp!=SQLITE_OK){
+        cerr << "ERRO AO REMOVER USUARIO: " << msgerr << endl;
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+}
+
+void BD::bd_remover_exemplar(const char* f, Exemplar item){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    int codigoexemplar = item.getCodigo();
+    string sql_comando = "Delete from Exemplares where codigo="+to_string(codigoexemplar)+"; ";
+    char* msgerr;
+    int resp = 0;
+
+    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL,&msgerr);
+    if(resp!=SQLITE_OK){
+        cerr << "ERRO AO REMOVER EXEMPLAR: " << msgerr << endl;
+    }
+
+    sqlite3_free(msgerr);
     sqlite3_close(bibdb);
 }
