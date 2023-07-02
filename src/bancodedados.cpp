@@ -41,8 +41,7 @@ void BD::bd_criar_tabela_acervos(const char* f){
 // a mesma logica para todos os metodos bd_criar_tabela_.
 void BD::bd_criar_tabela_usuarios(const char* f){
     
-    sqlite3* bibdb;
-    
+    sqlite3* bibdb; 
     sqlite3_open(f, &bibdb);
 
     string sql_comando = "CREATE TABLE IF NOT EXISTS Usuarios("
@@ -65,8 +64,7 @@ void BD::bd_criar_tabela_usuarios(const char* f){
 // a mesma logica para todos os metodos bd_criar_tabela_.
 void BD::bd_criar_tabela_exemplares(const char* f){
     
-    sqlite3* bibdb;
-    
+    sqlite3* bibdb; 
     sqlite3_open(f, &bibdb);
 
     string sql_comando = "CREATE TABLE IF NOT EXISTS Exemplares("
@@ -94,56 +92,60 @@ void BD::bd_criar_tabela_exemplares(const char* f){
 
 //a mesma logica para todos os metodos bd_inserir_tabela_.
 void BD::bd_inserir_tabela_acervos(const char* f, Acervo livro){
-    
-    //criando conexao e abrindo o banco de dados.
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
+    bool check = checkAcervo(f, livro);
+    if(check == (0||false)){
+        //criando conexao e abrindo o banco de dados.
+        sqlite3* bibdb;
+        sqlite3_open(f, &bibdb);
 
-    //armazenando os atributos do acervo em variaveis para subtituir no comando sql.
-    string autor, title, genero;
-    autor = livro.getAutor();
-    title = livro.getTitulo();
-    genero = livro.getGenero();
-    int anopub;
-    int codigo;
-    anopub = livro.getAnoPublicacao();
-    codigo = livro.getCodigo();
+        //armazenando os atributos do acervo em variaveis para subtituir no comando sql.
+        string autor, title, genero;
+        autor = livro.getAutor();
+        title = livro.getTitulo();
+        genero = livro.getGenero();
+        int anopub;
+        int codigo;
+        anopub = livro.getAnoPublicacao();
+        codigo = livro.getCodigo();
 
-    string sql_comando = "INSERT INTO Acervos VALUES('"+autor+"',"+to_string(anopub)+",'"+title+"','"+genero+"',"+to_string(codigo)+");";
+        string sql_comando = "INSERT INTO Acervos VALUES('"+autor+"',"+to_string(anopub)+",'"+title+"','"+genero+"',"+to_string(codigo)+");";
 
-    char* msgerr;
-    int rsp = 0;
+        char* msgerr;
+        int rsp = 0;
 
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if (rsp!=SQLITE_OK){
-        cerr << "ERRO AO INSERIR EM ACERVOS: " << msgerr << endl;
+        rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+        if (rsp!=SQLITE_OK){
+            cerr << "ERRO AO INSERIR EM ACERVOS: " << msgerr << endl;
+        }
+
+        sqlite3_free(msgerr);
+        sqlite3_close(bibdb);
     }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
 }
 
 void BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
+    bool check = checkUsuario(f, user);
+    if(check==(0||false)){
+        sqlite3* bibdb;
+        sqlite3_open(f, &bibdb);
 
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
+        string email = user.get_email_perfil_usuario();
+        int id = user.get_ID_perfil_usuario();
+        int senha = user.get_senha_perfil_usuario();
 
-    string email = user.get_email_perfil_usuario();
-    int id = user.get_ID_perfil_usuario();
-    int senha = user.get_senha_perfil_usuario();
+        string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+");";
 
-    string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+");";
+        char* msgerr;
+        int rsp = 0;
 
-    char* msgerr;
-    int rsp = 0;
+        rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+        if (rsp!=SQLITE_OK){
+            cerr << "ERRO AO INSERIR EM USUARIOS: " << msgerr << endl;
+        }
 
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if (rsp!=SQLITE_OK){
-        cerr << "ERRO AO INSERIR EM USUARIOS: " << msgerr << endl;
+        sqlite3_free(msgerr);
+        sqlite3_close(bibdb);
     }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
 }
 
 void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar item){
@@ -198,6 +200,7 @@ void BD::bd_acessar_tebela_acervos(const char* f){
     const unsigned char* autor;
     const unsigned char* titulo;
     const unsigned char* genero;
+    int numacervo = 0;
 
     while (sqlite3_step(stmt) != SQLITE_DONE) {
         autor = sqlite3_column_text(stmt, 0);
@@ -205,8 +208,9 @@ void BD::bd_acessar_tebela_acervos(const char* f){
         titulo = sqlite3_column_text(stmt, 2);
         genero = sqlite3_column_text(stmt, 3);
         codigo = sqlite3_column_int(stmt, 4);
+        numacervo++;
 
-        cout << "Novo Acervo: " << endl;
+        cout << "Acervo "+to_string(numacervo)+": " << endl;
         cout << "autor: " << autor << endl;
         cout << "ano de publicacao: " << anopub << endl;
         cout << "titulo: " << titulo << endl;
@@ -233,14 +237,16 @@ void BD::bd_acessar_tabela_usuarios(const char* f){
     int id;
     const unsigned char* email;
     int senha;
+    int numusuarios = 0;
 
     while(sqlite3_step(stmt)!=SQLITE_DONE){
         
         id = sqlite3_column_int(stmt, 0);
         email = sqlite3_column_text(stmt, 1);
         senha = sqlite3_column_int(stmt, 2);
+        numusuarios++;
 
-        cout << "Novo Usuario: " << endl;
+        cout << "Usuario "+to_string(numusuarios)+": " << endl;
         cout << "id: " << id << endl;
         cout << "email: " << email << endl;
         cout << "senha: " << senha << endl;
@@ -267,7 +273,8 @@ void BD::bd_acessar_tabela_exemplares(const char* f){
     const unsigned char* titulo;
     const unsigned char* genero;
     int emprestado, anopub, dataaquisicao, datadevolucao, codigo, codigospecifico;
-    
+    int numexemplares = 0;
+
     while(sqlite3_step(stmt)!=SQLITE_DONE){
 
         autor = sqlite3_column_text(stmt, 0);
@@ -279,8 +286,9 @@ void BD::bd_acessar_tabela_exemplares(const char* f){
         dataaquisicao = sqlite3_column_int(stmt, 6);
         codigospecifico = sqlite3_column_int(stmt, 7);
         datadevolucao = sqlite3_column_int(stmt,8);
+        numexemplares++;
 
-        cout << "Novo Exemplar: " << endl;
+        cout << "Exemplar "+to_string(numexemplares)+": " << endl;
         cout << "autor: " << autor << endl;
         cout << "ano de publicacao: " << anopub << endl;
         cout << "titulo: " << titulo << endl;
@@ -365,6 +373,11 @@ void BD::bd_remover_acervo(const char* f, Acervo livro){
         cerr << "ERRO AO REMOVER ACERVO: " << msgerr << endl; 
     }
 
+    //se um acervo eh removido seus exemplares tambem sao.
+    Exemplar livroaux("",0,"","",codigoacervo,0,0,0,0);
+    bd_remover_exemplar(f, livroaux);
+
+    sqlite3_finalize(stmt);
     sqlite3_free(msgerr);
     sqlite3_close(bibdb);
 }
@@ -404,3 +417,103 @@ void BD::bd_remover_exemplar(const char* f, Exemplar item){
     sqlite3_free(msgerr);
     sqlite3_close(bibdb);
 }
+
+//metodos de checagem.
+bool BD::checkAcervo(const char* f, Acervo livro){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+    sqlite3_stmt* stmt;
+
+    int codigodoacervo = livro.getCodigo();
+
+    // string sql_consulta = "SELECT FROM Acervos where codigo="+to_string(codigodoacervo)+" and titulo="+
+    // tituloacervo+"; ";
+
+    string sql_consulta = "SELECT * FROM Acervos; ";
+
+    sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
+    const unsigned char* tituloigual;
+    int codigoigual = 0;
+
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        tituloigual = sqlite3_column_text(stmt, 2);
+        codigoigual = sqlite3_column_int(stmt, 4);
+
+        if(codigoigual==codigodoacervo){
+            cout << "ERRO: Ja existe um acervo com esse codigo: "+to_string(codigoigual)+", Titulo: " << tituloigual <<"."<< endl;
+            sqlite3_finalize(stmt);
+            sqlite3_close(bibdb);
+            return true;
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(bibdb);
+
+    return false;
+    
+}
+
+bool BD::checkUsuario(const char* f, Perfil_usuario user){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+    sqlite3_stmt* stmt;
+
+    int iduser = user.get_ID_perfil_usuario();
+    string sql_consulta = "SELECT * FROM Usuarios; ";
+
+    sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
+    int idigual = 0;
+    const unsigned char* emailigual;
+
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        idigual = sqlite3_column_int(stmt, 0);
+        emailigual = sqlite3_column_text(stmt, 1);
+
+        if(idigual == iduser){
+            cout << "ERRO: Usuario ja cadastrado com id: "+to_string(idigual)+", email: " << emailigual << "." << endl;
+            sqlite3_finalize(stmt);
+            sqlite3_close(bibdb);
+            return true;
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(bibdb);
+
+    return false;
+}
+
+int BD::checkNumExemplares(const char* f, Acervo livro){
+    
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+    sqlite3_stmt* stmt;
+
+    int codigodoacervo = livro.getCodigo();
+    string sql_consulta = "SELECT * FROM Exemplares; ";
+    int numexemplares = 0;
+
+    sqlite3_prepare_v2(bibdb,sql_consulta.c_str(), -1, &stmt, 0);
+    int codigoexemplar = 0;
+    int codigoespecifico = 0;
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        codigoexemplar = sqlite3_column_int(stmt, 4);
+        codigoespecifico = sqlite3_column_int(stmt, 7);
+
+        if(codigodoacervo == codigoexemplar){
+            numexemplares++;
+            if(numexemplares == 1){
+                cout << "Acervo "<< codigodoacervo << ":" << endl;
+            }
+            cout << "Exemplar " << numexemplares << ": " << codigoespecifico << "." << endl;
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(bibdb);
+    
+    return numexemplares;
+
+}
+
