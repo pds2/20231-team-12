@@ -53,6 +53,7 @@ int main(){
     // cout << dados.checkUsuario(file, lagosta);
 
     dados.bd_inserir_tabela_usuarios(file, lagosta);
+
     
     cout << dados.checkNumExemplares(file, md);
     

@@ -1,0 +1,63 @@
+Documentacao - Classe BD
+
+Atributos -> Essa classe não possui atributos pois em cada método, uma conexão com o banco de dados eh necessária. Tanto para abrir o arquivo .db quanto para fazer as operações.
+
+Métodos -> Os métodos são todos public pois eh necesssario que todas as outras classes possam ter acesso a eles. 
+
+Parâmetros -> Em todos os métodos, o primeiro parâmetro é um const char* f que deve receber um argumento do mesmo tipo (obviamente) que tenha em seu conteúdo o nomedoarquivo.db.
+por exemplo: const char* file = "biblioteca.db" onde file é usado como primeiro argumento cada vez que um método é chamado.
+
+SQLite -> sqlite3* nomedaconexao cria uma conexao com o banco de dados e é utilizado como primeiro argumento em todas as funções SQLite.
+
+sqlite3_open(file, &nomedaconexao); abre o arquivo pela conexao com o banco de dados que foi contruída.
+
+string sql_comando ou string sql_consulta : São declaradas para armazenar o comando em sintaxe sql a ser executado pelo sqlite.
+
+char* msgerr : Armazena o erro retornado por sqlite3.
+
+int resp ou int rsp : Armazena o retorno de sqlite3_exec() para tratamento de erros.
+
+A função
+sqlite3_exec foi utilizada para criar e destruir tabelas, inserir e remover dados.
+sqlite3_exec(nomedaconexao, comandosql.c_str(), NULL, NULL, &msgerr); em todas as chamadas executa o comando armazenado na variavel do tipo string comandosql, e se por algum motivo
+o comando não possa ser executado, armazena uma mensagem de erro em msgerr. Se não ocorre nenhum erro, SQLITE_OK é retornado. Os parâmetros que recebem NULL como argumento não foram considerados úteis para a aplicação.
+
+sqlite3_stmt* stmt : Cria um objeto de intrução preparado. Representa uma única instrução SQL que foi compilada no formato binário e está pronta para ser avaliada. 
+Na prática é como se fosse um ponteiro para a primeira posição de uma matriz referente a uma tabela.
+
+A função
+sqlite3_prepare_v2 foi utilizada para acessar os dados.
+sqlite3_prepare_v2(nomedaconexao, comandosql.c_str(), -1, &stmt, 0); Prepara a instrução sql. Recebe o objeto de intrução preparado para ser executado em sqlite_step. Os parâmetros que recebem -1 e 0 como argumentos foram 
+"desconsiderados" para a aplicação. Retorna SQLITE_OK se tudo ocorre bem.
+
+sqlite3_step(stmt) : Se stmt é um ponteiro que percorre as colunas da matriz, step o faz pular para a próxima linha. Quando não há mais "linhas", ou seja, dados na tabela, SQLITE_DONE é retornado.
+Para percorrer as colunas, é necessário saber o tipo de dado armazenado na coluna e indicá-lo com sqlite3_column_tipo.
+
+A função
+sqlite3_column_tipo(stmt, numerodacoluna) foi utilizada em um while que recebe sqlite_step(stmt)!=SQLITE_DONE como argumento.
+exemplo: para acessar os dados da tabela Usuarios e armazená-los:
+
+        int id;
+        const unsigned char* email;  //sqlite3_column_text retorna um tipo const unsigned char*.
+        int senha;
+        int numusuarios = 0;
+
+        while(sqlite3_step(stmt)!=SQLITE_DONE){
+            
+            id = sqlite3_column_int(stmt, 0); //acessando a primeira coluna.
+            email = sqlite3_column_text(stmt, 1); //acessando a segunda coluna.
+            senha = sqlite3_column_int(stmt, 2); //acessando a terceira coluna.
+		
+	//imprimindo o conteúdo de cada uma das variáveis antes de pular para a próxima linha.
+            cout << "id: " << id << endl;
+            cout << "email: " << email << endl;
+            cout << "senha: " << senha << endl;
+
+	//pula para a próxima linha.
+
+	}
+
+sqlite3_free(msgerr), sqlite3_finalize(stmt), sqlite3_close(nomedaconexao) : As duas primeiras são usadas para liberar a memória e a última para fechar a conexão com o banco de dados. Se não são usadas
+corretamente, SQLite pode retornar o erro database is blocked (o banco de dados está bloqueado).
+
+Fim. 
