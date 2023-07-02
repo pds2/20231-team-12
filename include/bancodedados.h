@@ -79,6 +79,9 @@ class BD{
     /*@brief retorna o numero de exemplares de um acervo. */
     static int checkNumExemplares(const char* f, Acervo livro);
 
+    /*@brief checa se a tabela existe*/
+    static bool checkTabelaExiste(const char* f, string nome_tabela);
+
 };
 
 #endif

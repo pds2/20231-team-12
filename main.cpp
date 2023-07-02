@@ -55,7 +55,7 @@ int main(){
     dados.bd_inserir_tabela_usuarios(file, lagosta);
     
     cout << dados.checkNumExemplares(file, md);
-
+    
     //deixar fixo aqui
     cout << "\n";
     dados.bd_acessar_tebela_acervos(file);

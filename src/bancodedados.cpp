@@ -182,126 +182,144 @@ void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar item){
 
 void BD::bd_acessar_tebela_acervos(const char* f){
     
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
+    bool check = checkTabelaExiste(f, "Acervos");
+    if(check==(1||true)){
+        sqlite3* bibdb;
+        sqlite3_open(f, &bibdb);
 
-    /*stmt:
-    Pense em cada instrução SQL como um programa de computador separado. 
-    O texto SQL original é o código-fonte. Um objeto de instrução preparado é o código de objeto compilado. 
-    Todo o SQL deve ser convertido em uma instrução preparada antes de ser executado.
-    */
-    sqlite3_stmt* stmt;
+        /*stmt:
+        Pense em cada instrução SQL como um programa de computador separado. 
+        O texto SQL original é o código-fonte. Um objeto de instrução preparado é o código de objeto compilado. 
+        Todo o SQL deve ser convertido em uma instrução preparada antes de ser executado.
+        */
+        sqlite3_stmt* stmt;
 
-    string sql_consulta = "SELECT * FROM Acervos;";
+        string sql_consulta = "SELECT * FROM Acervos;";
 
-    sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
+        sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
 
-    int anopub, codigo;
-    const unsigned char* autor;
-    const unsigned char* titulo;
-    const unsigned char* genero;
-    int numacervo = 0;
+        int anopub, codigo;
+        const unsigned char* autor;
+        const unsigned char* titulo;
+        const unsigned char* genero;
+        int numacervo = 0;
 
-    while (sqlite3_step(stmt) != SQLITE_DONE) {
-        autor = sqlite3_column_text(stmt, 0);
-        anopub = sqlite3_column_int(stmt, 1);
-        titulo = sqlite3_column_text(stmt, 2);
-        genero = sqlite3_column_text(stmt, 3);
-        codigo = sqlite3_column_int(stmt, 4);
-        numacervo++;
+        while (sqlite3_step(stmt) != SQLITE_DONE) {
+            autor = sqlite3_column_text(stmt, 0);
+            anopub = sqlite3_column_int(stmt, 1);
+            titulo = sqlite3_column_text(stmt, 2);
+            genero = sqlite3_column_text(stmt, 3);
+            codigo = sqlite3_column_int(stmt, 4);
+            numacervo++;
 
-        cout << "Acervo "+to_string(numacervo)+": " << endl;
-        cout << "autor: " << autor << endl;
-        cout << "ano de publicacao: " << anopub << endl;
-        cout << "titulo: " << titulo << endl;
-        cout << "genero: " << genero << endl;
-        cout << "codigo: " << codigo << endl;
-        cout << "\n";
+            cout << "Acervo "+to_string(numacervo)+": " << endl;
+            cout << "autor: " << autor << endl;
+            cout << "ano de publicacao: " << anopub << endl;
+            cout << "titulo: " << titulo << endl;
+            cout << "genero: " << genero << endl;
+            cout << "codigo: " << codigo << endl;
+            cout << "\n";
 
+        }
+
+        sqlite3_finalize(stmt);
+        sqlite3_close(bibdb);        
     }
-
-    sqlite3_finalize(stmt);
-    sqlite3_close(bibdb);
+    else{
+        cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Acervos" << endl;
+    }
 }
 
 void BD::bd_acessar_tabela_usuarios(const char* f){
     
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
-    sqlite3_stmt* stmt;
+    bool check = checkTabelaExiste(f, "Usuarios");
+    if(check==(1||true)){
+        sqlite3* bibdb;
+        sqlite3_open(f, &bibdb);
+        sqlite3_stmt* stmt;
 
-    string sql_comando = "SELECT * FROM Usuarios;";
+        string sql_comando = "SELECT * FROM Usuarios;";
 
-    sqlite3_prepare_v2(bibdb, sql_comando.c_str(), -1, &stmt, 0);
+        sqlite3_prepare_v2(bibdb, sql_comando.c_str(), -1, &stmt, 0);
 
-    int id;
-    const unsigned char* email;
-    int senha;
-    int numusuarios = 0;
+        int id;
+        const unsigned char* email;
+        int senha;
+        int numusuarios = 0;
 
-    while(sqlite3_step(stmt)!=SQLITE_DONE){
-        
-        id = sqlite3_column_int(stmt, 0);
-        email = sqlite3_column_text(stmt, 1);
-        senha = sqlite3_column_int(stmt, 2);
-        numusuarios++;
+        while(sqlite3_step(stmt)!=SQLITE_DONE){
+            
+            id = sqlite3_column_int(stmt, 0);
+            email = sqlite3_column_text(stmt, 1);
+            senha = sqlite3_column_int(stmt, 2);
+            numusuarios++;
 
-        cout << "Usuario "+to_string(numusuarios)+": " << endl;
-        cout << "id: " << id << endl;
-        cout << "email: " << email << endl;
-        cout << "senha: " << senha << endl;
-        cout << "\n";
+            cout << "Usuario "+to_string(numusuarios)+": " << endl;
+            cout << "id: " << id << endl;
+            cout << "email: " << email << endl;
+            cout << "senha: " << senha << endl;
+            cout << "\n";
 
+        }
+
+        sqlite3_free(stmt);
+        sqlite3_close(bibdb);
     }
-
-    sqlite3_free(stmt);
-    sqlite3_close(bibdb);
+    else{
+        cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Usuarios" << endl;
+    }
 
 }
 
 void BD::bd_acessar_tabela_exemplares(const char* f){
 
-    sqlite3* bibdb;
-    sqlite3_open(f, & bibdb);
-    sqlite3_stmt* stmt;
+    bool check = checkTabelaExiste(f,"Exemplares");
+    if(check==(1||true)){
+        sqlite3* bibdb;
+        sqlite3_open(f, & bibdb);
+        sqlite3_stmt* stmt;
 
-    string sql_consulta = "SELECT * FROM Exemplares;";
+        string sql_consulta = "SELECT * FROM Exemplares;";
 
-    sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
+        sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
 
-    const unsigned char* autor;
-    const unsigned char* titulo;
-    const unsigned char* genero;
-    int emprestado, anopub, dataaquisicao, datadevolucao, codigo, codigospecifico;
-    int numexemplares = 0;
+        const unsigned char* autor;
+        const unsigned char* titulo;
+        const unsigned char* genero;
+        int emprestado, anopub, dataaquisicao, datadevolucao, codigo, codigospecifico;
+        int numexemplares = 0;
 
-    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        while(sqlite3_step(stmt)!=SQLITE_DONE){
 
-        autor = sqlite3_column_text(stmt, 0);
-        anopub = sqlite3_column_int(stmt, 1);
-        titulo = sqlite3_column_text(stmt, 2);
-        genero = sqlite3_column_text(stmt, 3);
-        codigo = sqlite3_column_int(stmt, 4);
-        emprestado = sqlite3_column_int(stmt, 5);
-        dataaquisicao = sqlite3_column_int(stmt, 6);
-        codigospecifico = sqlite3_column_int(stmt, 7);
-        datadevolucao = sqlite3_column_int(stmt,8);
-        numexemplares++;
+            autor = sqlite3_column_text(stmt, 0);
+            anopub = sqlite3_column_int(stmt, 1);
+            titulo = sqlite3_column_text(stmt, 2);
+            genero = sqlite3_column_text(stmt, 3);
+            codigo = sqlite3_column_int(stmt, 4);
+            emprestado = sqlite3_column_int(stmt, 5);
+            dataaquisicao = sqlite3_column_int(stmt, 6);
+            codigospecifico = sqlite3_column_int(stmt, 7);
+            datadevolucao = sqlite3_column_int(stmt,8);
+            numexemplares++;
 
-        cout << "Exemplar "+to_string(numexemplares)+": " << endl;
-        cout << "autor: " << autor << endl;
-        cout << "ano de publicacao: " << anopub << endl;
-        cout << "titulo: " << titulo << endl;
-        cout << "genero: " << genero << endl;
-        cout << "codigo: " << codigo << endl;
-        cout << "data de aquisicao: " << dataaquisicao << endl; 
-        cout << "emprestado: " << emprestado << endl;
-        cout << "data de devolucao: " << datadevolucao << endl;
-        cout << "\n";
+            cout << "Exemplar "+to_string(numexemplares)+": " << endl;
+            cout << "autor: " << autor << endl;
+            cout << "ano de publicacao: " << anopub << endl;
+            cout << "titulo: " << titulo << endl;
+            cout << "genero: " << genero << endl;
+            cout << "codigo: " << codigo << endl;
+            cout << "data de aquisicao: " << dataaquisicao << endl; 
+            cout << "emprestado: " << emprestado << endl;
+            cout << "data de devolucao: " << datadevolucao << endl;
+            cout << "\n";
+        }
+
+        sqlite3_finalize(stmt);
+        sqlite3_close(bibdb);
     }
-
-    sqlite3_finalize(stmt);
-    sqlite3_close(bibdb);
+    else {
+        cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Exemplares" << endl;
+    }
 }
 
 //metodos para destruir tabelas
@@ -515,5 +533,29 @@ int BD::checkNumExemplares(const char* f, Acervo livro){
     
     return numexemplares;
 
+}
+
+bool BD::checkTabelaExiste(const char*f, string nome_tabela){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+    sqlite3_stmt* stmt;
+
+    string sql_consulta = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='"+nome_tabela+"'; ";
+    sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        int algumdadoint = sqlite3_column_int(stmt, 0);
+        const unsigned char* algumdadotext = sqlite3_column_text(stmt, 0);
+
+        if((algumdadoint==0) || (algumdadotext==0)){
+            sqlite3_finalize(stmt);
+            sqlite3_close(bibdb);
+            return false;
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(bibdb);
+
+    return true;
 }
 
