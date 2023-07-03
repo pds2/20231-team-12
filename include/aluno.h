@@ -35,7 +35,7 @@ class Aluno : public Perfil_usuario {
         /*
          * @brief Empresta um livro ao aluno.
          */
-        void emprestar_livro(Exemplar livro, int data);
+        void emprestar_livro(Exemplar livro);
         /*
          * @brief Devolve um livro do aluno.
          */
