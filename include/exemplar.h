@@ -21,6 +21,7 @@ public:
 
 
 private:
+
     bool emprestado;
     int dataAquisicao;
     int codigoEspecifico;

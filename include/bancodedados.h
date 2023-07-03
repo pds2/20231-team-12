@@ -5,6 +5,9 @@
 #include "acervo.h"
 #include "perfil_usuario.hpp"
 #include "exemplar.h"
+#include "aluno.h"
+#include "admin.h"
+#include "bibliotecario.hpp"
 
 class BD{
     public:
@@ -12,6 +15,8 @@ class BD{
     /* const char* f eh referente ao arquivo .db que vai ser criado e/ou aberto.
     * por exemplo const char* file = "biblioteca.db";
     */
+
+    ~BD() { };
 
     //metodos que ciam as tabelas. funcionam da mesma forma. a repeticao eh necessaria.
 
@@ -42,6 +47,10 @@ class BD{
 
     /*@brief Insere perfis na tabela usuarios se nao existe um perfil com o mesmo id. */
     void bd_inserir_tabela_usuarios(const char* f, Perfil_usuario user);
+
+    void bd_inserir_admin(const char* f, Admin adm);
+    void bd_inserir_aluno(const char* f, Aluno aluno);
+    void bd_inserir_bibliotecario(const char*f, Bibliotecario bibliotecario);
 
     /*@brief Insere exemplares na tabela exemplares sem restricoes.*/
     void bd_inserir_tabela_exemplares(const char* f, Exemplar item);
@@ -81,6 +90,10 @@ class BD{
 
     /*@brief checa se a tabela existe*/
     bool checkTabelaExiste(const char* f, string nome_tabela);
+
+    //metodos update.
+    /*@brief Atualiza se o livro esta emprestado(1) ou nãoemprestado/devolvido(0). */
+    void updateExemplarEmprestado(const char* f, Exemplar item, int umouzero);
 
 };
 

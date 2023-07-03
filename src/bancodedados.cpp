@@ -47,7 +47,8 @@ void BD::bd_criar_tabela_usuarios(const char* f){
     string sql_comando = "CREATE TABLE IF NOT EXISTS Usuarios("
     "ID INT NOT NULL,"
     "email TEXT NOT NULL,"
-    "senha INTEGER NOT NULL)";
+    "senha INTEGER NOT NULL,"
+    "papel TEXT)";
 
     char* msgerr;
     int rsp = 0;
@@ -132,8 +133,9 @@ void BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
         string email = user.get_email_perfil_usuario();
         int id = user.get_ID_perfil_usuario();
         int senha = user.get_senha_perfil_usuario();
+        string papel = "indefinido";
 
-        string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+");";
+        string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+",'"+papel+"');";
 
         char* msgerr;
         int rsp = 0;
@@ -147,6 +149,74 @@ void BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
         sqlite3_close(bibdb);
     }
 }
+
+void BD::bd_inserir_admin(const char* f, Admin adm){
+
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    bd_inserir_tabela_usuarios(f, adm);
+
+    int admid = adm.get_ID_perfil_usuario();
+    string papel = "administrador";
+
+    string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(admid)+"; ";
+    char* msgerr;
+    int resp = 0;
+
+    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(resp!=SQLITE_OK){
+        cerr << "ERRO AO INSERIR Admin EM Usuarios: " << msgerr << endl;
+    }
+    
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+}
+
+void BD::bd_inserir_aluno(const char* f, Aluno aluno){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    bd_inserir_tabela_usuarios(f, aluno);
+
+    int alunoid = aluno.get_ID_perfil_usuario();
+    string papel = "aluno";
+
+    string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(alunoid)+"; ";
+    char* msgerr;
+    int resp = 0;
+
+    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(resp!=SQLITE_OK){
+        cerr << "ERRO AO INSERIR aluno EM Usuarios: " << msgerr << endl;
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+
+}
+
+void BD::bd_inserir_bibliotecario(const char* f, Bibliotecario bibliotecario){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    bd_inserir_tabela_usuarios(f, bibliotecario);
+    int bibliotecarioid = bibliotecario.get_ID_perfil_usuario();
+    string papel = "bibliotecario";
+
+    string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(bibliotecarioid)+";";
+    char* msgerr;
+    int resp = 0;
+
+    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(resp!=SQLITE_OK){
+        cerr << "ERRO AO INSERIR bibliotecario EM Usuarios: " << msgerr << endl;
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+}
+
 
 void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar item){
 
@@ -245,6 +315,7 @@ void BD::bd_acessar_tabela_usuarios(const char* f){
         int id;
         const unsigned char* email;
         int senha;
+        const unsigned char* papel;
         int numusuarios = 0;
 
         while(sqlite3_step(stmt)!=SQLITE_DONE){
@@ -252,12 +323,14 @@ void BD::bd_acessar_tabela_usuarios(const char* f){
             id = sqlite3_column_int(stmt, 0);
             email = sqlite3_column_text(stmt, 1);
             senha = sqlite3_column_int(stmt, 2);
+            papel = sqlite3_column_text(stmt, 3);
             numusuarios++;
 
             cout << "Usuario "+to_string(numusuarios)+": " << endl;
             cout << "id: " << id << endl;
             cout << "email: " << email << endl;
             cout << "senha: " << senha << endl;
+            cout << "papel: " << papel << endl;
             cout << "\n";
 
         }
@@ -478,6 +551,7 @@ bool BD::checkUsuario(const char* f, Perfil_usuario user){
     sqlite3_stmt* stmt;
 
     int iduser = user.get_ID_perfil_usuario();
+
     string sql_consulta = "SELECT * FROM Usuarios; ";
 
     sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
@@ -559,3 +633,22 @@ bool BD::checkTabelaExiste(const char*f, string nome_tabela){
     return true;
 }
 
+void BD::updateExemplarEmprestado(const char* f, Exemplar item, int umouzero){
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+
+    int codigoespecifico = item.getCodigoEspecifico();
+
+    string sql_comando = "UPDATE Exemplares set emprestado="+to_string(umouzero)+" where ID="+to_string(codigoespecifico)+";";
+    char* msgerr;
+    int resp = 0;
+
+    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(resp!=SQLITE_OK){
+        cerr << "ERRO ATUALIZAR Emprestado em Exemplares: " << msgerr << endl;
+    }
+
+    sqlite3_free(msgerr);
+    sqlite3_close(bibdb);
+
+}
