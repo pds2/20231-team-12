@@ -5,7 +5,6 @@
 
 Aluno::Aluno(unsigned int id, std::string email, int senha, Papel_do_usuario papel):
     Perfil_usuario(id, email, senha, papel) {
-    std::cout << "Aluno criado!" << std::endl;
 }
 
 Aluno::~Aluno() {
@@ -21,7 +20,7 @@ unsigned int Aluno::get_n_exemplares() {
     return exemplares.size();
 }
 
-void Aluno::emprestar_livro(Exemplar livro, int data) {
+void Aluno::emprestar_livro(Exemplar livro) {
     if(exemplares.size()>5) throw ja_possui_mutos_livros_e();
     for(auto l : exemplares) if(l.calculaMulta()!=0) throw aluno_com_multa_e();
     exemplares.push_back(livro);
