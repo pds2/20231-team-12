@@ -1,6 +1,7 @@
 #include "aluno.h"
 
 #include <iostream>
+<<<<<<< HEAD
 #include <iomanip>
 
 Aluno::Aluno(unsigned int id, std::string email, int senha, Papel_do_usuario papel):
@@ -65,3 +66,23 @@ void Aluno::consultar_multa_total() {
     if(total!=0) std::cout << "O total da(s) multa(s) de todos os livros é R$" << total << "." << std::endl;
     else std::cout << "Não há nenhuma multa no nome do aluno." << std::endl;
 }
+=======
+
+Aluno::Aluno(unsigned int id, std::string email, int senha): _n_livros(0), Perfil_usuario(id, email, senha) {
+    std::cout << "Aluno criado!" << std::endl;
+}
+
+unsigned int Aluno::n_livros() {
+    return _n_livros;
+}
+
+void Aluno::emprestar_livro() {
+    _n_livros++;
+}
+
+/*
+double consultar_multa(int n) {
+    ...
+}
+*/
+>>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287

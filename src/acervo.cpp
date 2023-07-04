@@ -1,28 +1,35 @@
 #include "../include/acervo.h"
 
-Acervo::Acervo(std::string autor, int anoPublicacao, std::string titulo, std::string genero, int codigo)
-    : autor(autor), anoPublicacao(anoPublicacao), titulo(titulo), genero(genero), codigo(codigo) {
+Acervo::Acervo(std::string autor, int ano_publicacao, std::string titulo, CODIGOS_GENEROS_ACERVO genero, int codigo)
+{
+    _autor = autor;
+    _ano_publicacao = ano_publicacao;
+    _titulo = titulo;
+    _genero = genero;
+    _codigo = codigo;
 }
 
-Acervo::~Acervo() {
+std::string Acervo::get_autor()
+{
+    return _autor;
 }
 
-std::string Acervo::getAutor() const {
-    return autor;
+int Acervo::get_ano_publicacao()
+{
+    return _ano_publicacao;
 }
 
-int Acervo::getAnoPublicacao() const {
-    return anoPublicacao;
+std::string Acervo::get_titulo()
+{
+    return _titulo;
 }
 
-std::string Acervo::getTitulo() const {
-    return titulo;
+CODIGOS_GENEROS_ACERVO Acervo::get_genero()
+{
+    return _genero;
 }
 
-std::string Acervo::getGenero() const {
-    return genero;
-}
-
-int Acervo::getCodigo() const {
-    return codigo;
+int Acervo::get_codigo()
+{
+    return _codigo;
 }

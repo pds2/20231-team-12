@@ -15,7 +15,10 @@ private:
     const char* file = "biblioteca.db";
     
 public:
+<<<<<<< HEAD
 
+=======
+>>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
     virtual Papel_do_usuario set_papel_usuario() override;
 
     // MUDAR OS TIPOS RECEBIDOS QUANDO A LAYLA FIZER OS ACERVOS
@@ -29,7 +32,11 @@ public:
 
     void remover_exemplar(Exemplar); // remove do um dos exemplares de um acervo
 
+<<<<<<< HEAD
     void consulta_geral_acervos(Exemplar); // nao precisa ser um vector, mas vai ser uma lista de todos os livros
+=======
+    std::vector consulta_geral_acervos(Exemplar); // nao precisa ser um vector, mas vai ser uma lista de todos os livros
+>>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
     // usar esse metodo pra deletar em massa? pessoa digita 1, 3, 4 etc e deleta ali os da lista
     // integrar com o bd
 

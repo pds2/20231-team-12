@@ -3,6 +3,7 @@
 
 #include <string>
 
+<<<<<<< HEAD
 #include "aluno.h"
 #include "bibliotecario.hpp"
 
@@ -33,6 +34,15 @@ class Admin : public Perfil_usuario {
          * Destroi o admin.
          */
         ~Admin();
+=======
+#include "perfil_usuario.hpp"
+
+class Admin : public Perfil_usuario {
+    public:
+        Admin(unsigned int id, std::string email, int senha);
+        void deletar_usuario(unsigned int id);
+        void deletar_bibliotecario(unsigned int id);
+>>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
 };
 
 #endif

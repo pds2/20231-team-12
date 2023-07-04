@@ -1,5 +1,8 @@
 #include "../include/bibliotecario.hpp"
+<<<<<<< HEAD
 #include "../include/bancodedados.h"
+=======
+>>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
 
 Papel_do_usuario Bibliotecario::set_papel_usuario()
 {
