@@ -289,7 +289,7 @@ void BD::bd_acessar_tebela_acervos(const char* f){
         sqlite3_finalize(stmt);
         sqlite3_close(bibdb);        
     }
-    //se a tabela foi destruida ou nao criada.
+    //se a tabela foi destruida ou nao criada, else.
     else{
         cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Acervos" << endl;
     }
