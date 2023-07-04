@@ -1,12 +1,12 @@
 #ifndef ALUNO_H
 #define ALUNO_H
 
-<<<<<<< HEAD
 #include <list>
 #include <string>
 
 #include "exemplar.h"
 #include "perfil_usuario.hpp"
+#include "bancodedados.h"
 
 class aluno_com_multa_e {};
 class ja_possui_mutos_livros_e {};
@@ -53,22 +53,10 @@ class Aluno : public Perfil_usuario {
          * @brief Consulta a multa de todos os livros emprestados.
          */
         void consultar_multa_total();
-=======
-#include <string>
 
-#include "perfil_usuario.hpp"
+        /// @brief Persistence: metodo criado para auxiliar no acesso aos exemplares.
+        void BDauxiliar(string codigosecreto);
 
-class Aluno : public Perfil_usuario {
-    private:
-        //só uma variável que eu pensei que talvez o aluno teria, ex: cada um pode ter
-        //no max x livros, se já tiver x não pode ter mais
-        unsigned int _n_livros;
-    public:
-        Aluno(unsigned int id, std::string email, int senha);
-        unsigned int n_livros();
-        void emprestar_livro();
-        //double consultar_multa(int codigo);
->>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
 };
 
 #endif

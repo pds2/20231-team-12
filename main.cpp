@@ -70,7 +70,8 @@ int main(){
     // dados.bd_acessar_tebela_acervos(file);
     // dados.bd_acessar_tabela_usuarios(file);
     // dados.bd_acessar_tabela_exemplares(file);
-    
+
+
     return 0;
 
 }

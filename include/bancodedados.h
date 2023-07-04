@@ -8,6 +8,9 @@
 #include "aluno.h"
 #include "admin.h"
 #include "bibliotecario.hpp"
+#include <string>
+
+using namespace std;
 
 class BD{
     public:
@@ -43,17 +46,17 @@ class BD{
     //metodos para inserir.
 
     /*@brief Insere acervos na tabela acervos se nao existe um acervo com o mesmo codigo. */
-    void bd_inserir_tabela_acervos(const char* f, Acervo livro);
+    void bd_inserir_tabela_acervos(const char* f, Acervo &livro);
 
     /*@brief Insere perfis na tabela usuarios se nao existe um perfil com o mesmo id. */
-    void bd_inserir_tabela_usuarios(const char* f, Perfil_usuario user);
+    void bd_inserir_tabela_usuarios(const char* f, Perfil_usuario &user);
 
-    void bd_inserir_admin(const char* f, Admin adm);
-    void bd_inserir_aluno(const char* f, Aluno aluno);
-    void bd_inserir_bibliotecario(const char*f, Bibliotecario bibliotecario);
+    void bd_inserir_admin(const char* f, Admin &adm);
+    void bd_inserir_aluno(const char* f, Aluno &aluno);
+    void bd_inserir_bibliotecario(const char*f, Bibliotecario &bibliotecario);
 
     /*@brief Insere exemplares na tabela exemplares sem restricoes.*/
-    void bd_inserir_tabela_exemplares(const char* f, Exemplar item);
+    void bd_inserir_tabela_exemplares(const char* f, Exemplar &item);
 
     //metodos para acessar/selecionar.
 
@@ -69,31 +72,34 @@ class BD{
     // metodos para remover.
 
     /* @brief remove um acervo e seus exemplares por seu codigo. */
-    void bd_remover_acervo(const char* f, Acervo livro);
+    void bd_remover_acervo(const char* f, Acervo &livro);
 
     /* @brief remove um usuario por seu id. */
-    void bd_remover_usuario(const char* f, Perfil_usuario user);
+    void bd_remover_usuario(const char* f, Perfil_usuario &user);
+
+    //acessando um metodo auxiliar para remover exemplares e remover aluno.
+    void bd_remover_aluno_e_devolver_exemplares(const char* f, Aluno &user);
 
     /* @brief remove um exemplar por seu codigo. */
-    void bd_remover_exemplar(const char* f, Exemplar item);
+    void bd_remover_exemplar(const char* f, Exemplar &item);
 
     //metodos de checagem.
 
-    /*@brief checa se ja existe um acervo com o mesmo codigo e titulo. TRUE p/EXISTE e FALSE p/NAO EXISTE*/
-    bool checkAcervo(const char* f, Acervo livro);
+    /*@brief checa se ja existe um acervo com o mesmo codigo. TRUE p/EXISTE e FALSE p/NAO EXISTE*/
+    bool checkAcervo(const char* f, Acervo &livro);
 
     /*@brief checa se ja existe um usuario com o mesmo id no bd. TRUE p/EXISTE e false p/NAO EXISTE*/
-    bool checkUsuario(const char* f, Perfil_usuario user);
+    bool checkUsuario(const char* f, Perfil_usuario &user);
 
     /*@brief retorna o numero de exemplares de um acervo. */
-    int checkNumExemplares(const char* f, Acervo livro);
+    int checkNumExemplares(const char* f, Acervo &livro);
 
     /*@brief checa se a tabela existe*/
     bool checkTabelaExiste(const char* f, string nome_tabela);
 
     //metodos update.
     /*@brief Atualiza se o livro esta emprestado(1) ou nãoemprestado/devolvido(0). */
-    void updateExemplarEmprestado(const char* f, Exemplar item, int umouzero);
+    void updateExemplarEmprestado(const char* f, Exemplar &item, int umouzero);
 
 };
 

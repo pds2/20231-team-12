@@ -1,11 +1,11 @@
 #include "aluno.h"
 
 #include <iostream>
-<<<<<<< HEAD
 #include <iomanip>
 
 Aluno::Aluno(unsigned int id, std::string email, int senha, Papel_do_usuario papel):
     Perfil_usuario(id, email, senha, papel) {
+        bibdados.bd_inserir_aluno(file, *this);
 }
 
 Aluno::~Aluno() {
@@ -14,7 +14,7 @@ Aluno::~Aluno() {
 void Aluno::livros_emprestados() {
     if(exemplares.size()==0) std::cout << "O aluno nao possui nenhum livro." << std::endl;
     else std::cout << "Livro(s) emprestado(s) para o aluno:" << std::endl;
-    for(auto l : exemplares) std::cout << l.getTitulo() << ", escrito por " << l.getAutor() << std::endl;// imprimir os dados dos livros
+    for(auto l : exemplares) std::cout << l.getTitulo() << ", escrito por " << l.getAutor() << std::endl; // imprimir os dados dos livros
 }
 
 unsigned int Aluno::get_n_exemplares() {
@@ -38,7 +38,7 @@ void Aluno::devolver_livro(int codigo) {
 }
 
 void Aluno::consultar_acervo() {
-    //...
+    bibdados.bd_acessar_tabela_exemplares(file);
 }
 
 void Aluno::consultar_multa(int codigo) {
@@ -66,23 +66,12 @@ void Aluno::consultar_multa_total() {
     if(total!=0) std::cout << "O total da(s) multa(s) de todos os livros é R$" << total << "." << std::endl;
     else std::cout << "Não há nenhuma multa no nome do aluno." << std::endl;
 }
-=======
 
-Aluno::Aluno(unsigned int id, std::string email, int senha): _n_livros(0), Perfil_usuario(id, email, senha) {
-    std::cout << "Aluno criado!" << std::endl;
+void Aluno::BDauxiliar(string codigosecreto){
+    if(codigosecreto=="Persistence20231"){
+        for(Exemplar exemplaremprestado : exemplares){
+            bibdados.updateExemplarEmprestado(file, exemplaremprestado, 0);
+            cout << "O Exemplar: "<< exemplaremprestado.get_codigo() <<" foi devolvido."<<endl;
+        }
+    }
 }
-
-unsigned int Aluno::n_livros() {
-    return _n_livros;
-}
-
-void Aluno::emprestar_livro() {
-    _n_livros++;
-}
-
-/*
-double consultar_multa(int n) {
-    ...
-}
-*/
->>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287

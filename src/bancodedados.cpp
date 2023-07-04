@@ -74,10 +74,8 @@ void BD::bd_criar_tabela_exemplares(const char* f){
     "titulo TEXT NOT NULL,"
     "genero TEXT NOT NULL,"
     "codigo INTEGER NOT NULL,"
-    "emprestado TEXT NOT NULL,"
-    "dataaquisicao INTEGER NOT NULL,"
-    "codigoespecificacao INTEGER NOT NULL,"
-    "datadevolucao INTEGER NOT NULL)";
+    "codigoexemplar TEXT NOT NULL,"
+    "emprestado TEXT NOT NULL)";
 
     char* msgerr;
     int rsp = 0;
@@ -92,8 +90,9 @@ void BD::bd_criar_tabela_exemplares(const char* f){
 }
 
 //a mesma logica para todos os metodos bd_inserir_tabela_.
-void BD::bd_inserir_tabela_acervos(const char* f, Acervo livro){
+void BD::bd_inserir_tabela_acervos(const char* f, Acervo &livro){
     bool check = checkAcervo(f, livro);
+    //se nao ha nenhum livro com o mesmo codigo, a execucao continua.
     if(check == (0||false)){
         //criando conexao e abrindo o banco de dados.
         sqlite3* bibdb;
@@ -101,13 +100,13 @@ void BD::bd_inserir_tabela_acervos(const char* f, Acervo livro){
 
         //armazenando os atributos do acervo em variaveis para subtituir no comando sql.
         string autor, title, genero;
-        autor = livro.getAutor();
-        title = livro.getTitulo();
-        genero = livro.getGenero();
+        autor = livro.get_autor();
+        title = livro.get_titulo();
+        genero = livro.get_genero();
         int anopub;
         int codigo;
-        anopub = livro.getAnoPublicacao();
-        codigo = livro.getCodigo();
+        anopub = livro.get_ano_publicacao();
+        codigo = livro.get_codigo();
 
         string sql_comando = "INSERT INTO Acervos VALUES('"+autor+"',"+to_string(anopub)+",'"+title+"','"+genero+"',"+to_string(codigo)+");";
 
@@ -124,8 +123,9 @@ void BD::bd_inserir_tabela_acervos(const char* f, Acervo livro){
     }
 }
 
-void BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
+void BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario &user){
     bool check = checkUsuario(f, user);
+    //se nao existe um usuario com o mesmo id segue a execucao.
     if(check==(0||false)){
         sqlite3* bibdb;
         sqlite3_open(f, &bibdb);
@@ -149,8 +149,8 @@ void BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario user){
         sqlite3_close(bibdb);
     }
 }
-
-void BD::bd_inserir_admin(const char* f, Admin adm){
+//dando um update de papel indefinido para admin.
+void BD::bd_inserir_admin(const char* f, Admin &adm){
 
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
@@ -158,7 +158,7 @@ void BD::bd_inserir_admin(const char* f, Admin adm){
     bd_inserir_tabela_usuarios(f, adm);
 
     int admid = adm.get_ID_perfil_usuario();
-    string papel = "administrador";
+    string papel = "ADMIN";
 
     string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(admid)+"; ";
     char* msgerr;
@@ -172,15 +172,15 @@ void BD::bd_inserir_admin(const char* f, Admin adm){
     sqlite3_free(msgerr);
     sqlite3_close(bibdb);
 }
-
-void BD::bd_inserir_aluno(const char* f, Aluno aluno){
+//dando um update de papel indefinido para aluno.
+void BD::bd_inserir_aluno(const char* f, Aluno &aluno){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
 
     bd_inserir_tabela_usuarios(f, aluno);
 
     int alunoid = aluno.get_ID_perfil_usuario();
-    string papel = "aluno";
+    string papel = "ALUNO";
 
     string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(alunoid)+"; ";
     char* msgerr;
@@ -195,14 +195,14 @@ void BD::bd_inserir_aluno(const char* f, Aluno aluno){
     sqlite3_close(bibdb);
 
 }
-
-void BD::bd_inserir_bibliotecario(const char* f, Bibliotecario bibliotecario){
+//dando um update de papel indefinido para bibliotecario.
+void BD::bd_inserir_bibliotecario(const char* f, Bibliotecario &bibliotecario){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
 
     bd_inserir_tabela_usuarios(f, bibliotecario);
     int bibliotecarioid = bibliotecario.get_ID_perfil_usuario();
-    string papel = "bibliotecario";
+    string papel = "BIBLIOTECARIO";
 
     string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(bibliotecarioid)+";";
     char* msgerr;
@@ -217,51 +217,45 @@ void BD::bd_inserir_bibliotecario(const char* f, Bibliotecario bibliotecario){
     sqlite3_close(bibdb);
 }
 
+/// @brief 
+/// @param f 
+/// @param item 
+void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar &item){
 
-void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar item){
+//     sqlite3* bibdb;
+//     sqlite3_open(f, &bibdb);
 
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
+//     string autor = item.get_autor(); 
+//     int anopub = item.get_ano_publicacao(); 
+//     string titulo = item.get_titulo(); 
+//     // string genero = item.get_genero();
+//     int codigo = item.get_codigo();
+//     int emprestado = item.get_emprestado(); 
+    // int dataaquisicao = item.get_dia_emprestado();
+//     int codigoespecifico = item.get_codigo_exemplar();
 
-    string autor = item.getAutor(); 
-    int anopub = item.getAnoPublicacao(); 
-    string titulo = item.getTitulo(); 
-    string genero = item.getGenero();
-    int codigo = item.getCodigo();
-    int emprestado = item.isEmprestado(); 
-    int dataaquisicao = item.getDataAquisicao();
-    int codigoespecifico = item.getCodigoEspecifico();
-    int datadevolucao = item.getDataDevolucao();
+//     string sql_comando = "INSERT INTO Exemplares VALUES('"+autor+"',"+to_string(anopub)+",'"+titulo+"','"+genero+"',"+
+//     to_string(codigo)+","+to_string(emprestado)+","+to_string(dataaquisicao)+","+to_string(codigoespecifico)+","+
+//     to_string(datadevolucao)+");";
 
-    string sql_comando = "INSERT INTO Exemplares VALUES('"+autor+"',"+to_string(anopub)+",'"+titulo+"','"+genero+"',"+
-    to_string(codigo)+","+to_string(emprestado)+","+to_string(dataaquisicao)+","+to_string(codigoespecifico)+","+
-    to_string(datadevolucao)+");";
+//     char* msgerr;
+//     int rsp = 0;
 
-    char* msgerr;
-    int rsp = 0;
+//     rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+//     if (rsp != SQLITE_OK){
+//         cerr << "ERRO AO INSERIR EM EXEMPLARES: " << msgerr << endl;
+//     }
 
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if (rsp != SQLITE_OK){
-        cerr << "ERRO AO INSERIR EM EXEMPLARES: " << msgerr << endl;
-    }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+//     sqlite3_free(msgerr);
+//     sqlite3_close(bibdb);
 }
 
-
 void BD::bd_acessar_tebela_acervos(const char* f){
-    
     bool check = checkTabelaExiste(f, "Acervos");
+    //se a tabela existe, continua a execucao.
     if(check==(1||true)){
         sqlite3* bibdb;
         sqlite3_open(f, &bibdb);
-
-        /*stmt:
-        Pense em cada instrução SQL como um programa de computador separado. 
-        O texto SQL original é o código-fonte. Um objeto de instrução preparado é o código de objeto compilado. 
-        Todo o SQL deve ser convertido em uma instrução preparada antes de ser executado.
-        */
         sqlite3_stmt* stmt;
 
         string sql_consulta = "SELECT * FROM Acervos;";
@@ -295,13 +289,13 @@ void BD::bd_acessar_tebela_acervos(const char* f){
         sqlite3_finalize(stmt);
         sqlite3_close(bibdb);        
     }
+    //se a tabela foi destruida ou nao criada.
     else{
         cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Acervos" << endl;
     }
 }
 
 void BD::bd_acessar_tabela_usuarios(const char* f){
-    
     bool check = checkTabelaExiste(f, "Usuarios");
     if(check==(1||true)){
         sqlite3* bibdb;
@@ -345,7 +339,6 @@ void BD::bd_acessar_tabela_usuarios(const char* f){
 }
 
 void BD::bd_acessar_tabela_exemplares(const char* f){
-
     bool check = checkTabelaExiste(f,"Exemplares");
     if(check==(1||true)){
         sqlite3* bibdb;
@@ -394,8 +387,12 @@ void BD::bd_acessar_tabela_exemplares(const char* f){
         cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Exemplares" << endl;
     }
 }
+///
+///
+///
 
 //metodos para destruir tabelas
+//todos funcionam.
 void BD::bd_destruir_tabela_acervos(const char* f){
     sqlite3* bibdb;
     sqlite3_open(f,&bibdb);
@@ -449,12 +446,13 @@ void BD::bd_destruir_tabela_exemplares(const char* f){
 }
 
 //metodos para remover
-void BD::bd_remover_acervo(const char* f, Acervo livro){
+//ok
+void BD::bd_remover_acervo(const char* f, Acervo &livro){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
     sqlite3_stmt* stmt;
 
-    int codigoacervo = livro.getCodigo();
+    int codigoacervo = livro.get_codigo();
 
     string sql_comando = "Delete from Acervos where codigo="+to_string(codigoacervo)+"; ";
     char* msgerr;
@@ -472,8 +470,8 @@ void BD::bd_remover_acervo(const char* f, Acervo livro){
     sqlite3_free(msgerr);
     sqlite3_close(bibdb);
 }
-
-void BD::bd_remover_usuario(const char* f, Perfil_usuario user){
+//ok
+void BD::bd_remover_usuario(const char* f, Perfil_usuario &user){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
 
@@ -491,11 +489,17 @@ void BD::bd_remover_usuario(const char* f, Perfil_usuario user){
     sqlite3_close(bibdb);
 }
 
-void BD::bd_remover_exemplar(const char* f, Exemplar item){
+//acessando um metodo auxiliar para remover exemplares ao remover aluno.
+void BD::bd_remover_aluno_e_devolver_exemplares(const char* f, Aluno &user){
+    user.BDauxiliar("Persistence20231");
+    bd_remover_usuario(f, user);
+}
+//conferido.
+void BD::bd_remover_exemplar(const char* f, Exemplar &item){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
 
-    int codigoexemplar = item.getCodigo();
+    int codigoexemplar = item.get_codigo();
     string sql_comando = "Delete from Exemplares where codigo="+to_string(codigoexemplar)+"; ";
     char* msgerr;
     int resp = 0;
@@ -510,12 +514,13 @@ void BD::bd_remover_exemplar(const char* f, Exemplar item){
 }
 
 //metodos de checagem.
-bool BD::checkAcervo(const char* f, Acervo livro){
+//funcionando.
+bool BD::checkAcervo(const char* f, Acervo &livro){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
     sqlite3_stmt* stmt;
 
-    int codigodoacervo = livro.getCodigo();
+    int codigodoacervo = livro.get_codigo();
 
     // string sql_consulta = "SELECT FROM Acervos where codigo="+to_string(codigodoacervo)+" and titulo="+
     // tituloacervo+"; ";
@@ -544,8 +549,8 @@ bool BD::checkAcervo(const char* f, Acervo livro){
     return false;
     
 }
-
-bool BD::checkUsuario(const char* f, Perfil_usuario user){
+//funcionando.
+bool BD::checkUsuario(const char* f, Perfil_usuario &user){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
     sqlite3_stmt* stmt;
@@ -575,14 +580,14 @@ bool BD::checkUsuario(const char* f, Perfil_usuario user){
 
     return false;
 }
-
-int BD::checkNumExemplares(const char* f, Acervo livro){
+//corrigido.
+int BD::checkNumExemplares(const char* f, Acervo &livro){
     
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
     sqlite3_stmt* stmt;
 
-    int codigodoacervo = livro.getCodigo();
+    int codigodoacervo = livro.get_codigo();
     string sql_consulta = "SELECT * FROM Exemplares; ";
     int numexemplares = 0;
 
@@ -591,7 +596,7 @@ int BD::checkNumExemplares(const char* f, Acervo livro){
     int codigoespecifico = 0;
     while(sqlite3_step(stmt)!=SQLITE_DONE){
         codigoexemplar = sqlite3_column_int(stmt, 4);
-        codigoespecifico = sqlite3_column_int(stmt, 7);
+        codigoespecifico = sqlite3_column_int(stmt, 5);
 
         if(codigodoacervo == codigoexemplar){
             numexemplares++;
@@ -608,7 +613,7 @@ int BD::checkNumExemplares(const char* f, Acervo livro){
     return numexemplares;
 
 }
-
+//funciona.
 bool BD::checkTabelaExiste(const char*f, string nome_tabela){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
@@ -632,12 +637,12 @@ bool BD::checkTabelaExiste(const char*f, string nome_tabela){
 
     return true;
 }
-
-void BD::updateExemplarEmprestado(const char* f, Exemplar item, int umouzero){
+//set emprestado = 1, devolvido = 0. 
+void BD::updateExemplarEmprestado(const char* f, Exemplar &item, int umouzero){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
 
-    int codigoespecifico = item.getCodigoEspecifico();
+    int codigoespecifico = item.get_codigo_exemplar();
 
     string sql_comando = "UPDATE Exemplares set emprestado="+to_string(umouzero)+" where ID="+to_string(codigoespecifico)+";";
     char* msgerr;

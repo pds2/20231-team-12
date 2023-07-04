@@ -3,7 +3,6 @@
 
 #include <string>
 
-<<<<<<< HEAD
 #include "aluno.h"
 #include "bibliotecario.hpp"
 
@@ -14,9 +13,6 @@ class id_ja_cadastrado_e {};
 class papel_invalido_e {};
 
 class Admin : public Perfil_usuario {
-    private:
-        const char* file = "biblioteca.db";
-        BD bibdados;
     public:
         /*
          * Constroi um admin.
@@ -33,16 +29,12 @@ class Admin : public Perfil_usuario {
         /*
          * Destroi o admin.
          */
-        ~Admin();
-=======
-#include "perfil_usuario.hpp"
 
-class Admin : public Perfil_usuario {
-    public:
-        Admin(unsigned int id, std::string email, int senha);
-        void deletar_usuario(unsigned int id);
-        void deletar_bibliotecario(unsigned int id);
->>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
+        //persistence
+        /*@brief Imprimir todos os Usuarios.*/
+        void consultar_Usuarios();
+
+        ~Admin();
 };
 
 #endif

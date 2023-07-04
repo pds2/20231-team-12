@@ -1,36 +1,6 @@
 #ifndef EXEMPLAR_H
 #define EXEMPLAR_H
 
-<<<<<<< HEAD
-#include "acervo.h"
-
-
-class Exemplar : public Acervo {
-public:
-    Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,
-             bool emprestado, int dataAquisicao, int codigoEspecifico, int dataDevolucao);
-
-    // Métodos getters
-    bool isEmprestado() const;
-    int getDataAquisicao() const;
-    int getCodigoEspecifico() const;
-    int getDataDevolucao() const;
-
-    //métodos
-    //void mostraMulta(int dataAtual) const;
-    int calculaMulta() const;
-
-
-private:
-
-    bool emprestado;
-    int dataAquisicao;
-    int codigoEspecifico;
-    int dataDevolucao;
-};
-
-#endif  // EXEMPLAR_H
-=======
 #include <ctime>
 
 #include "acervo.h"
@@ -62,4 +32,3 @@ public:
 };
 
 #endif
->>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
