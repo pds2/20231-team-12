@@ -41,5 +41,11 @@ void Exemplar::incrementar_multa()
     if (dia_atual_comparacao.tm_mday - _dia_emprestado.tm_mday >= 5)
     { // COMPARAR O MES TAMBEM
         _multa += 2;
+        bibdados.UpdateMultaExemplarAluno(file, *this);
     }
+}
+
+//Persistence:
+float Exemplar::get_multa(){
+    return _multa;
 }

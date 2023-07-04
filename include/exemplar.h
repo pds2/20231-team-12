@@ -29,6 +29,9 @@ public:
 
     void emprestar_exemplar();
     void incrementar_multa();
+
+    //Persistence:
+    float get_multa();
 };
 
 #endif

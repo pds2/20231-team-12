@@ -32,6 +32,9 @@ class BD{
     /*@brief cria a tabela exemplares. */
     void bd_criar_tabela_exemplares(const char* f);
 
+    /*@brief cria uma tabela com os exemplares emprestados ao aluno com o id correspondente.*/
+    void bd_criar_tabela_exemplaresaluno(const char* f);
+
     //metodos para destruir as tabelas.
 
     /*@brief destroi a tabela acervos. */
@@ -58,6 +61,8 @@ class BD{
     /*@brief Insere exemplares na tabela exemplares sem restricoes.*/
     void bd_inserir_tabela_exemplares(const char* f, Exemplar &item);
 
+    void bd_inserir_alunoexemplar(const char* f, Aluno &aluno, Exemplar &item);
+
     //metodos para acessar/selecionar.
 
     /*@brief Acessa e imprimi todos os dados na tabela acervos.*/
@@ -68,6 +73,8 @@ class BD{
 
     /*@brief Acessa e imprimi todos os dados na tabela exemplares.*/
     void bd_acessar_tabela_exemplares(const char* f);
+
+    void bd_acessar_tabela_exemplaresaluno(const char* f, Aluno &aluno);
 
     // metodos para remover.
 
@@ -82,6 +89,8 @@ class BD{
 
     /* @brief remove um exemplar por seu codigo. */
     void bd_remover_exemplar(const char* f, Exemplar &item);
+
+    void bd_remover_exemplaraluno(const char *f,int exemplarid);
 
     //metodos de checagem.
 
@@ -100,6 +109,8 @@ class BD{
     //metodos update.
     /*@brief Atualiza se o livro esta emprestado(1) ou nãoemprestado/devolvido(0). */
     void updateExemplarEmprestado(const char* f, Exemplar &item, int umouzero);
+    /*@brief Atualiza a multa referente a um exemplar.*/
+    void UpdateMultaExemplarAluno(const char *f, Exemplar &item);
 
 };
 

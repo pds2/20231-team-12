@@ -5,7 +5,6 @@
 
 Aluno::Aluno(unsigned int id, std::string email, int senha, Papel_do_usuario papel):
     Perfil_usuario(id, email, senha, papel) {
-        bibdados.bd_inserir_aluno(file, *this);
 }
 
 Aluno::~Aluno() {
@@ -15,6 +14,7 @@ void Aluno::livros_emprestados() {
     if(exemplares.size()==0) std::cout << "O aluno nao possui nenhum livro." << std::endl;
     else std::cout << "Livro(s) emprestado(s) para o aluno:" << std::endl;
     for(auto l : exemplares) std::cout << l.getTitulo() << ", escrito por " << l.getAutor() << std::endl; // imprimir os dados dos livros
+    bibdados.bd_acessar_tabela_exemplaresaluno(file, *this);
 }
 
 unsigned int Aluno::get_n_exemplares() {
@@ -25,6 +25,8 @@ void Aluno::emprestar_livro(Exemplar livro) {
     if(exemplares.size()>5) throw ja_possui_mutos_livros_e();
     for(auto l : exemplares) if(l.calculaMulta()!=0) throw aluno_com_multa_e();
     exemplares.push_back(livro);
+    bibdados.updateExemplarEmprestado(file, livro, 1);
+    bibdados.bd_inserir_alunoexemplar(file, *this, livro);
 }
 
 void Aluno::devolver_livro(int codigo) {
@@ -32,9 +34,19 @@ void Aluno::devolver_livro(int codigo) {
     for(auto l : exemplares) if(l.getCodigoEspecifico()==codigo) p=false;
     if(p) throw nao_possui_esse_livro_e();
     
+    //Persistence: esse for deve vir antes do for que contem erase.
+    for(Exemplar l : exemplares){
+        if(l.get_codigo_exemplar() == codigo){
+            bibdados.updateExemplarEmprestado(file, l, 0);
+            bibdados.bd_remover_exemplaraluno(file, codigo);
+        }
+    }
+    //
+
     for(auto it = exemplares.begin(); it!=exemplares.end();it++) {
         if(it->getCodigoEspecifico()==codigo) exemplares.erase(it);
     }
+
 }
 
 void Aluno::consultar_acervo() {
@@ -67,6 +79,7 @@ void Aluno::consultar_multa_total() {
     else std::cout << "Não há nenhuma multa no nome do aluno." << std::endl;
 }
 
+//devolucao de todos os exemplares.
 void Aluno::BDauxiliar(string codigosecreto){
     if(codigosecreto=="Persistence20231"){
         for(Exemplar exemplaremprestado : exemplares){
