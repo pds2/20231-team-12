@@ -16,8 +16,8 @@ public:
     int getDataDevolucao() const;
 
     //métodos
-    void mostraMulta(int dataAtual) const;
-    int calculaMulta(int dataAtual) const;
+    //void mostraMulta(int dataAtual) const;
+    int calculaMulta() const;
 
 
 private:
