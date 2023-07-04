@@ -17,7 +17,8 @@ public:
 
     //métodos
     //void mostraMulta(int dataAtual) const;
-    int calculaMulta() const;
+    int calculaMulta();
+    int calculaDataDevolucao(); 
 
 
 private:
@@ -25,6 +26,7 @@ private:
     int dataAquisicao;
     int codigoEspecifico;
     int dataDevolucao;
+    
 };
 
 #endif  // EXEMPLAR_H

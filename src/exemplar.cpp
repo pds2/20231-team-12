@@ -1,4 +1,4 @@
-#include "exemplar.h"
+#include "../include/exemplar.h"
 #include <iostream>
 #include <ctime>
 
@@ -6,14 +6,9 @@ Exemplar::Exemplar(std::string autor, int anoPublicacao, std::string titulo, std
                    bool emprestado, int dataAquisicao, int codigoEspecifico, int dataDevolucao)
     : Acervo(autor, anoPublicacao, titulo, genero, codigo), emprestado(emprestado), dataAquisicao(dataAquisicao),
       codigoEspecifico(codigoEspecifico), dataDevolucao(dataDevolucao) {
+        
 }
 
-bool Exemplar::isEmprestado() const {
-    return emprestado;
-    if (emprestado == true){
-        getDataDevolucao();
-    }
-}
 
 int Exemplar::getDataAquisicao() const {
     return dataAquisicao;
@@ -26,11 +21,30 @@ int Exemplar::getCodigoEspecifico() const {
 int Exemplar::getDataDevolucao() const{
     return dataDevolucao;
 }
+int Exemplar::calculaDataDevolucao() {
+    std::tm aquisicao_time = { 0 };
+    aquisicao_time.tm_mday = dataAquisicao % 100;
+    aquisicao_time.tm_mon = (dataAquisicao / 100) % 100 - 1;
+    aquisicao_time.tm_year = dataAquisicao / 10000 - 1900;
 
-int Exemplar::calculaMulta() const {
+    std::time_t aquisicao_timestamp = std::mktime(&aquisicao_time);
+
+    // Adiciona um mês à data de aquisição
+    std::tm devolucao_time = *std::localtime(&aquisicao_timestamp);
+    devolucao_time.tm_mon += 1;
+
+    std::time_t devolucao_timestamp = std::mktime(&devolucao_time);
+
+    std::tm* devolucao_date = std::localtime(&devolucao_timestamp);
+
+    dataDevolucao = (devolucao_date->tm_year + 1900) * 10000 + (devolucao_date->tm_mon + 1) * 100 + devolucao_date->tm_mday;
+
+    return dataDevolucao;
+}
+int Exemplar::calculaMulta() {
 
     //pega a data de devolucao que devera estar em formato 18/06/2023 -> 18062023
-    int dataDevolucao = getDataDevolucao();
+    dataDevolucao = calculaDataDevolucao();
 
     int diaDevolucao, mesDevolucao, anoDevolucao;
     int diasAtraso = 0; 
@@ -70,6 +84,7 @@ if (anoAtual > anoDevolucao || (anoAtual == anoDevolucao && mesAtual > mesDevolu
         atual_time.tm_mon = mesAtual - 1;
         atual_time.tm_year = anoAtual - 1900;
 
+
         /*Da mesma forma que fizemos para a data de devolução, estamos convertendo a estrutura atual_time, que 
         contém a data atual, em um valor de tempo std::time_t.*/
         std::time_t atual_timestamp = std::mktime(&atual_time);
@@ -88,7 +103,7 @@ if (anoAtual > anoDevolucao || (anoAtual == anoDevolucao && mesAtual > mesDevolu
     }
    
     if (diasAtraso > 0) {
-        multa = diasAtraso;
+        multa = diasAtraso * 1;
         std::cout << "Multa de: R$ " << multa << std::endl;
     } else {
          std::cout << "Nenhuma multa!" << std::endl;;
