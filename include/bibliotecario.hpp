@@ -25,9 +25,14 @@ public:
 
     void remover_exemplar(Exemplar); // remove do um dos exemplares de um acervo
 
+<<<<<<< HEAD
     void consulta_geral_acervos(Exemplar); // nao precisa ser um vector, mas vai ser uma lista de todos os livros
     // usar esse metodo pra deletar em massa? pessoa digita 1, 3, 4 etc e deleta ali os da lista
     // integrar com o bd
+=======
+    // std::vector consulta_geral_acervos(); // nao precisa ser um vector, mas vai ser uma lista de todos os livros
+    // usar esse metodo pra deletar em massa? pessoa digita 1, 3, 4 etc e deleta ali os da lista
+>>>>>>> e72aed66b4c53ba20f50d0834f4e0b2ac7a28286
 
     void emprestimo_de_exemplar(Exemplar); // empresta um exemplar especifico a um aluno
 

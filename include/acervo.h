@@ -4,8 +4,11 @@
 #include "bancodedados.h"
 #include <string>
 
+<<<<<<< HEAD
 // criar os codigos especificos de cada genero em um arquivo separado
 
+=======
+>>>>>>> e72aed66b4c53ba20f50d0834f4e0b2ac7a28286
 enum CODIGOS_GENEROS_ACERVO
 {
     MATEMATICA,
@@ -32,6 +35,7 @@ public:
     ~Acervo();
 
     // getters
+<<<<<<< HEAD
     std::string get_autor();
     int get_ano_publicacao();
     std::string get_titulo();
@@ -41,6 +45,13 @@ public:
 protected:
     const char* file = "biblioteca.db";
     BD bibdados;
+=======
+    std::string get_autor() const;
+    int get_ano_publicacao() const;
+    std::string get_titulo() const;
+    CODIGOS_GENEROS_ACERVO get_genero() const;
+    int get_codigo() const;
+>>>>>>> e72aed66b4c53ba20f50d0834f4e0b2ac7a28286
 };
 
 #endif // ACERVO_H
