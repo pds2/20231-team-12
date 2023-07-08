@@ -19,10 +19,10 @@ tm Exemplar::get_dia_emprestado()
     return _dia_emprestado;
 }
 
-CODIGOS_SUBGENEROS_EXEMPLARES Exemplar::get_codigo_exemplar()
-{
-    return _codigo_exemplar;
-}
+// CODIGOS_SUBGENEROS_EXEMPLARES Exemplar::get_codigo_exemplar()
+// {
+//     return _codigo_exemplar;
+// }
 
 void Exemplar::emprestar_exemplar()
 {
