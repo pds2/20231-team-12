@@ -3,34 +3,37 @@
 
 #include <string>
 
-using namespace std;
-class Acervo {
-public:
-    //Construtor
-    Acervo(string autor, int anoPublicacao, string titulo, string genero, int codigo);
-    virtual ~Acervo();
-
-    //getters
-    string getAutor() const;
-    int getAnoPublicacao() const;
-    string getTitulo() const;
-    string getGenero() const;
-    int getCodigo() const;
-
-    //setters
-    /*string setAutor() const;
-    int setAnoPublicacao() const;
-    string setTitulo() const;
-    string setGenero() const;
-    int setCodigo() const;*/
-
-
-private:
-    string autor;
-    int anoPublicacao;
-    string titulo;
-    string genero;
-    int codigo;
+enum CODIGOS_GENEROS_ACERVO
+{
+    MATEMATICA,
+    FISICA,
+    ARTE,
+    PROGRAMACAO,
+    CULINARIA,
+    HISTORIA
 };
 
-#endif  // ACERVO_H
+// ACERVO NAO É virtual (pura), da pra criar um acervo sem ter nenhum exemplar (meio estranho mas ta certo)
+class Acervo
+{
+private:
+    std::string _autor;
+    int _ano_publicacao;
+    std::string _titulo;
+    CODIGOS_GENEROS_ACERVO _genero;
+    int _codigo;
+
+public:
+    // Construtor
+    Acervo(std::string autor, int ano_publicacao, std::string titulo, CODIGOS_GENEROS_ACERVO genero, int codigo);
+    ~Acervo();
+
+    // getters
+    std::string get_autor() const;
+    int get_ano_publicacao() const;
+    std::string get_titulo() const;
+    CODIGOS_GENEROS_ACERVO get_genero() const;
+    int get_codigo() const;
+};
+
+#endif // ACERVO_H
