@@ -3,8 +3,8 @@
 
 #include "acervo.h"
 
-
-class Exemplar : public Acervo {
+class Exemplar : public Acervo
+{
 public:
     Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,
              bool emprestado, int dataAquisicao, int codigoEspecifico, int dataDevolucao);
@@ -15,18 +15,16 @@ public:
     int getCodigoEspecifico() const;
     int getDataDevolucao() const;
 
-    //métodos
-    //void mostraMulta(int dataAtual) const;
+    // métodos
+    // void mostraMulta(int dataAtual) const;
     int calculaMulta();
-    int calculaDataDevolucao(); 
-
+    int calculaDataDevolucao();
 
 private:
     bool emprestado;
     int dataAquisicao;
     int codigoEspecifico;
     int dataDevolucao;
-    
 };
 
-#endif  // EXEMPLAR_H
+#endif // EXEMPLAR_H
