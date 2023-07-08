@@ -2,6 +2,7 @@
 #define ADMIN_H
 
 #include <string>
+#include <list>
 
 #include "aluno.h"
 #include "bibliotecario.hpp"
@@ -33,6 +34,8 @@ class Admin : public Perfil_usuario {
         //persistence
         /*@brief Imprimir todos os Usuarios.*/
         void consultar_Usuarios();
+
+        void adicionar_usuario(Perfil_usuario* user);
 
         ~Admin();
 };

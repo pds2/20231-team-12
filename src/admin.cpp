@@ -107,3 +107,25 @@ void Admin::consultar_Usuarios(){
 }
 
 Admin::~Admin() {}
+
+// void Admin::adicionar_usuario(Perfil_usuario* user){
+//     list<Perfil_usuario*> usuarios;
+
+//     /*checa se existe um usuario no bd com o mesmo id do passado como parâmetro.*/
+//     bool check = bibdados.checkUsuario(file, user);
+//     if(check==(1||true)){
+//         // lançar a excessão pois já existe um usuario com o mesmo id.
+//     }
+//     if(check==(0||false)){
+//         usuarios.push_back(user);
+
+//         //na persistencia eu acrescento um metodo para inserir o usuario no bd.
+//         if(user->get_papel_usuario()==BIBLIOTECARIO){
+//             bibdados.bd_inserir_bibliotecario(file, user);
+//         }
+//         else{
+//             bibdados.bd_inserir_aluno(file, user);
+//         }
+//         //
+//     }
+// }

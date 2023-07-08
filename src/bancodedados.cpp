@@ -6,14 +6,34 @@
 
 using namespace std;
 
-// a mesma logica para todos os metodos bd_criar_tabela_.
-void BD::bd_criar_tabela_acervos(const char* f){
+void BD::executar_sql(const char* f, string comandosql, string avisoerro){
     
     //criando uma conexao com o banco de dados.
     sqlite3* bibdb;
     
     //abrindo o banco de dados.
     sqlite3_open(f, &bibdb);
+
+    //comando para criar uma tabela, sintaxe sql.
+    string sql_comando = comandosql;
+    string alerta_erro = avisoerro;
+
+    //para armazenar mensagens de erro e retorno da funcao, repsectivamente.
+    char* msgerr;
+    int resp = 0;
+
+    //funcao que cria a tabela.
+    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
+    if(resp!=SQLITE_OK){
+        cerr << alerta_erro << msgerr << endl;
+    }
+    
+    //liberando memoria.
+    sqlite3_free(msgerr);    
+    sqlite3_close(bibdb);  
+}
+
+void BD::bd_criar_tabela_acervos(const char* f){
 
     //comando para criar uma tabela, sintaxe sql.
     string sql_comando = "CREATE TABLE IF NOT EXISTS Acervos("
@@ -23,26 +43,13 @@ void BD::bd_criar_tabela_acervos(const char* f){
     "genero TEXT NOT NULL,"
     "codigo INTEGER NOT NULL)";
 
-    //para armazenar mensagens de erro e retorno da funcao, repsectivamente.
-    char* msgerr;
-    int rsp = 0;
+    string aviso_erro = "ERRO AO CRIAR A TABELA ACERVOS: ";
 
-    //funcao que cria a tabela.
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(rsp!=SQLITE_OK){
-        cerr << "ERRO AO CRIAR A TABELA ACERVOS: " << msgerr << endl;
-    }
-    
-    //liberando memoria.
-    sqlite3_free(msgerr);    
-    sqlite3_close(bibdb);  
+    executar_sql(f, sql_comando, aviso_erro);    
+
 }
 
-// a mesma logica para todos os metodos bd_criar_tabela_.
 void BD::bd_criar_tabela_usuarios(const char* f){
-    
-    sqlite3* bibdb; 
-    sqlite3_open(f, &bibdb);
 
     string sql_comando = "CREATE TABLE IF NOT EXISTS Usuarios("
     "ID INT NOT NULL,"
@@ -50,23 +57,12 @@ void BD::bd_criar_tabela_usuarios(const char* f){
     "senha INTEGER NOT NULL,"
     "papel TEXT)";
 
-    char* msgerr;
-    int rsp = 0;
+    string alerta_erro = "ERRO AO CRIAR A TABELA USUARIOS: ";
 
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(rsp!=SQLITE_OK){
-        cerr << "ERRO AO CRIAR A TABELA USUARIOS: " << msgerr << endl;
-    }
-    
-    sqlite3_free(msgerr);    
-    sqlite3_close(bibdb);  
+    executar_sql(f, sql_comando, alerta_erro);
 }
 
-// a mesma logica para todos os metodos bd_criar_tabela_.
 void BD::bd_criar_tabela_exemplares(const char* f){
-    
-    sqlite3* bibdb; 
-    sqlite3_open(f, &bibdb);
 
     string sql_comando = "CREATE TABLE IF NOT EXISTS Exemplares("
     "autor TEXT NOT NULL,"
@@ -77,231 +73,149 @@ void BD::bd_criar_tabela_exemplares(const char* f){
     "codigoexemplar TEXT NOT NULL,"
     "emprestado TEXT NOT NULL)";
 
-    char* msgerr;
-    int rsp = 0;
+    string alerta_erro =  "ERRO AO CRIAR A TABELA ACERVOS: ";
 
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(rsp!=SQLITE_OK){
-        cerr << "ERRO AO CRIAR A TABELA ACERVOS: " << msgerr << endl;
-    }
-    
-    sqlite3_free(msgerr);    
-    sqlite3_close(bibdb);  
+    executar_sql(f, sql_comando, alerta_erro);
 }
 
 void BD::bd_criar_tabela_exemplaresaluno(const char* f){
-    
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
 
     string sql_comando = "CREATE TABLE IF NOT EXISTS AlunoExemplares("
     "alunoid INT NOT NULL,"
-    "codigoexemplar INT NOT NULL,"
+    "codigoexemplar TEXT NOT NULL,"
     "multa INT NOT NULL)";
 
-    char* msgerr;
-    int rsp = 0;
+    string alerta_erro = "ERRO AO CRIAR A TABELA ALUNOEXEMPLARES: ";
 
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(rsp!=SQLITE_OK){
-        cerr << "ERRO AO CRIAR A TABELA ALUNOEXEMPLARES: " << msgerr << endl;
-    }
-    
-    sqlite3_free(msgerr);    
-    sqlite3_close(bibdb); 
-
+    executar_sql(f, sql_comando, alerta_erro);
 }
 
-//a mesma logica para todos os metodos bd_inserir_tabela_.
-void BD::bd_inserir_tabela_acervos(const char* f, Acervo &livro){
+void BD::bd_inserir_tabela_acervos(const char* f, Acervo* livro){
+
     bool check = checkAcervo(f, livro);
     //se nao ha nenhum livro com o mesmo codigo, a execucao continua.
     if(check == (0||false)){
-        //criando conexao e abrindo o banco de dados.
-        sqlite3* bibdb;
-        sqlite3_open(f, &bibdb);
-
         //armazenando os atributos do acervo em variaveis para subtituir no comando sql.
         string autor, title, genero;
-        autor = livro.get_autor();
-        title = livro.get_titulo();
-        genero = livro.get_genero();
+        autor = livro->get_autor();
+        title = livro->get_titulo();
+        genero = livro->get_genero();
         int anopub;
         int codigo;
-        anopub = livro.get_ano_publicacao();
-        codigo = livro.get_codigo();
+        anopub = livro->get_ano_publicacao();
+        codigo = livro->get_codigo();
 
         string sql_comando = "INSERT INTO Acervos VALUES('"+autor+"',"+to_string(anopub)+",'"+title+"','"+genero+"',"+to_string(codigo)+");";
 
-        char* msgerr;
-        int rsp = 0;
+        string alerta_erro = "ERRO AO INSERIR EM ACERVOS: ";
 
-        rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-        if (rsp!=SQLITE_OK){
-            cerr << "ERRO AO INSERIR EM ACERVOS: " << msgerr << endl;
-        }
-
-        sqlite3_free(msgerr);
-        sqlite3_close(bibdb);
+        executar_sql(f, sql_comando, alerta_erro);
     }
 }
 
-void BD::bd_inserir_tabela_usuarios(const char*f, Perfil_usuario &user){
+void BD::bd_inserir_tabela_usuarios(const char* f, Perfil_usuario* user){
+
     bool check = checkUsuario(f, user);
     //se nao existe um usuario com o mesmo id segue a execucao.
     if(check==(0||false)){
         sqlite3* bibdb;
         sqlite3_open(f, &bibdb);
 
-        string email = user.get_email_perfil_usuario();
-        int id = user.get_ID_perfil_usuario();
-        int senha = user.get_senha_perfil_usuario();
+        string email = user->get_email_perfil_usuario();
+        int id = user->get_ID_perfil_usuario();
+        int senha = user->get_senha_perfil_usuario();
         string papel = "indefinido";
 
         string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+",'"+papel+"');";
 
-        char* msgerr;
-        int rsp = 0;
+        string alerta_erro = "ERRO AO INSERIR EM USUARIOS: ";
 
-        rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-        if (rsp!=SQLITE_OK){
-            cerr << "ERRO AO INSERIR EM USUARIOS: " << msgerr << endl;
-        }
+        executar_sql(f, sql_comando, alerta_erro);
 
-        sqlite3_free(msgerr);
-        sqlite3_close(bibdb);
     }
 }
-//dando um update de papel indefinido para admin.
-void BD::bd_inserir_admin(const char* f, Admin &adm){
 
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
+void BD::bd_inserir_admin(const char* f, Admin* adm){
 
     bd_inserir_tabela_usuarios(f, adm);
 
-    int admid = adm.get_ID_perfil_usuario();
+    int admid = adm->get_ID_perfil_usuario();
     string papel = "ADMIN";
 
     string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(admid)+"; ";
-    char* msgerr;
-    int resp = 0;
 
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO AO INSERIR Admin EM Usuarios: " << msgerr << endl;
-    }
+    string alerta_erro = "ERRO AO INSERIR Admin EM Usuarios: ";
     
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+    executar_sql(f, sql_comando, alerta_erro);
 }
-//dando um update de papel indefinido para aluno.
-void BD::bd_inserir_aluno(const char* f, Aluno &aluno){
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
+
+void BD::bd_inserir_aluno(const char* f, Aluno* aluno){
 
     bd_inserir_tabela_usuarios(f, aluno);
 
-    int alunoid = aluno.get_ID_perfil_usuario();
+    int alunoid = aluno->get_ID_perfil_usuario();
     string papel = "ALUNO";
 
     string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(alunoid)+"; ";
-    char* msgerr;
-    int resp = 0;
 
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO AO INSERIR aluno EM Usuarios: " << msgerr << endl;
-    }
+    string alerta_erro = "ERRO AO INSERIR aluno EM Usuarios: ";
 
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+    executar_sql(f, sql_comando, alerta_erro);
 
 }
-//dando um update de papel indefinido para bibliotecario.
-void BD::bd_inserir_bibliotecario(const char* f, Bibliotecario &bibliotecario){
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
+
+void BD::bd_inserir_bibliotecario(const char* f, Bibliotecario* bibliotecario){
 
     bd_inserir_tabela_usuarios(f, bibliotecario);
-    int bibliotecarioid = bibliotecario.get_ID_perfil_usuario();
+
+    int bibliotecarioid = bibliotecario->get_ID_perfil_usuario();
     string papel = "BIBLIOTECARIO";
 
     string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(bibliotecarioid)+";";
-    char* msgerr;
-    int resp = 0;
 
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO AO INSERIR bibliotecario EM Usuarios: " << msgerr << endl;
-    }
+    string alerta_erro = "ERRO AO INSERIR bibliotecario EM Usuarios: ";
 
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+    executar_sql(f, sql_comando, alerta_erro);
 }
 
-/// @brief 
-/// @param f 
-/// @param item 
-void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar &item){
+void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar* item){
 
-//     sqlite3* bibdb;
-//     sqlite3_open(f, &bibdb);
+    string autor, titulo, genero, codigo_exemplar;
+    autor = item->get_autor(); 
+    int anopub = item->get_ano_publicacao(); 
+    titulo = item->get_titulo(); 
+    genero = item->get_genero();
+    int codigo = item->get_codigo();
+    codigo_exemplar = item->get_codigo_exemplar();
 
-//     string autor = item.get_autor(); 
-//     int anopub = item.get_ano_publicacao(); 
-//     string titulo = item.get_titulo(); 
-//     // string genero = item.get_genero();
-//     int codigo = item.get_codigo();
-//     int emprestado = item.get_emprestado(); 
-    // int dataaquisicao = item.get_dia_emprestado();
-//     int codigoespecifico = item.get_codigo_exemplar();
+    string sql_comando = "INSERT INTO Exemplares VALUES('"+autor+"',"+to_string(anopub)+",'"+titulo+"','"+genero+"',"+
+    to_string(codigo)+","+codigo_exemplar+");";
 
-//     string sql_comando = "INSERT INTO Exemplares VALUES('"+autor+"',"+to_string(anopub)+",'"+titulo+"','"+genero+"',"+
-//     to_string(codigo)+","+to_string(emprestado)+","+to_string(dataaquisicao)+","+to_string(codigoespecifico)+","+
-//     to_string(datadevolucao)+");";
+    string alerta_erro = "ERRO AO INSERIR EM EXEMPLARES: ";
 
-//     char* msgerr;
-//     int rsp = 0;
-
-//     rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-//     if (rsp != SQLITE_OK){
-//         cerr << "ERRO AO INSERIR EM EXEMPLARES: " << msgerr << endl;
-//     }
-
-//     sqlite3_free(msgerr);
-//     sqlite3_close(bibdb);
+    executar_sql(f, sql_comando, alerta_erro);
 }
 
-void BD::bd_inserir_alunoexemplar(const char* f, Aluno &aluno, Exemplar &item){
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
+void BD::bd_inserir_alunoexemplar(const char* f, Aluno* aluno, Exemplar* item){
 
-    int alunoid = aluno.get_ID_perfil_usuario();
-    int codigoexemplar = item.get_codigo_exemplar();
-    int multa = item.get_multa();
+    int alunoid = aluno->get_ID_perfil_usuario();
+    CODIGOS_SUBGENEROS_EXEMPLARES codigoexemplar = item->get_codigo_exemplar();
+    int multa = item->get_multa();
 
     string sql_comando = "INSERT INTO AlunoExemplares VALUES("+to_string(alunoid)+","+to_string(codigoexemplar)+","+
     to_string(multa)+"); ";
 
-    char* msgerr;
-    int rsp = 0;
+    string alerta_erro = "ERRO AO INSERIR EM ALUNOEXEMPLARES: ";
 
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if (rsp!=SQLITE_OK){
-        cerr << "ERRO AO INSERIR EM ALUNOEXEMPLARES: " << msgerr << endl;
-    }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+    executar_sql(f, sql_comando, alerta_erro);
 }
-
-/// @brief 
-/// @param f 
+ 
 void BD::bd_acessar_tebela_acervos(const char* f){
+
     bool check = checkTabelaExiste(f, "Acervos");
     //se a tabela existe, continua a execucao.
     if(check==(1||true)){
+
         sqlite3* bibdb;
         sqlite3_open(f, &bibdb);
         sqlite3_stmt* stmt;
@@ -344,8 +258,11 @@ void BD::bd_acessar_tebela_acervos(const char* f){
 }
 
 void BD::bd_acessar_tabela_usuarios(const char* f){
+
     bool check = checkTabelaExiste(f, "Usuarios");
+
     if(check==(1||true)){
+
         sqlite3* bibdb;
         sqlite3_open(f, &bibdb);
         sqlite3_stmt* stmt;
@@ -387,8 +304,11 @@ void BD::bd_acessar_tabela_usuarios(const char* f){
 }
 
 void BD::bd_acessar_tabela_exemplares(const char* f){
+
     bool check = checkTabelaExiste(f,"Exemplares");
+
     if(check==(1||true)){
+
         sqlite3* bibdb;
         sqlite3_open(f, & bibdb);
         sqlite3_stmt* stmt;
@@ -400,7 +320,9 @@ void BD::bd_acessar_tabela_exemplares(const char* f){
         const unsigned char* autor;
         const unsigned char* titulo;
         const unsigned char* genero;
-        int emprestado, anopub, dataaquisicao, datadevolucao, codigo, codigospecifico;
+        const unsigned char* codigo_exemplar;
+        const unsigned char* emprestado;
+        int anopub, codigo;
         int numexemplares = 0;
 
         while(sqlite3_step(stmt)!=SQLITE_DONE){
@@ -410,10 +332,8 @@ void BD::bd_acessar_tabela_exemplares(const char* f){
             titulo = sqlite3_column_text(stmt, 2);
             genero = sqlite3_column_text(stmt, 3);
             codigo = sqlite3_column_int(stmt, 4);
-            emprestado = sqlite3_column_int(stmt, 5);
-            dataaquisicao = sqlite3_column_int(stmt, 6);
-            codigospecifico = sqlite3_column_int(stmt, 7);
-            datadevolucao = sqlite3_column_int(stmt,8);
+            codigo_exemplar = sqlite3_column_text(stmt, 5);
+            emprestado = sqlite3_column_text(stmt, 6);
             numexemplares++;
 
             cout << "Exemplar "+to_string(numexemplares)+": " << endl;
@@ -422,9 +342,8 @@ void BD::bd_acessar_tabela_exemplares(const char* f){
             cout << "titulo: " << titulo << endl;
             cout << "genero: " << genero << endl;
             cout << "codigo: " << codigo << endl;
-            cout << "data de aquisicao: " << dataaquisicao << endl; 
+            cout << "codigo do exemplar: " << codigo_exemplar << endl; 
             cout << "emprestado: " << emprestado << endl;
-            cout << "data de devolucao: " << datadevolucao << endl;
             cout << "\n";
         }
 
@@ -435,28 +354,30 @@ void BD::bd_acessar_tabela_exemplares(const char* f){
         cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Exemplares" << endl;
     }
 }
-///
-///
-/// 
 
-void BD::bd_acessar_tabela_exemplaresaluno(const char* f, Aluno &aluno){
+void BD::bd_acessar_tabela_exemplaresaluno(const char* f, Aluno* aluno){
+
     bool check = checkTabelaExiste(f,"AlunoExemplares");
+    
     if(check==(1||true)){
+
         sqlite3* bibdb;
         sqlite3_open(f, & bibdb);
         sqlite3_stmt* stmt;
 
-        int id = aluno.get_ID_perfil_usuario();
+        int id = aluno->get_ID_perfil_usuario();
+
         string sql_consulta = "SELECT * FROM AlunoExemplares where alunoid="+to_string(id)+";";
 
         sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
 
-        int alunoidbd, codigoexemplar, multaexemplar;
+        const unsigned char* codigoexemplar;
+        int alunoidbd, multaexemplar;
         int numexemplares = 0;
 
         while(sqlite3_step(stmt)!=SQLITE_DONE){
             alunoidbd = sqlite3_column_int(stmt, 0);
-            codigoexemplar = sqlite3_column_int(stmt, 1);
+            codigoexemplar = sqlite3_column_text(stmt, 1);
             multaexemplar = sqlite3_column_int(stmt,2);
             numexemplares++;
 
@@ -475,154 +396,113 @@ void BD::bd_acessar_tabela_exemplaresaluno(const char* f, Aluno &aluno){
     }
 }
 
-//metodos para destruir tabelas
-//todos funcionam.
 void BD::bd_destruir_tabela_acervos(const char* f){
-    sqlite3* bibdb;
-    sqlite3_open(f,&bibdb);
 
     string sql_comando = "Drop Table Acervos;";
-    char* msgerr;
-    
-    int rsp = 0;
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(rsp!=SQLITE_OK){
-        cerr << "ERRO AO DESTRUIR TABELA ACERVOS: " << msgerr << endl;
-    }
+    string alerta_erro = "ERRO AO DESTRUIR TABELA ACERVOS: ";
+    executar_sql(f, sql_comando, alerta_erro);
 
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
 }
 
 void BD::bd_destruir_tabela_usuarios(const char* f){
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
 
     string sql_comando = "Drop Table Usuarios;";
-    char* msgerr;
-    int resp = 0;
+    string alerta_erro = "ERRO AO DESTRUIR TABELA USUARIOS: ";
+    executar_sql(f, sql_comando, alerta_erro);
 
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO AO DESTRUIR TABELA USUARIOS: " << msgerr << endl;
-    }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
 }
 
 void BD::bd_destruir_tabela_exemplares(const char* f){
-    
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
 
     string sql_comando = "Drop Table Exemplares; ";
-    char* msgerr;
-    int resp = 0;
+    string alerta_erro = "ERRO AO DESTRUIR TABELA EXEMPLARES: ";
+    executar_sql(f, sql_comando, alerta_erro);
 
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO AO DESTRUIR TABELA EXEMPLARES: " << endl;
-    }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
 }
 
-//metodos para remover
-//ok
-void BD::bd_remover_acervo(const char* f, Acervo &livro){
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
-    sqlite3_stmt* stmt;
+void BD::bd_remover_acervo(const char* f, Acervo *livro){
 
-    int codigoacervo = livro.get_codigo();
+    bool check = checkAcervo(f, livro);
+    if(check==(1||true)){
 
-    string sql_comando = "Delete from Acervos where codigo="+to_string(codigoacervo)+"; ";
-    char* msgerr;
-    int rsp = 0;
-    rsp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(rsp!=SQLITE_OK){
-        cerr << "ERRO AO REMOVER ACERVO: " << msgerr << endl; 
+        int codigoacervo = livro->get_codigo();
+
+        string sql_comando = "Delete from Acervos where codigo="+to_string(codigoacervo)+"; ";
+        string alerta_erro = "ERRO AO REMOVER ACERVO: "; 
+        executar_sql(f, sql_comando, alerta_erro);
+
+        //se um acervo eh removido seus exemplares tambem sao. 
+        bd_remover_exemplaresdoacervo(f, livro);
     }
-
-    //se um acervo eh removido seus exemplares tambem sao.
-    Exemplar livroaux("",0,"","",codigoacervo,0,0,0,0);
-    bd_remover_exemplar(f, livroaux);
-
-    sqlite3_finalize(stmt);
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+    else{
+        cerr << "ERRO AO REMOVER ACERVO INEXISTENTE: "<< livro->get_codigo() << endl;
+    }
 }
-//ok
-void BD::bd_remover_usuario(const char* f, Perfil_usuario &user){
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
 
-    int iduser = user.get_ID_perfil_usuario();
+void BD::bd_remover_usuario(const char* f, Perfil_usuario *user){
+
+    int iduser = user->get_ID_perfil_usuario();
     string sql_comando = "Delete from Usuarios where ID="+to_string(iduser)+"; ";
-    char* msgerr;
-    int resp = 0;
+    string alerta_erro = "ERRO AO REMOVER USUARIO: "+to_string(iduser)+" ";
 
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO AO REMOVER USUARIO: " << msgerr << endl;
-    }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+    executar_sql(f, sql_comando, alerta_erro);
 }
 
-//acessando um metodo auxiliar para remover exemplares ao remover aluno.
-void BD::bd_remover_aluno_e_devolver_exemplares(const char* f, Aluno &user){
-    user.BDauxiliar("Persistence20231");
+void BD::bd_remover_aluno_e_devolver_exemplares(const char* f, Aluno *user){
+
+    user->BDauxiliar("Persistence20231");
     bd_remover_usuario(f, user);
 }
-//conferido.
-void BD::bd_remover_exemplar(const char* f, Exemplar &item){
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
 
-    int codigoexemplar = item.get_codigo();
-    string sql_comando = "Delete from Exemplares where codigo="+to_string(codigoexemplar)+"; ";
-    char* msgerr;
-    int resp = 0;
+void BD::bd_remover_exemplarespecifico(const char* f, Exemplar* item){
 
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL,&msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO AO REMOVER EXEMPLAR: " << msgerr << endl;
+    bool check = checkExemplar(f, item);
+    if(check==(1||true)){
+
+        CODIGOS_SUBGENEROS_EXEMPLARES idexemplar = item->get_codigo_exemplar();
+        int idacervo = item->get_codigo();
+
+        string sql_comando = "Delete from Exemplares where codigoexemplar="+to_string(idexemplar)+"; ";
+        string alerta_erro = "ERRO AO REMOVER EXEMPLAR ESPECIFICO: "+to_string(idexemplar)+
+        "ACERVO CORRESPONDENTE: "+to_string(idacervo);
+
+        executar_sql(f, sql_comando, alerta_erro);
     }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
 }
 
-void BD::bd_remover_exemplaraluno(const char *f,int exemplarid){
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
+void BD::bd_remover_exemplaresdoacervo(const char* f, Acervo* livro){
 
-    int codigoexemplar = exemplarid;
+    bool check = checkAcervo(f, livro);
+
+    if(check==(1||true)){
+
+        int codigodolivro = livro->get_codigo();
+        string sql_comando = "Delete from Exemplares where codigo="+to_string(codigodolivro)+"; ";
+        string alerta_erro = "ERRO AO REMOVER OS EXEMPLARES DO ACERVO "+to_string(codigodolivro)+": ";
+        executar_sql(f, sql_comando, alerta_erro);      
+    }
+    else{
+        cerr << "ERRO AO REMOVER EXEMPLARES DE UM ACERVO INEXISTENTE: " << livro->get_codigo() << endl;
+    }
+
+}
+
+void BD::bd_remover_exemplaraluno(const char *f, CODIGOS_SUBGENEROS_EXEMPLARES exemplarid){
+
+    CODIGOS_SUBGENEROS_EXEMPLARES codigoexemplar = exemplarid;
     string sql_comando = "Delete from AlunoExemplares where codigoexemplar="+to_string(codigoexemplar)+"; ";
-    char* msgerr;
-    int resp = 0;
-
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL,&msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO AO REMOVER EXEMPLAR: " << msgerr << endl;
-    }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+    string alerta_erro = "ERRO AO REMOVER EXEMPLAR: "+to_string(codigoexemplar);
+    
+    executar_sql(f, sql_comando, alerta_erro);
 }
 
-//metodos de checagem.
-//funcionando.
-bool BD::checkAcervo(const char* f, Acervo &livro){
+bool BD::checkAcervo(const char* f, Acervo* livro){
+
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
     sqlite3_stmt* stmt;
 
-    int codigodoacervo = livro.get_codigo();
+    int codigodoacervo = livro->get_codigo();
 
     // string sql_consulta = "SELECT FROM Acervos where codigo="+to_string(codigodoacervo)+" and titulo="+
     // tituloacervo+"; ";
@@ -651,13 +531,14 @@ bool BD::checkAcervo(const char* f, Acervo &livro){
     return false;
     
 }
-//funcionando.
-bool BD::checkUsuario(const char* f, Perfil_usuario &user){
+
+bool BD::checkUsuario(const char* f, Perfil_usuario* user){
+
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
     sqlite3_stmt* stmt;
 
-    int iduser = user.get_ID_perfil_usuario();
+    int iduser = user->get_ID_perfil_usuario();
 
     string sql_consulta = "SELECT * FROM Usuarios; ";
 
@@ -682,14 +563,55 @@ bool BD::checkUsuario(const char* f, Perfil_usuario &user){
 
     return false;
 }
-//corrigido.
-int BD::checkNumExemplares(const char* f, Acervo &livro){
+
+bool BD::checkExemplar(const char* f, Exemplar* item){
+
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+    sqlite3_stmt* stmt;
+
+    int codigo_exemplar_int;
+    codigo_exemplar_int = item->get_codigo_exemplar();
+    int codigodoacervo;
+    codigodoacervo = item->get_codigo();
+
+    string sql_consulta = "SELECT * FROM Exemplares; ";
+
+    sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
+
+    int codigoexemplarbd;
+    int codigodoacervobd;
+
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+
+        codigodoacervobd = sqlite3_column_int(stmt, 4);
+        codigoexemplarbd = sqlite3_column_int(stmt,5);
+
+        if(codigodoacervobd == codigodoacervo){
+            if(codigo_exemplar_int == codigoexemplarbd){
+                cout << "ERRO: Ja existe um Exemplar com esse codigo especifico: "+to_string(codigoexemplarbd)+
+                ", Codigo do Acervo corresp.: " << codigodoacervobd << "." << endl;
+                sqlite3_finalize(stmt);
+                sqlite3_close(bibdb);
+                return true;
+            }
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(bibdb);
+
+    return false;
+
+}
+
+int BD::checkNumExemplares(const char* f, Acervo* livro){
     
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
     sqlite3_stmt* stmt;
 
-    int codigodoacervo = livro.get_codigo();
+    int codigodoacervo = livro->get_codigo();
     string sql_consulta = "SELECT * FROM Exemplares; ";
     int numexemplares = 0;
 
@@ -715,14 +637,16 @@ int BD::checkNumExemplares(const char* f, Acervo &livro){
     return numexemplares;
 
 }
-//funciona.
+
 bool BD::checkTabelaExiste(const char*f, string nome_tabela){
+
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
     sqlite3_stmt* stmt;
 
     string sql_consulta = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='"+nome_tabela+"'; ";
     sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
+    
     while(sqlite3_step(stmt)!=SQLITE_DONE){
         int algumdadoint = sqlite3_column_int(stmt, 0);
         const unsigned char* algumdadotext = sqlite3_column_text(stmt, 0);
@@ -740,47 +664,29 @@ bool BD::checkTabelaExiste(const char*f, string nome_tabela){
     return true;
 }
 
-//metodos update
-//set emprestado = 1, devolvido = 0. 
-void BD::updateExemplarEmprestado(const char* f, Exemplar &item, int umouzero){
+void BD::updateExemplarEmprestado(const char* f, Exemplar* item, int umouzero){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
 
-    int codigoespecifico = item.get_codigo_exemplar();
+    CODIGOS_SUBGENEROS_EXEMPLARES codigoespecifico = item->get_codigo_exemplar();
 
-    string sql_comando = "UPDATE Exemplares set emprestado="+to_string(umouzero)+" where ID="+to_string(codigoespecifico)+";";
-    char* msgerr;
-    int resp = 0;
+    string sql_comando = "UPDATE Exemplares set emprestado="+to_string(umouzero)+" where codigoexemplar="+to_string(codigoespecifico)+";";
+    string alerta_erro = "ERRO AO ATUALIZAR Emprestado em Exemplares: "+to_string(codigoespecifico);
 
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO ATUALIZAR Emprestado em Exemplares: " << msgerr << endl;
-    }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+    executar_sql(f, sql_comando, alerta_erro);
 
 }
-//atualiza a multa no bd.
-void BD::UpdateMultaExemplarAluno(const char* f, Exemplar &item){
-    sqlite3* bibdb;
-    sqlite3_open(f, &bibdb);
 
-    int multadoexemplar = item.get_multa();
-    int iddoexemplar = item.get_codigo_exemplar();
+void BD::UpdateMultaExemplarAluno(const char* f, Exemplar* item){
 
-    string sql_comando = "UPDATE AlunoExemplares set multa="+to_string(multadoexemplar)+" where ID="+
+    int multadoexemplar = item->get_multa();
+    CODIGOS_SUBGENEROS_EXEMPLARES iddoexemplar = item->get_codigo_exemplar();
+
+    string sql_comando = "UPDATE AlunoExemplares set multa="+to_string(multadoexemplar)+" where codigoexemplar="+
     to_string(iddoexemplar)+"; ";
 
-    char* msgerr;
-    int resp = 0;
-
-    resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-    if(resp!=SQLITE_OK){
-        cerr << "ERRO ATUALIZAR multa em AlunoExemplares: " << msgerr << endl;
-    }
-
-    sqlite3_free(msgerr);
-    sqlite3_close(bibdb);
+    string alerta_erro = "ERRO AO ATUALIZAR multa em AlunoExemplares: ";
+    
+    executar_sql(f, sql_comando, alerta_erro);
 
 }

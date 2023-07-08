@@ -7,7 +7,6 @@ Exemplar::Exemplar(std::string autor, int ano_publicacao, std::string titulo, CO
 
     _emprestado = 0;
     _multa = 0;
-    bibdados.bd_inserir_tabela_exemplares(file, *this);
 };
 
 bool Exemplar::get_emprestado()
@@ -31,7 +30,7 @@ void Exemplar::emprestar_exemplar()
     _dia_emprestado = *localtime(&dia_hoje);
 
     _emprestado = 1;
-    bibdados.updateExemplarEmprestado(file, *this, 1);
+    bibdados.updateExemplarEmprestado(file, &(*this), 1);
 }
 void Exemplar::incrementar_multa()
 {
@@ -41,7 +40,7 @@ void Exemplar::incrementar_multa()
     if (dia_atual_comparacao.tm_mday - _dia_emprestado.tm_mday >= 5)
     { // COMPARAR O MES TAMBEM
         _multa += 2;
-        bibdados.UpdateMultaExemplarAluno(file, *this);
+        bibdados.UpdateMultaExemplarAluno(file, &(*this));
     }
 }
 

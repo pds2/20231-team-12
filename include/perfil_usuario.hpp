@@ -45,7 +45,7 @@ public:
     ~Perfil_usuario();
 
 protected:
-    const char* file;
+    const char* file = "biblioteca.db";
     BD bibdados;
 };
 
