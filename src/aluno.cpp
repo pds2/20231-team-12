@@ -80,11 +80,11 @@ unsigned int Aluno::get_n_exemplares() {
 // }
 
 //devolucao de todos os exemplares.
-void Aluno::BDauxiliar(string codigosecreto){
-    if(codigosecreto=="Persistence20231"){
-        for(Exemplar exemplaremprestado : exemplares){
-            bibdados.updateExemplarEmprestado(file, &exemplaremprestado, 0);
-            cout << "O Exemplar: "<< exemplaremprestado.get_codigo_exemplar() <<" foi devolvido."<<endl;
-        }
-    }
-}
+// void Aluno::BDauxiliar(string codigosecreto){
+//     if(codigosecreto=="Persistence20231"){
+//         for(Exemplar exemplaremprestado : exemplares){
+//             bibdados.updateExemplarEmprestado(file, &exemplaremprestado, 0);
+//             cout << "O Exemplar: "<< exemplaremprestado.get_codigo_exemplar() <<" foi devolvido."<<endl;
+//         }
+//     }
+// }
