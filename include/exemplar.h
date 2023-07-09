@@ -7,7 +7,7 @@
 class Exemplar : public Acervo {
 public:
     Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,
-             bool emprestado, int dataAquisicao, int codigoEspecifico, int dataDevolucao);
+             bool emprestado, int dataAquisicao, int codigoEspecifico);
 
     // Métodos getters
     bool isEmprestado() const;
@@ -18,14 +18,14 @@ public:
     //métodos
     //void mostraMulta(int dataAtual) const;
     int calculaMulta();
-    int calculaDataDevolucao(); 
+    int calculaDataDevolucaoSistema(); 
 
 
 private:
     bool emprestado;
     int dataAquisicao;
     int codigoEspecifico;
-    int dataDevolucao;
+    //int dataDevolucaoUsuario;
     
 };
 
