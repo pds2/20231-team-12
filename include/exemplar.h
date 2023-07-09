@@ -20,8 +20,8 @@ public:
     void setDataEmprestimo(int dataEmprestimo);
 
     //métodos
-    //void mostraMulta(int dataAtual) const;
-    int calculaMulta();
+    
+    void calculaMulta();
     int calculaDataDevolucaoSistema(); 
 
 

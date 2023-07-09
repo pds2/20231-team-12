@@ -55,7 +55,7 @@ int Exemplar::calculaDataDevolucaoSistema() {
 }
 
 
-int Exemplar::calculaMulta() {
+void Exemplar::calculaMulta() {
     int dataDevolucaoSistema = this->calculaDataDevolucaoSistema();  // Obtém a data de devolução calculada pelo sistema
 
 
@@ -74,7 +74,7 @@ int Exemplar::calculaMulta() {
     std::chrono::system_clock::time_point dataDevolucaoPonto = std::chrono::system_clock::from_time_t(dataDevolucaoTimestamp);
 
 
-    //printando
+ /*  //printando para ver horarios e datas 
 
 // Converter dataDevolucaoPonto para std::tm
 std::time_t dataDevolucaoPontoTimeT = std::chrono::system_clock::to_time_t(dataDevolucaoPonto);
@@ -95,7 +95,7 @@ std::cout << "Data atual: "
           << std::put_time(dataAtualPontoTM, "%Y-%m-%d %H:%M:%S")
           << std::endl;
 
-//fim printando
+//fim printando*/
 
     // Calcula a diferença entre a data atual e a data de devolução em dias
     std::chrono::duration<int, std::ratio<86400>> duracao = std::chrono::duration_cast<std::chrono::duration<int, std::ratio<86400>>>(dataAtualPonto - dataDevolucaoPonto);
@@ -105,21 +105,22 @@ std::cout << "Data atual: "
 
     // Se não houver atraso, a multa é zero
     if (diasAtraso <= 0) {
-            std::cout << "Nenhuma multa!" << std::endl;
-        return 0;
+            multa = 0;
+        // std::cout << "Nenhuma multa!" << std::endl;
+        //return multa;
     }
   else{
     // Calcula o valor da multa (assumindo uma taxa fixa por dia de 1 real)
     int taxaMultaPorDia = 1;  // multa de 1 real por dia
     multa = taxaMultaPorDia * diasAtraso;
 
-    std::cout << "Multa de: R$ " << multa << std::endl;
-    return multa;
+    //std::cout << "Multa de: R$ " << multa << std::endl;
+    //return multa;
  }
 }
 
 int Exemplar::getMulta() const {
-    return multa;
+    return multa; 
 }
 
 
