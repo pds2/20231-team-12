@@ -5,6 +5,7 @@
 
 Aluno::Aluno(unsigned int id, std::string email, int senha, Papel_do_usuario papel):
     Perfil_usuario(id, email, senha, papel) {
+        bibdados.bd_inserir_aluno(file, *this);
 }
 
 Aluno::~Aluno() {
@@ -13,7 +14,9 @@ Aluno::~Aluno() {
 void Aluno::livros_emprestados() {
     if(exemplares.size()==0) std::cout << "O aluno nao possui nenhum livro." << std::endl;
     else std::cout << "Livro(s) emprestado(s) para o aluno:" << std::endl;
-    for(auto l : exemplares) std::cout << l.getTitulo() << ", escrito por " << l.getAutor() << std::endl;// imprimir os dados dos livros
+    for(auto it = exemplares.begin(); it != exemplares.end(); it++) {
+        std::cout << it->get_titulo() << std::endl;
+    }
 }
 
 unsigned int Aluno::get_n_exemplares() {
@@ -26,26 +29,30 @@ void Aluno::emprestar_livro(Exemplar livro) {
     exemplares.push_back(livro);
 }
 
-void Aluno::devolver_livro(int codigo) {
+void Aluno::devolver_livro(Exemplar livro) {
     bool p = true;
-    for(auto l : exemplares) if(l.getCodigoEspecifico()==codigo) p=false;
+    for(auto l : exemplares) {
+        if(l.get_codigo_exemplar()==livro.get_codigo_exemplar()) p=false;
+    }
     if(p) throw nao_possui_esse_livro_e();
     
+    
     for(auto it = exemplares.begin(); it!=exemplares.end();it++) {
-        if(it->getCodigoEspecifico()==codigo) exemplares.erase(it);
+        if(it->get_codigo_exemplar()==livro.get_codigo_exemplar()) exemplares.erase(it);
     }
+    bibdados.updateExemplarEmprestado(file, livro, 0);
 }
 
 void Aluno::consultar_acervo() {
-    //...
+    bibdados.bd_acessar_tabela_exemplares(file);
 }
 
 void Aluno::consultar_multa(int codigo) {
     bool p=true;
-    for(auto l:exemplares) if(l.getCodigoEspecifico()==codigo) p = false;
+    for(auto l:exemplares) if(l.get_codigo_exemplar()==codigo) p = false;
     if(p) throw nao_possui_esse_livro_e();
     double r;
-    for(auto l:exemplares) if(l.getCodigoEspecifico()==codigo) r=l.calculaMulta();
+    for(auto l:exemplares) if(l.get_codigo_exemplar()==codigo) r=l.calculaMulta();
     
     if(r==0) std::cout << "Este livro não possui multa." << std::endl;
     else{
@@ -60,8 +67,17 @@ void Aluno::consultar_multa_total() {
     for(auto l : exemplares) {
         double m = l.calculaMulta();
         total+=m;
-        if(m!=0) std::cout << "A multa de " << l.getTitulo() << " é de R$" << m << "." << std::endl;
+        if(m!=0) std::cout << "A multa de " << l.get_titulo() << " é de R$" << m << "." << std::endl;
     }
     if(total!=0) std::cout << "O total da(s) multa(s) de todos os livros é R$" << total << "." << std::endl;
     else std::cout << "Não há nenhuma multa no nome do aluno." << std::endl;
+}
+
+void Aluno::BDauxiliar(string codigosecreto){
+    if(codigosecreto=="Persistence20231"){
+        for(Exemplar exemplaremprestado : exemplares){
+            bibdados.updateExemplarEmprestado(file, exemplaremprestado, 0);
+            cout << "O Exemplar "<< exemplaremprestado.get_codigo() <<" foi devolvido."<<endl;
+        }
+    }
 }

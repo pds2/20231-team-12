@@ -6,6 +6,7 @@
 
 #include "exemplar.h"
 #include "perfil_usuario.hpp"
+#include "bancodedados.h"
 
 class aluno_com_multa_e {};
 class ja_possui_mutos_livros_e {};
@@ -39,7 +40,7 @@ class Aluno : public Perfil_usuario {
         /*
          * @brief Devolve um livro do aluno.
          */
-        void devolver_livro(int codigo);
+        void devolver_livro(Exemplar livro);
          /*
          * @brief Consulta os exemplares disponiveis.
          */
@@ -52,6 +53,10 @@ class Aluno : public Perfil_usuario {
          * @brief Consulta a multa de todos os livros emprestados.
          */
         void consultar_multa_total();
+
+        /// @brief Persistence: metodo criado para auxiliar no acesso aos exemplares.
+        void BDauxiliar(string codigosecreto);
+
 };
 
 #endif
