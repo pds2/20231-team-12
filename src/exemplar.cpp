@@ -7,15 +7,19 @@
 #include <iomanip>
 
 Exemplar::Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,
-                   bool emprestado, int dataAquisicao, int codigoEspecifico)
-    : Acervo(autor, anoPublicacao, titulo, genero, codigo), emprestado(emprestado), dataAquisicao(dataAquisicao),
+                   bool emprestado,  int codigoEspecifico)
+    : Acervo(autor, anoPublicacao, titulo, genero, codigo), emprestado(emprestado),
       codigoEspecifico(codigoEspecifico)  {
         
 }
 
+int Exemplar::getdataEmprestimo() const {
+    return dataEmprestimo;
+}
 
-int Exemplar::getDataAquisicao() const {
-    return dataAquisicao;
+ //set -> Necessário para realizar os test cases
+void Exemplar::setDataEmprestimo(int dataEmprestimo) {
+    this->dataEmprestimo = dataEmprestimo;
 }
 
 int Exemplar::getCodigoEspecifico() const {
@@ -23,9 +27,9 @@ int Exemplar::getCodigoEspecifico() const {
 }
 int Exemplar::calculaDataDevolucaoSistema() {
     std::tm aquisicao_time = { 0 };
-    aquisicao_time.tm_mday = dataAquisicao % 100;
-    aquisicao_time.tm_mon = (dataAquisicao / 100) % 100 - 1;
-    aquisicao_time.tm_year = dataAquisicao / 10000 - 1900;
+    aquisicao_time.tm_mday = getdataEmprestimo() % 100;
+    aquisicao_time.tm_mon = (getdataEmprestimo() / 100) % 100 - 1;
+    aquisicao_time.tm_year = getdataEmprestimo() / 10000 - 1900;
 
     std::time_t aquisicao_timestamp = std::mktime(&aquisicao_time);
 
@@ -105,15 +109,17 @@ std::cout << "Data atual: "
         return 0;
     }
   else{
-    // Calcula o valor da multa (assumindo uma taxa fixa por dia)
-    int taxaMultaPorDia = 1;  // Ajuste esse valor conforme necessário
-    int multa = taxaMultaPorDia * diasAtraso;
+    // Calcula o valor da multa (assumindo uma taxa fixa por dia de 1 real)
+    int taxaMultaPorDia = 1;  // multa de 1 real por dia
+    multa = taxaMultaPorDia * diasAtraso;
 
     std::cout << "Multa de: R$ " << multa << std::endl;
     return multa;
  }
 }
 
+int Exemplar::getMulta() const {
+    return multa;
+}
 
 
-/
