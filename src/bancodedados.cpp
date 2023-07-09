@@ -180,16 +180,16 @@ void BD::bd_inserir_bibliotecario(const char* f, Bibliotecario* bibliotecario){
 
 void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar* item){
 
-    string autor, titulo, genero, codigo_exemplar;
+    string autor, titulo, genero;
     autor = item->get_autor(); 
     int anopub = item->get_ano_publicacao(); 
     titulo = item->get_titulo(); 
     genero = item->get_genero();
     int codigo = item->get_codigo();
-    codigo_exemplar = item->get_codigo_exemplar();
+    int codigo_exemplar = item->getCodigoEspecifico();
 
     string sql_comando = "INSERT INTO Exemplares VALUES('"+autor+"',"+to_string(anopub)+",'"+titulo+"','"+genero+"',"+
-    to_string(codigo)+","+codigo_exemplar+");";
+    to_string(codigo)+","+to_string(codigo_exemplar)+");";
 
     string alerta_erro = "ERRO AO INSERIR EM EXEMPLARES: ";
 
@@ -199,8 +199,8 @@ void BD::bd_inserir_tabela_exemplares(const char* f, Exemplar* item){
 void BD::bd_inserir_alunoexemplar(const char* f, Aluno* aluno, Exemplar* item){
 
     int alunoid = aluno->get_ID_perfil_usuario();
-    CODIGOS_SUBGENEROS_EXEMPLARES codigoexemplar = item->get_codigo_exemplar();
-    int multa = item->get_multa();
+    int codigoexemplar = item->getCodigoEspecifico();
+    int multa = item->calculaMulta();
 
     string sql_comando = "INSERT INTO AlunoExemplares VALUES("+to_string(alunoid)+","+to_string(codigoexemplar)+","+
     to_string(multa)+"); ";
@@ -459,7 +459,7 @@ void BD::bd_remover_exemplarespecifico(const char* f, Exemplar* item){
     bool check = checkExemplar(f, item);
     if(check==(1||true)){
 
-        CODIGOS_SUBGENEROS_EXEMPLARES idexemplar = item->get_codigo_exemplar();
+        int idexemplar = item->getCodigoEspecifico();
         int idacervo = item->get_codigo();
 
         string sql_comando = "Delete from Exemplares where codigoexemplar="+to_string(idexemplar)+"; ";
@@ -487,9 +487,9 @@ void BD::bd_remover_exemplaresdoacervo(const char* f, Acervo* livro){
 
 }
 
-void BD::bd_remover_exemplaraluno(const char *f, CODIGOS_SUBGENEROS_EXEMPLARES exemplarid){
+void BD::bd_remover_exemplaraluno(const char *f, int exemplarid){
 
-    CODIGOS_SUBGENEROS_EXEMPLARES codigoexemplar = exemplarid;
+    int codigoexemplar = exemplarid;
     string sql_comando = "Delete from AlunoExemplares where codigoexemplar="+to_string(codigoexemplar)+"; ";
     string alerta_erro = "ERRO AO REMOVER EXEMPLAR: "+to_string(codigoexemplar);
     
@@ -571,7 +571,7 @@ bool BD::checkExemplar(const char* f, Exemplar* item){
     sqlite3_stmt* stmt;
 
     int codigo_exemplar_int;
-    codigo_exemplar_int = item->get_codigo_exemplar();
+    codigo_exemplar_int = item->getCodigoEspecifico();
     int codigodoacervo;
     codigodoacervo = item->get_codigo();
 
@@ -668,7 +668,7 @@ void BD::updateExemplarEmprestado(const char* f, Exemplar* item, int umouzero){
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
 
-    CODIGOS_SUBGENEROS_EXEMPLARES codigoespecifico = item->get_codigo_exemplar();
+    int codigoespecifico = item->getCodigoEspecifico();
 
     string sql_comando = "UPDATE Exemplares set emprestado="+to_string(umouzero)+" where codigoexemplar="+to_string(codigoespecifico)+";";
     string alerta_erro = "ERRO AO ATUALIZAR Emprestado em Exemplares: "+to_string(codigoespecifico);
@@ -679,8 +679,8 @@ void BD::updateExemplarEmprestado(const char* f, Exemplar* item, int umouzero){
 
 void BD::UpdateMultaExemplarAluno(const char* f, Exemplar* item){
 
-    int multadoexemplar = item->get_multa();
-    CODIGOS_SUBGENEROS_EXEMPLARES iddoexemplar = item->get_codigo_exemplar();
+    int multadoexemplar = item->calculaMulta();
+    int iddoexemplar = item->getCodigoEspecifico();
 
     string sql_comando = "UPDATE AlunoExemplares set multa="+to_string(multadoexemplar)+" where codigoexemplar="+
     to_string(iddoexemplar)+"; ";

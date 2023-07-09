@@ -46,7 +46,6 @@ public:
 
 protected:
     const char* file = "biblioteca.db";
-    BD bibdados;
 };
 
 #endif

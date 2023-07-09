@@ -1,5 +1,7 @@
 #include "admin.h"
 
+BD bibdados;
+
 Admin::Admin(unsigned int id, std::string email, int senha, Papel_do_usuario papel):
     Perfil_usuario(id, email, senha, papel) {
         std::cout << "Admin criado." << std::endl;

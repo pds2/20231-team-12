@@ -3,6 +3,8 @@
 #include <iostream>
 #include <iomanip>
 
+BD bibdados;
+
 Aluno::Aluno(unsigned int id, std::string email, int senha, Papel_do_usuario papel):
     Perfil_usuario(id, email, senha, papel) {
 }
@@ -80,7 +82,7 @@ unsigned int Aluno::get_n_exemplares() {
 // }
 
 //devolucao de todos os exemplares.
-// void Aluno::BDauxiliar(string codigosecreto){
+// void Aluno::BDauxiliar(std::string codigosecreto){
 //     if(codigosecreto=="Persistence20231"){
 //         for(Exemplar exemplaremprestado : exemplares){
 //             bibdados.updateExemplarEmprestado(file, &exemplaremprestado, 0);

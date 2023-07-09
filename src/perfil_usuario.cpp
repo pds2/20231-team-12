@@ -1,5 +1,7 @@
 #include "../include/perfil_usuario.hpp"
 
+BD bibdados;
+
 Perfil_usuario::Perfil_usuario()
 {
     _ID_perfil_usuario = 99999;

@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <std::string>
 #include <vector>
 
 #include "include/bancodedados.h"

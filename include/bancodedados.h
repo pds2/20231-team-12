@@ -1,5 +1,7 @@
-#ifndef BANCO_DE_DADOS
-#define BANCO_DE_DADOS
+#ifndef BANCO_DE_DADOS_H
+#define BANCO_DE_DADOS_H
+
+#include <string>
 
 #include "../sqlite/sqlite3.h"
 #include "acervo.h"
@@ -8,7 +10,6 @@
 #include "aluno.h"
 #include "admin.h"
 #include "bibliotecario.hpp"
-#include <string>
 
 using namespace std;
 
@@ -84,7 +85,7 @@ class BD{
     /* @brief remove todos os exemplares associados ao acervo. */
     void bd_remover_exemplaresdoacervo(const char* f, Acervo* livro);
     /* @brief remove um exemplar em AlunoExemplares pelo codigo especifico do exemplar.*/
-    void bd_remover_exemplaraluno(const char *f, CODIGOS_SUBGENEROS_EXEMPLARES exemplarid);
+    void bd_remover_exemplaraluno(const char *f, int exemplarid);
 
     //metodos de checagem.
 

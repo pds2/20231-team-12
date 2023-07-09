@@ -2,6 +2,7 @@
 #define PERFIL_BIBLIOTECARIO_H
 
 #include <vector>
+#include <string>
 
 #include "exemplar.h"
 #include "acervo.h"

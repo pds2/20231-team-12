@@ -6,6 +6,8 @@ Papel_do_usuario Bibliotecario::set_papel_usuario()
     return BIBLIOTECARIO;
 }
 
+BD bibdados;
+
 void Bibliotecario::adicionar_acervo(Acervo acervo_novo)
 {
     bibdados.bd_inserir_tabela_acervos(file, &acervo_novo);

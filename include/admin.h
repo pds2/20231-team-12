@@ -24,30 +24,31 @@ class papel_invalido_e
 };
 
 class Admin : public Perfil_usuario {
-    public:
-        /*
-         * Constroi um admin.
-         */
-        Admin(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
-        /*
-         * @brief Cadastra um novo usuário no sistema.
-         */
-        void adicionar_usuario(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
-        /*
-         * @brief Deleta um usuario pelo id.
-         */
-        void deletar_usuario(unsigned int id);
-        /*
-         * Destroi o admin.
-         */
+    
+public:
+    /*
+        * Constroi um admin.
+        */
+    Admin(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
+    /*
+        * @brief Cadastra um novo usuário no sistema.
+        */
+    void adicionar_usuario(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
+    /*
+        * @brief Deleta um usuario pelo id.
+        */
+    void deletar_usuario(unsigned int id);
+    /*
+        * Destroi o admin.
+        */
 
-        //persistence
-        /*@brief Imprimir todos os Usuarios.*/
-        void consultar_Usuarios();
+    //persistence
+    /*@brief Imprimir todos os Usuarios.*/
+    void consultar_Usuarios();
 
-        void adicionar_usuario(Perfil_usuario* user);
+    void adicionar_usuario(Perfil_usuario* user);
 
-        ~Admin();
+    ~Admin();
 };
 
 #endif
