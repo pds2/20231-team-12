@@ -1,8 +1,8 @@
 #ifndef ACERVO_H
 #define ACERVO_H
 
-#include "bancodedados.h"
 #include <string>
+#include "bancodedados.h"
 
 // ACERVO NAO É virtual (pura), da pra criar um acervo sem ter nenhum exemplar (meio estranho mas ta certo)
 class Acervo 
