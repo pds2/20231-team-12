@@ -8,55 +8,54 @@
 #include "perfil_usuario.hpp"
 #include "bancodedados.h"
 
-class aluno_com_multa_e {};
-class ja_possui_mutos_livros_e {};
-class nao_possui_esse_livro_e {};
+class aluno_com_multa_e
+{
+};
+class ja_possui_mutos_livros_e
+{
+};
+class nao_possui_esse_livro_e
+{
+};
 
-class Aluno : public Perfil_usuario {
+class Aluno : public Perfil_usuario
+{
 private:
-    std::list<Exemplar> exemplares;
-    
+    std::vector<Exemplar *> livros_com_aluno;
+
 public:
     /*
-        * Constroi um aluno.
-        */
-    Aluno(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
+     * Constroi um aluno.
+     */
+    Aluno(unsigned int id, std::string email, int senha);
+
     /*
-        * Destroi o aluno.
-        */
-    ~Aluno();
+     * @brief Mostra todos os livros emprestados.
+     */
+    void get_livros_emprestados();
     /*
-        * @brief Mostra todos os livros emprestados.
-        */
-    void livros_emprestados();
+     * @brief Pega o numero de livros que o aluno possui.
+     */
+    int get_n_exemplares();
+
+    // SO BIBLIOTECARIO PODE FAZER ISSO !!!!!!!!!!!!
+
+    // nao acho que devolve um acervo, se bem que precisa
+
+    Acervo consultar_acervo(Acervo) override;
     /*
-        * @brief Pega o numero de livros que o aluno possui.
-        */
-    unsigned int get_n_exemplares();
+     * @brief Consulta a multa de um livro pelo codigo.
+     */
+    void consultar_multa(Exemplar);
     /*
-        * @brief Empresta um livro ao aluno.
-        */
-    void emprestar_livro(Exemplar livro);
-    /*
-        * @brief Devolve um livro do aluno.
-        */
-    void devolver_livro(int codigo);
-        /*
-        * @brief Consulta os exemplares disponiveis.
-        */
-    void consultar_acervo();
-    /*
-        * @brief Consulta a multa de um livro pelo codigo.
-        */
-    void consultar_multa(int codigo);
-    /*
-        * @brief Consulta a multa de todos os livros emprestados.
-        */
-    void consultar_multa_total();
+     * @brief Consulta a multa de todos os livros emprestados.
+     */
+    void consultar_multa_total(std::vector);
+
+    int salvar_aluno_no_arquivo();
 
     /// @brief Persistence: metodo criado para auxiliar no acesso aos exemplares.
     void BDauxiliar(std::string codigosecreto);
-
 };
 
 #endif

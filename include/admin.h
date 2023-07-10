@@ -27,17 +27,17 @@ class Admin : public Perfil_usuario {
     
 public:
     /*
-        * Constroi um admin.
-        */
-    Admin(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
+     * Constroi um admin.
+     */
+    Admin(std::string email, int senha);
     /*
-        * @brief Cadastra um novo usuário no sistema.
-        */
-    void adicionar_usuario(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
+     * @brief Cadastra um novo usuário no sistema.
+     */
+    void adicionar_usuario(int tipo_de_user, std::string email, int senha);
     /*
-        * @brief Deleta um usuario pelo id.
-        */
-    void deletar_usuario(unsigned int id);
+     * @brief Deleta um usuario pelo id.
+     */
+    void deletar_usuario(std::string email);
     /*
         * Destroi o admin.
         */

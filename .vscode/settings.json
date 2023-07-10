@@ -93,6 +93,11 @@
 >>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
 =======
         "numbers": "cpp"
+<<<<<<< HEAD
 >>>>>>> e72aed66b4c53ba20f50d0834f4e0b2ac7a28286
     }
+=======
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+>>>>>>> afa5cbe83728dd4b40b5b37e415d8c51434ac38f
 }
