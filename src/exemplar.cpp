@@ -119,7 +119,7 @@ std::cout << "Data atual: "
  }
 }
 
-int Exemplar::getMulta() const {
+int Exemplar::getMulta() {
     return multa; 
 }
 

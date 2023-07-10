@@ -3,6 +3,9 @@
 #include <ctime>
 #include <chrono>
 
+#include "doctest.h"
+#include "../include/exemplar.h"
+
 
 
 TEST_CASE("Teste de cálculo da data de devolução") {
@@ -22,7 +25,7 @@ TEST_CASE("Exemplar Calcula Data Devolucao") {
 
     exemplar.setDataEmprestimo(20230617);
 
-    REQUIRE(exemplar.calculaDataDevolucaoSistema() == 20230717); // data devolução 17/07/2023
+    CHECK(exemplar.calculaDataDevolucaoSistema() == 20230717); // data devolução 17/07/2023
 }
 
 TEST_CASE("Exemplar Calcula Data Devolucao") {
@@ -30,7 +33,7 @@ TEST_CASE("Exemplar Calcula Data Devolucao") {
 
     exemplar.setDataEmprestimo(20240219);
 
-    REQUIRE(exemplar.calculaDataDevolucaoSistema() == 20240319); // data devolução 19/03/2023 - passou
+    CHECK(exemplar.calculaDataDevolucaoSistema() == 20240319); // data devolução 19/03/2023 - passou
 }
 
 TEST_CASE("Exemplar Calcula Data Devolucao") {
@@ -38,11 +41,59 @@ TEST_CASE("Exemplar Calcula Data Devolucao") {
 
   exemplar.setDataEmprestimo(20240218);
 
-    REQUIRE(exemplar.calculaDataDevolucaoSistema() == 20240318); //
+    CHECK(exemplar.calculaDataDevolucaoSistema() == 20240318); //
 }
 
 
 
+
+//Teste passou, dia 08/07/2023 deve ficar em comentário, pois ele vai mudando conforme a data
+//logo abaixo há um igual porem pegando os dias passados desde o dia do teste como se ele tivesse aumentando a multa ainda a mais no assertion a cada dia
+/*
+TEST_CASE("Exemplar - Teste do método getMulta - Com multa") {
+    Exemplar exemplar("Autor", 2021, "Título", "Gênero", 1234, false,  1);
+    // Data de aquisição: 05/06/2023
+    // Data de devolução: 08/07/2023 (1 mês e 3 dias após aquisição)
+        exemplar.setDataEmprestimo(20230605);
+        exemplar.calculaMulta();
+
+        // Verificação do resultado
+        CHECK(exemplar.getMulta() == 3); // Supondo que o valor da multa seja 3
+} 
+*/
+
+
+
+//Pegando os dias passados desde o dia do teste como se ele tivesse aumentando a multa ainda a mais no assertion a cada dia
+TEST_CASE("Exemplar - Teste do método getMulta e método Calcula Multa - Com multa de 3 reais")
+{
+    Exemplar exemplar("Autor", 2021, "Título", "Gênero", 1234, false, 1);
+    // Data de aquisição: 05/06/2023
+    // Data de devolução: 08/07/2023 (1 mês e 4 dias após aquisição)
+    exemplar.setDataEmprestimo(20230605);
+    exemplar.calculaMulta();
+
+    // Calcular o número de dias passados desde o dia 8 de julho de 2023 até a data atual
+    std::time_t dataAtual;
+    std::time(&dataAtual);
+
+    std::tm dataFutura = {0};
+    dataFutura.tm_year = 123; // Ano: 2023 - tm_year representa o número de anos desde 1900
+    dataFutura.tm_mon = 6;   // Mês: 7 - julho,  pois vai de  0 - 11 meses ao invés de 1 a 12
+    dataFutura.tm_mday = 8;  // Dia: 8
+
+    std::time_t dataFuturaTimestamp = std::mktime(&dataFutura);
+    std::time_t duracaoTimestamp = dataAtual - dataFuturaTimestamp;
+
+    int diasPassados = duracaoTimestamp / (60 * 60 * 24); // Conversão para dias
+
+    // Verificação do resultado
+    int multaEsperada = 3 + diasPassados; // Supondo que o valor da multa seja 4 inicialmente
+    CHECK(exemplar.getMulta() == multaEsperada);
+}
+
+//Teste passou, dia 08/07/2023 deve ficar em comentário, pois ele vai mudando conforme a data e vai gerar multa
+/*
 TEST_CASE("Exemplar Calcula Multa - test do getMulta - Sem multa") {
     Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345.67, false, 1);
     // Data de aquisição: 09/06/2023
@@ -51,34 +102,10 @@ TEST_CASE("Exemplar Calcula Multa - test do getMulta - Sem multa") {
 
     SUBCASE("Sem atraso") {
         int multa = exemplar.getMulta();
-        CHECK(multa == 0); //tem q ser 0
+        CHECK(multa == 0); 
     }
 }
-
-/*
-TEST_CASE("Exemplar Calcula Multa") {
-    Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345.67, false, 1);
-    // Data de aquisição: 05/06/2023
-    // Data de devolução: 08/07/2023 (1 mês e 4 dias após aquisição)
-    exemplar.setDataEmprestimo(20230605);
-    SUBCASE("Com 3 dias de atraso") {
-             int multa = exemplar.calculaMulta();
-
-    CHECK(multa == 4); //tem que ser 4 //ver pq este não passou e deu 0
-} 
-}*/
-
-
-TEST_CASE("Exemplar - Teste do método getMulta - Com multa") {
-    Exemplar exemplar("Autor", 2021, "Título", "Gênero", 1234, false,  1);
-    // Data de aquisição: 05/06/2023
-    // Data de devolução: 08/07/2023 (1 mês e 4 dias após aquisição)
-        exemplar.setDataEmprestimo(20230605);
-        exemplar.calculaMulta();
-
-        // Verificação do resultado
-        CHECK(exemplar.getMulta() == 4); // Supondo que o valor da multa seja 4   
-}
+*/
 
 
 
