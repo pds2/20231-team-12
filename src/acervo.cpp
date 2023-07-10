@@ -37,7 +37,7 @@ int Acervo::get_codigo() const
 int Acervo::salvar_acervo_no_arquivo()
 {
     std::ofstream acervo_out;
-    acervo_out.open("acervos.csv", std::ios::in);
+    acervo_out.open("acervos.csv", std::ios::app);
     if (!acervo_out)
     {
         std::cout << "arquivo nao existe" << std::endl;
