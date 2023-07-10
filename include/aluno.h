@@ -27,14 +27,11 @@ public:
      * Constroi um aluno.
      */
     Aluno(unsigned int id, std::string email, int senha);
-    /*
-     * Destroi o aluno.
-     */
-    ~Aluno();
+
     /*
      * @brief Mostra todos os livros emprestados.
      */
-    std::vector get_livros_emprestados();
+    void get_livros_emprestados();
     /*
      * @brief Pega o numero de livros que o aluno possui.
      */
@@ -42,29 +39,19 @@ public:
 
     // SO BIBLIOTECARIO PODE FAZER ISSO !!!!!!!!!!!!
 
-    /*
-     * @brief Empresta um livro ao aluno.
-     */
-    void emprestar_livro(Exemplar livro);
-    /*
-     * @brief Devolve um livro do aluno.
-     */
-    void devolver_livro(int codigo);
-    /*
-     * @brief Consulta os exemplares disponiveis.
-     */
-
     // nao acho que devolve um acervo, se bem que precisa
 
-    Acervo consultar_acervo(Acervo);
+    Acervo consultar_acervo(Acervo) override;
     /*
      * @brief Consulta a multa de um livro pelo codigo.
      */
-    void consultar_multa(int codigo);
+    void consultar_multa(Exemplar);
     /*
      * @brief Consulta a multa de todos os livros emprestados.
      */
-    void consultar_multa_total();
+    void consultar_multa_total(std::vector);
+
+    int salvar_aluno_no_arquivo();
 };
 
 #endif

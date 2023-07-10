@@ -11,8 +11,7 @@ private:
     double multa;
     bool emprestado;
     int dataAquisicao;
-    int dataEmprestimo;
-    int codigoEspecifico;
+    static int codigoEspecifico;
 
 public:
     Exemplar(std::string autor, int anoPublicacao, std::string titulo, int genero, float codigo,

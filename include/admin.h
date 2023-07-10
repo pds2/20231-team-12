@@ -28,15 +28,15 @@ public:
     /*
      * Constroi um admin.
      */
-    Admin(unsigned int id, std::string email, int senha);
+    Admin(std::string email, int senha);
     /*
      * @brief Cadastra um novo usuário no sistema.
      */
-    void adicionar_usuario(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
+    void adicionar_usuario(int tipo_de_user, std::string email, int senha);
     /*
      * @brief Deleta um usuario pelo id.
      */
-    void deletar_usuario(unsigned int id);
+    void deletar_usuario(std::string email);
     /*
      * Destroi o admin.
      */

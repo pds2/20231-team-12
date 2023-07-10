@@ -7,10 +7,6 @@ Aluno::Aluno(unsigned int id, std::string email, int senha) : Perfil_usuario(id,
 {
 }
 
-Aluno::~Aluno()
-{
-}
-
 void Aluno::livros_emprestados()
 {
     if (exemplares.size() == 0)
