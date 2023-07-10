@@ -28,7 +28,7 @@ public:
     /*
      * Constroi um admin.
      */
-    Admin(unsigned int id, std::string email, int senha, Papel_do_usuario papel);
+    Admin(unsigned int id, std::string email, int senha);
     /*
      * @brief Cadastra um novo usuário no sistema.
      */

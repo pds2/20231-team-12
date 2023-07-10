@@ -1,7 +1,8 @@
 #ifndef ACERVO_H
 #define ACERVO_H
 
-#include "bancodedados.h"
+// #include "bancodedados.h"
+#include <fstream>
 #include <string>
 
 // criar os codigos especificos de cada genero em um arquivo separado
@@ -10,11 +11,11 @@
 class Acervo
 {
 private:
-    std::string _autor;
-    int _ano_publicacao;
-    std::string _titulo;
-    int _genero;
     int _codigo;
+    std::string _autor;
+    std::string _titulo;
+    int _ano_publicacao;
+    int _genero;
 
 public:
     // Construtor
@@ -28,9 +29,13 @@ public:
     int get_genero() const;
     int get_codigo() const;
 
-protected:
-    const char *file = "biblioteca.db";
-    BD bibdados;
+    int salvar_acervo_no_arquivo();
+
+    /*
+    protected:
+        const char *file = "biblioteca.db";
+        BD bibdados;
+    */
 };
 
 #endif // ACERVO_H

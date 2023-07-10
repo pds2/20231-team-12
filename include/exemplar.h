@@ -1,30 +1,34 @@
 #ifndef EXEMPLAR_H
 #define EXEMPLAR_H
 
+#include <ctime>
+
 #include "acervo.h"
 
 class Exemplar : public Acervo
 {
+private:
+    double multa;
+    bool emprestado;
+    int dataAquisicao;
+    int dataEmprestimo;
+    int codigoEspecifico;
+
 public:
-    Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,
-             bool emprestado, int dataAquisicao, int codigoEspecifico, int dataDevolucao);
+    Exemplar(std::string autor, int anoPublicacao, std::string titulo, int genero, float codigo,
+             bool emprestado, int dataAquisicao, int codigoEspecifico);
 
     // Métodos getters
     bool isEmprestado() const;
     int getDataAquisicao() const;
     int getCodigoEspecifico() const;
-    int getDataDevolucao() const;
+    int getDataEmprestimo() const;
+    double getMulta() const;
 
     // métodos
-    // void mostraMulta(int dataAtual) const;
     int calculaMulta();
-    int calculaDataDevolucao();
-
-private:
-    bool emprestado;
-    int dataAquisicao;
-    int codigoEspecifico;
-    int dataDevolucao;
+    int calculaDataDevolucao(); // isso vai servir pra calcular multa
+    int salva_exemplar_no_arquivo();
 };
 
 #endif // EXEMPLAR_H
