@@ -2,8 +2,12 @@
 #define PERFIL_USUARIO_H
 
 #include <iostream>
-#include "perfil_usuario.hpp"
-#include "bancodedados.h"
+#include <string>
+#include <iostream>
+#include "../sqlite/sqlite3.h"
+
+using namespace std;
+
 
 // TODOS os tipos de usuarios tem os mesmos atributos. o que muda sao os metodos que cada um pode fazer/tem acesso
 // nao sei onde a gente usaria virtual e override, talvez para retornar livros visiveis para bibliotecarios mas ocultos
@@ -28,6 +32,7 @@ private:
 
 protected:
     Papel_do_usuario _papel;
+    const char* file = "biblioteca.db";
 
 public:
     // default, para testes
@@ -50,7 +55,15 @@ public:
     ~Perfil_usuario();
 
 protected:
-    const char* file = "biblioteca.db";
+    //Persistence
+    static void executar_sql(const char* f, string comandosql, string avisoerro);
+    void bd_criar_tabela_usuarios(const char* f);
+    void bd_criar_tabela_exemplaresaluno(const char* f);
+    void bd_inserir_tabela_usuarios(const char* f, Perfil_usuario* user);
+    void bd_destruir_tabela_usuarios(const char* f);
+    bool checkUsuario(const char* f, Perfil_usuario* user);
+    bool checkTabelaExiste(const char*f, string nome_tabela);
+
 };
 
 #endif

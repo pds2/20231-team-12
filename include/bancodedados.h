@@ -16,6 +16,8 @@ using namespace std;
 class BD{
     public:
 
+    /*        ESTA CLASSE EH APENAS UMA DOCUMENTACAO DOS METODOS DE PERSISTENCIA.     */
+
     /* const char* f eh referente ao arquivo .db que vai ser criado e/ou aberto.
     * por exemplo const char* file = "biblioteca.db";
     */
@@ -78,7 +80,11 @@ class BD{
     void bd_remover_acervo(const char* f, Acervo* livro);
     /* @brief remove um usuario por seu id. */
     void bd_remover_usuario(const char* f, Perfil_usuario* user);
-    //acessando um metodo auxiliar para remover exemplares e remover aluno.
+    /*@brief remover por id.*/
+    void bd_remover_usuarioporid(const char* f, int id);
+    /*@brief remover por email.*/
+    void bd_remover_usuarioporemail(const char* f, string email);
+    /*@brief acessando um metodo auxiliar para remover exemplares e remover aluno.*/
     void bd_remover_aluno_e_devolver_exemplares(const char* f, Aluno* user);
     /* @brief remove um exemplar por seu codigo. */
     void bd_remover_exemplarespecifico(const char* f, Exemplar* item);

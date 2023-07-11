@@ -2,8 +2,8 @@
 #define ADMIN_H
 
 #include <string>
-#include <list>
 
+//dedados.h"
 #include "aluno.h"
 #include "bibliotecario.hpp"
 
@@ -23,8 +23,11 @@ class papel_invalido_e
 {
 };
 
-class Admin : public Perfil_usuario {
-    
+class Admin : public Perfil_usuario
+{
+protected:
+    const char* file = "biblioteca.db";
+
 public:
     /*
      * Constroi um admin.
@@ -39,16 +42,24 @@ public:
      */
     void deletar_usuario(std::string email);
     /*
-        * Destroi o admin.
-        */
-
-    //persistence
-    /*@brief Imprimir todos os Usuarios.*/
-    void consultar_Usuarios();
-
-    void adicionar_usuario(Perfil_usuario* user);
-
+     * @brief Destroi o admin.
+     */
     ~Admin();
+protected:
+    //Persistence
+    static void executar_sql(const char* f, string comandosql, string avisoerro);
+    void bd_inserir_admin(const char* f, Admin* adm);
+    void bd_inserir_aluno(const char* f, Aluno* aluno);
+    void bd_inserir_bibliotecario(const char* f, Bibliotecario* bibliotecario);
+    void bd_acessar_tabela_usuarios(const char* f);
+    void bd_remover_usuario(const char* f, Perfil_usuario* user);
+    void bd_remover_usuarioporid(const char* f, int id);
+    void bd_remover_usuarioporemail(const char* f, string email);
+    void bd_remover_aluno_e_devolver_exemplares(const char* f, Aluno *user);
+    bool checkUsuario(const char* f, Perfil_usuario* user);
+    bool checkTabelaExiste(const char*f, string nome_tabela);
+    void updateExemplarEmprestado(const char* f, Exemplar* item, int umouzero);
+    void UpdateMultaExemplarAluno(const char* f, Exemplar* item);
 };
 
 #endif

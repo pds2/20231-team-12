@@ -439,13 +439,29 @@ void BD::bd_remover_acervo(const char* f, Acervo *livro){
     }
 }
 
-void BD::bd_remover_usuario(const char* f, Perfil_usuario *user){
+void BD::bd_remover_usuario(const char* f, Perfil_usuario* user){
 
     int iduser = user->get_ID_perfil_usuario();
     string sql_comando = "Delete from Usuarios where ID="+to_string(iduser)+"; ";
     string alerta_erro = "ERRO AO REMOVER USUARIO: "+to_string(iduser)+" ";
 
     executar_sql(f, sql_comando, alerta_erro);
+}
+
+void BD::bd_remover_usuarioporid(const char* f, int id){
+
+    string sql_comando = "Delete from Usuarios where ID="+to_string(id)+"; ";
+    string alerta_erro = "ERRO AO REMOVER USUARIO: "+to_string(id)+" ";
+
+    executar_sql(f, sql_comando, alerta_erro);
+}
+
+void BD::bd_remover_usuarioporemail(const char* f, string email){
+
+    string sql_comando = "Delete from Usuarios where email="+email+"; ";
+    string alerta_erro = "ERRO AO REMOVER USUARIO: "+email+" ";
+
+    executar_sql(f, sql_comando, alerta_erro); 
 }
 
 void BD::bd_remover_aluno_e_devolver_exemplares(const char* f, Aluno *user){
