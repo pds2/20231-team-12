@@ -40,9 +40,11 @@ public:
      */
     int get_n_exemplares();
 
+    void emprestar_livro(Exemplar livro);
     // nao acho que devolve um acervo, se bem que precisa
+    void devolver_livro(int codigo);
 
-    void consultar_acervo(Acervo) override;
+    void consultar_acervo(std::string) override;
     /*
      * @brief Consulta a multa de um livro pelo codigo.
      */

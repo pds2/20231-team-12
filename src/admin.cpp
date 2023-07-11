@@ -38,13 +38,14 @@ void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
     {
         Aluno novo_aluno = Aluno(email, senha);
         novo_aluno.salvar_aluno_no_arquivo();
-
+        bd_inserir_aluno(file, &novo_aluno);
 
     }
     else if (tipo_de_user = (int)BIBLIOTECARIO)
     {
         Bibliotecario novo_bibliotecario = Bibliotecario(email, senha);
         novo_bibliotecario.salvar_bibl_no_arquivo();
+        bd_inserir_bibliotecario(file, &novo_bibliotecario);
     }
 }
 
@@ -100,9 +101,52 @@ void Admin::deletar_usuario(std::string email)
     rename("usuarios_temp.csv", "usuarios.csv");
 }
 
-void Admin::consultar_acervo(std::string)
+void Admin::consultar_acervo(std::string titulo)
 {
+    sqlite3* bibdados;
+    sqlite3_open(file, &bibdados);
+    sqlite3_stmt* stmt;
 
+    string sql_comando = "SELECT * FROM Acervos where titulo='"+titulo+"';";
+
+    sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt,0);
+
+    int anopub, codigo;
+    const unsigned char* autor;
+    const unsigned char* titulo;
+    const unsigned char* genero;
+    int numacervo = 0;
+
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        codigo = sqlite3_column_int(stmt, 4);
+        
+        string sql_comando = "SELECT * FROM Acervos where ID="+to_string(codigo)+";";
+        sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt,0);
+
+        while(sqlite3_step(stmt)!=SQLITE_DONE{
+            autor = sqlite3_column_text(stmt, 0);
+            anopub = sqlite3_column_int(stmt, 1);
+            titulo = sqlite3_column_text(stmt, 2);
+            genero = sqlite3_column_text(stmt, 3);
+            codigo2 = sqlite3_column_int(stmt, 4);
+            codigo_exemplar = sqlite3_column_text(stmt, 5);
+            emprestado = sqlite3_column_text(stmt, 6);
+            numexemplares++;
+
+            cout << "Exemplar "+to_string(numexemplares)+": " << endl;
+            cout << "autor: " << autor << endl;
+            cout << "ano de publicacao: " << anopub << endl;
+            cout << "titulo: " << titulo << endl;
+            cout << "genero: " << genero << endl;
+            cout << "codigo: " << codigo2 << endl;
+            cout << "codigo do exemplar: " << codigo_exemplar << endl; 
+            cout << "emprestado: " << emprestado << endl;
+            cout << "\n";
+        }
+        
+        sqlite3_finalize(stmt);
+        sqlite3_close(bibdados);
+    }
 }
 
 Admin::~Admin()

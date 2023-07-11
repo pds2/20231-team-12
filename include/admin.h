@@ -2,6 +2,8 @@
 #define ADMIN_H
 
 #include <string>
+#include <fstream>
+#include <sstream>
 
 //dedados.h"
 #include "aluno.h"
@@ -44,7 +46,7 @@ public:
     /*
      * @brief Destroi o admin.
      */
-    virtual void consultar_acervo() override;
+    virtual void consultar_acervo(std::string titulo) override;
     ~Admin();
 protected:
     //Persistence
