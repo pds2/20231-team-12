@@ -34,10 +34,11 @@ public:
      * @param senha Senha do aluno.
      */
     Aluno(std::string email, int senha);
-    /*
-     * @brief Destrói o aluno.
-     */
-    ~Aluno();
+
+
+    virtual ~Aluno();
+
+
 
     /*
      * @brief Pega todos os livros emprestados ao aluno.
@@ -52,6 +53,7 @@ public:
      * @param livro Endereço do livro a ser emprestado.
      */
     void emprestar_livro(Exemplar *livro);
+
     /*
      * @brief Devolve um livro do aluno.
      * @param codigo Código do livro a ser emprestado.
@@ -62,6 +64,7 @@ public:
      * @param titulo Titulo do acervo a ser buscado.
      */
     void consultar_acervo(std::string titulo) override;
+
     /*
      * @brief Consulta a multa de todos os livros emprestados.
      */

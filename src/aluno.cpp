@@ -1,4 +1,4 @@
-#include "aluno.h"
+#include "../include/aluno.h"
 
 #include <iostream>
 #include <iomanip>
@@ -40,10 +40,12 @@ void Aluno::emprestar_livro(Exemplar *livro)
     if (this->livros_com_aluno.size() > 5)
         throw ja_possui_mutos_livros_e();
     for (auto l : livros_com_aluno)
+
     {
         if(l->calculaMulta() != 0) throw aluno_com_multa_e();
         if(l->get_codigo()==livro->get_codigo()) throw ja_possui_esse_livro_e();
     }
+
     livros_com_aluno.push_back(livro);
 }
 
@@ -69,7 +71,7 @@ void Aluno::devolver_livro(int codigo)
 
 void Aluno::consultar_acervo(std::string titulo) // pro aluno so retorna codigo, titulo e autor, e # exemplares disponiveis
 {
-    std::ifstream arquivo_acervo("acervo.csv");
+    std::ifstream arquivo_acervo("files/acervo.csv");
     if (!arquivo_acervo)
     {
         std::cout << "Falha ao abrir o arquivo" << std::endl;
@@ -150,7 +152,9 @@ void Aluno::consultar_multa_total()
 int Aluno::salvar_aluno_no_arquivo()
 {
     std::ofstream aluno_out;
-    aluno_out.open("usuarios.csv", std::ios_base::app);
+
+    aluno_out.open("files/usuarios.csv", std::ios_base::app);
+
     if (!aluno_out)
     {
         std::cout << "arquivo nao existe" << std::endl;

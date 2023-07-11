@@ -32,6 +32,7 @@ public:
      * @brief Destrói o acervo.
      */
     ~Acervo();
+    bool operator<(const Acervo &acervo_custom) const;
 
     /*
      * @brief Compara dois acervos com o operador <.

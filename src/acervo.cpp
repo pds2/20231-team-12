@@ -1,12 +1,26 @@
 #include "../include/acervo.h"
 
 Acervo::Acervo(int codigo, std::string autor, std::string titulo,
-               int ano_publicacao, int genero) : _autor(autor),
-                                                 _ano_publicacao(ano_publicacao),
+               int ano_publicacao, int genero) : _codigo(codigo),
+                                                 _autor(autor),
                                                  _titulo(titulo),
-                                                 _genero(genero),
-                                                 _codigo(codigo)
+                                                 _ano_publicacao(ano_publicacao),
+                                                 _genero(genero)
 {
+}
+
+Acervo::~Acervo() {}
+
+bool Acervo::operator<(const Acervo &acervo_custom) const
+{
+    if (acervo_custom.get_codigo() < this->_codigo)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 std::string Acervo::get_autor() const
@@ -37,7 +51,7 @@ int Acervo::get_codigo() const
 int Acervo::salvar_acervo_no_arquivo()
 {
     std::ofstream acervo_out;
-    acervo_out.open("acervos.csv", std::ios_base::app);
+    acervo_out.open("files/acervos.csv", std::ios_base::app);
     if (!acervo_out)
     {
         std::cout << "arquivo nao existe" << std::endl;

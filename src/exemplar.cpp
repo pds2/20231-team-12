@@ -4,10 +4,12 @@
 
 Exemplar::Exemplar(int codigo, int codigoEspecifico, std::string autor, std::string titulo, int ano_publicacao, int genero)
     : Acervo(codigo, autor, titulo, ano_publicacao, genero), emprestado(0),
-      codigoEspecifico(codigoEspecifico), dataEmprestimo(0)
+      dataEmprestimo(0), codigoEspecifico(codigoEspecifico)
 {
     salva_exemplar_no_arquivo();
 }
+
+Exemplar::~Exemplar() {}
 
 int Exemplar::getCodigoEspecifico() const
 {
@@ -59,8 +61,6 @@ int Exemplar::calculaMulta()
     int mesAtual = current_time->tm_mon + 1;     // retorna o mês atual, onde janeiro é representado por 0 e dezembro por 11, convertendo para 1 a 12(soma-se+1)
     int anoAtual = current_time->tm_year + 1900; // 1900 - convenção C Library
 
-    int dataAtual = diaAtual + mesAtual * 100 + anoAtual * 10000; // operação q combina o ano, mês e dia em formato de data numérica 17/06/23 -> 20230617
-
     diaDevolucao = dataDevolucao % 100;
     mesDevolucao = (dataDevolucao / 100) % 100;
     anoDevolucao = dataDevolucao / 10000;
@@ -78,7 +78,7 @@ int Exemplar::calculaMulta()
         devolução para um valor de tempo.*/
         std::time_t devolucao_timestamp = std::mktime(&devolucao_time);
 
-        /*Aqui, estamos criando uma estrutura std::tm chamada atual_time e inicializando todos os seus campos como zero.*/
+        //Aqui, estamos criando uma estrutura std::tm chamada atual_time e inicializando todos os seus campos como zero.
         std::tm atual_time = {0};
         atual_time.tm_mday = diaAtual;
         atual_time.tm_mon = mesAtual - 1;
@@ -90,7 +90,7 @@ int Exemplar::calculaMulta()
 
         // Calcula a diferença em segundos entre as datas
         std::time_t diff_seconds = std::difftime(atual_timestamp, devolucao_timestamp);
-        /*std::difftime() é uma função da biblioteca <ctime> que calcula a diferença de tempo entre dois valores de tempo (std::time_t) em segundos.*/
+        //std::difftime() é uma função da biblioteca <ctime> que calcula a diferença de tempo entre dois valores de tempo (std::time_t) em segundos.
 
         // Converte a diferença em segundos para dias
         diasAtraso = static_cast<int>(diff_seconds) / (60 * 60 * 24);
@@ -117,7 +117,7 @@ int Exemplar::calculaMulta()
 int Exemplar::salva_exemplar_no_arquivo()
 {
     std::ofstream exemplar_out;
-    exemplar_out.open("exemplares.csv", std::ios_base::app);
+    exemplar_out.open("files/exemplares.csv", std::ios_base::app);
     if (!exemplar_out)
     {
         std::cout << "arquivo nao existe" << std::endl;

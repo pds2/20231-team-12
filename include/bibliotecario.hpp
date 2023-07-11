@@ -20,16 +20,19 @@ public:
      * @param senha Senha do bibliotecário.
      */
     Bibliotecario(std::string, int);
+
     /*
      * @brief Destrói o bibliotecário.
      */
-    ~Bibliotecario();
+    virtual ~Bibliotecario();
+
 
     /*
      * @brief Consulta a existência e os dados de um acervo pelo título.
      * @param titulo Título do acervo a ser buscado.
      */
     void consultar_acervo(std::string) override;
+
     /*
      * @brief Adiciona um acervo ao sistema.
      * @param codigo Codigo do acervo.
@@ -53,6 +56,7 @@ public:
      * @brief Remove um acervo do sistema.
      * @param codigo Codigo do acervo a ser removido.
      */
+
     void remover_acervo(int);   // remove acervo específico, pelo número CDU
     /*
      * @brief Remove um exemplar do sistema.
@@ -69,6 +73,7 @@ public:
      * @param aluno Aluno a receber o exemplar.
      */
     void emprestimo_de_exemplar(Exemplar *, Aluno &); // empresta um exemplar especifico a um aluno
+
     /*
      * @brief Faz a devolução de um livro de um aluno ao sistema.
      * @param codigo Código do exemplar a ser devolvido.

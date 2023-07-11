@@ -35,6 +35,7 @@ public:
      */
     ~Sistema();
 
+
     /*
      * @brief Carrega os acervos cadastrados.
      */
@@ -46,6 +47,7 @@ public:
     /*
      * @brief Faz a tela de cadastro do sistema.
      */
+
     int tela_cadastro();
     /*
      * @brief Faz a tela de login no sistema;
@@ -63,5 +65,8 @@ public:
      * @brief Faz a tela de uso do sistema para um admin.
      */
     void tela_admin(int);
+    void inicia_sistema();
 };
+
 #endif
+
