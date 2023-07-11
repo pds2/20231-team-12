@@ -61,8 +61,10 @@ void Bibliotecario::adicionar_exemplar(int codigo, int codigoEspecifico, std::st
 void Bibliotecario::remover_acervo(int codigo_acervo)
 {
 
+
     std::ifstream arquivo_acervo("files/acervos.csv");
     std::ofstream arquivo_atualizado("files/acervos_temp.csv");
+
     std::string linha;
     std::string codigo_string = std::to_string(codigo_acervo);
 
@@ -92,14 +94,18 @@ void Bibliotecario::remover_acervo(int codigo_acervo)
     arquivo_acervo.close();
     arquivo_atualizado.close();
 
+
     remove("files/acervos.csv");
     rename("files/acervos_temp.csv", "files/acervos.csv");
+
 }
 
 void Bibliotecario::remover_exemplar(int codigo_exemplar)
 {
+
     std::ifstream arquivo_acervo("files/acervos.csv");
     std::ofstream arquivo_atualizado("files/acervos_temp.csv");
+
     std::string linha;
     std::string codigo_string = std::to_string(codigo_exemplar);
 
@@ -129,23 +135,40 @@ void Bibliotecario::remover_exemplar(int codigo_exemplar)
     arquivo_acervo.close();
     arquivo_atualizado.close();
 
+
     remove("files/acervos.csv");
     rename("files/acervos_temp.csv", "files/acervos.csv");
+
 }
 
 void Bibliotecario::emprestimo_de_exemplar(Exemplar *livro, Aluno &aluno)
 {
-    aluno.emprestar_livro(livro);
+
+    try {
+        aluno.emprestar_livro(livro);
+    } catch(ja_possui_mutos_livros_e) {
+        std::cout << "O aluno ja possui muitos livros, nao pode pegar mais." << std::endl;
+    } catch(ja_possui_esse_livro_e) {
+        std::cout << "O aluno ja possui este livro." << std::endl;
+    } catch(aluno_com_multa_e) {
+        std::cout << "O aluno esta com multas, nao pode pegar mais livros até pagar." << std::endl;
+    }
 }
 
 void Bibliotecario::devolucao_de_exemplar(int codigo, Aluno &aluno)
 {
-    aluno.devolver_livro(codigo);
+    try {
+        aluno.devolver_livro(codigo);
+    } catch(nao_possui_esse_livro_e) {
+        std::cout << "O aluno não possui este livro." << std::endl;
+    }
 }
 
 int Bibliotecario::salvar_bibl_no_arquivo()
 {
+
     std::fstream bibli_file("files/usuarios.csv", std::ios_base::in | std::ios_base::out | std::ios_base::app);
+
 
     if (!bibli_file)
     {
@@ -157,6 +180,7 @@ int Bibliotecario::salvar_bibl_no_arquivo()
     bool bibliotecarioExists = false;
 
     while (std::getline(bibli_file, line))
+
     {
         std::istringstream iss(line);
         std::string email;
@@ -170,6 +194,7 @@ int Bibliotecario::salvar_bibl_no_arquivo()
 
     if (bibliotecarioExists)
     {
+
         std::cout << "bibliotecario ja existe" << std::endl;
         return 0;
     }
