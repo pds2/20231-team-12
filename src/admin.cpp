@@ -1,100 +1,80 @@
-#include "../include/admin.h"
+#include "admin.h"
 
-Admin::Admin(unsigned int id, std::string email, int senha, Papel_do_usuario papel):
-    Perfil_usuario(id, email, senha, papel) {
-        bibdados.bd_inserir_admin(file, *this);
+Admin::Admin(std::string email, int senha) : Perfil_usuario(email, senha)
+{
+    this->_papel = ADMIN;
 }
 
-void Admin::adicionar_usuario(Perfil_usuario* perfil) {
-    if(bibdados.checkUsuario(file, *perfil)) {
-        throw id_ja_cadastrado_e();
+void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
+{
+    if (tipo_de_user = (int)ALUNO)
+    {
+        Aluno novo_aluno = Aluno(email, senha);
+        novo_aluno.salvar_aluno_no_arquivo();
     }
-
-    _usuarios.push_back(perfil);
-    bibdados.bd_inserir_tabela_usuarios(file, *perfil);
-
-    if(perfil->get_papel_usuario()==BIBLIOTECARIO) {
-        Bibliotecario *b = static_cast<Bibliotecario*>(perfil);
-        bibdados.bd_inserir_bibliotecario(file, *b);
+    else if (tipo_de_user = (int)BIBLIOTECARIO)
+    {
+        Bibliotecario novo_bibliotecario = Bibliotecario(email, senha);
+        novo_bibliotecario.salvar_bibl_no_arquivo();
     }
-    else {
-        Aluno *a = static_cast<Aluno*>(perfil);
-        bibdados.bd_inserir_aluno(file, *a);
-    }
-
-    // 
-    // O proprio metodo do bd para inserir ja verifica se o id ja esta sendo utilizado.
-    // if(papel==ALUNO) {
-    //     Aluno a(id,email,senha,papel);
-    //     //adiciona o aluno ao bd.
-    //     bibdados.bd_inserir_aluno(file, a);
-        
-    // } else {
-    //     //Construtor ainda não definido
-    //     Bibliotecario b(id,email,senha,papel);
-    //     //adiciona o bibliotecario ao bd.
-    //     bibdados.bd_inserir_bibliotecario(file, b);
-
-    // }
-    
 }
 
+void Admin::deletar_usuario(std::string email)
+{
+    // verifica se o id não é do próprio admin, e depois se existe algum usuario com esse id
+    if (this->get_email_perfil_usuario() == email)
+    {
+        throw id_invalido_e();
+    }
 
-void Admin::deletar_usuario(Perfil_usuario *perfil) {
-    // Checa se o id não é o do proprio admin, e depois se existe alguem com o id
-    if(perfil->get_ID_perfil_usuario()==get_ID_perfil_usuario()) throw id_invalido_e();
-    if(!bibdados.checkUsuario(file,*perfil)) throw perfil_nao_existe_e();
+    // bool b = true;
+    //  for(*todos os usuario do bd*) if(usuario.get_ID_perfil_usuario()==id) b = false;
+    // if (b)
+    //    throw id_nao_existe_e();
 
-     // persistence: tentando montar essa logica aqui.
-    sqlite3* bibdb;
-    sqlite3_open(file, &bibdb);
-    sqlite3_stmt* stmt;
-    int id = perfil->get_ID_perfil_usuario();
+    /*for(*todos os usuario do bd*) {
+        if(id do usuario == id) {
+            if(usuario for aluno) devolver todos os livros que estão com o aluno
+            deletar o usuario
+        }
+    }*/
 
-    string sql_comando = "SELECT * FROM Usuarios where ID="+to_string(id)+"; ";
+    std::ifstream arquivo_usuarios("usuarios.csv");
+    std::ofstream arquivo_atualizado("usuarios_temp.csv");
+    std::string linha;
 
-    sqlite3_prepare_v2(bibdb, sql_comando.c_str(), -1, &stmt, 0);
-    int iduserbd = 0;
-    const unsigned char* papeluserbd;
-    int senhauserbd = 0;
-      //20 784     104188
-    while(sqlite3_step(stmt)!=SQLITE_DONE){
-        iduserbd = sqlite3_column_int(stmt, 0);
-        senhauserbd = sqlite3_column_int(stmt, 2);
-        papeluserbd = sqlite3_column_text(stmt, 3);
-        if(iduserbd == id){
-            // nao sei se a conversao abaixo possui algum problema
-            if(papeluserbd == (const unsigned char*)"ALUNO") {
-                Aluno alunocomoid(id,"",senhauserbd,ALUNO);
-                bibdados.bd_remover_aluno_e_devolver_exemplares(file, alunocomoid);
-                sqlite3_finalize(stmt);
-                sqlite3_close(bibdb);
-            }
-            if(papeluserbd == (const unsigned char *)"BIBLIOTECARIO"){
-                string sql_comando = "Delete from Usuarios where ID="+to_string(id)+"; ";
-                char* msgerr;
-                int resp = 0;
+    while (getline(arquivo_usuarios, linha))
+    {
+        std::istringstream iss(linha);
+        std::string campo;
+        bool email_encontrado = false;
 
-                resp = sqlite3_exec(bibdb, sql_comando.c_str(), NULL, NULL, &msgerr);
-                if(resp!=SQLITE_OK){
-                    cerr << "ERRO AO REMOVER USUARIO: " << msgerr << endl;
-                }
-                sqlite3_finalize(stmt);
-                sqlite3_free(msgerr);
-                sqlite3_close(bibdb);
-            }
-            for(auto it = _usuarios.begin();it!=_usuarios.end();it++) {
-                if((*it)->get_ID_perfil_usuario()==id) _usuarios.erase(it);
+        while (getline(iss, campo, ','))
+        {
+            if (campo == email)
+            {
+                email_encontrado = true;
+                break;
             }
         }
+
+        if (!email_encontrado)
+        {
+            arquivo_atualizado << linha << '\n';
+        }
     }
-    sqlite3_finalize(stmt);
-    sqlite3_close(bibdb);
+
+    arquivo_usuarios.close();
+    arquivo_atualizado.close();
+
+    remove("usuarios.csv");
+    rename("usuarios_temp.csv", "usuarios.csv");
 }
 
-void Admin::consultar_Usuarios() {
-    bibdados.bd_acessar_tabela_usuarios(file);
-    cout << "\n";
+void Admin::consultar_acervo(Acervo)
+{
 }
 
-Admin::~Admin() {}
+Admin::~Admin()
+{
+}
