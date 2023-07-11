@@ -111,11 +111,14 @@ void Admin::consultar_acervo(std::string titulo)
 
     sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt,0);
 
-    int anopub, codigo;
+    int anopub, codigo, codigo2;
     const unsigned char* autor;
     const unsigned char* titulo;
     const unsigned char* genero;
     int numacervo = 0;
+    int numexemplares = 0;
+    const unsigned char* codigo_exemplar;
+    const unsigned char* emprestado;
 
     while(sqlite3_step(stmt)!=SQLITE_DONE){
         codigo = sqlite3_column_int(stmt, 4);
@@ -123,7 +126,8 @@ void Admin::consultar_acervo(std::string titulo)
         string sql_comando = "SELECT * FROM Acervos where ID="+to_string(codigo)+";";
         sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt,0);
 
-        while(sqlite3_step(stmt)!=SQLITE_DONE{
+        while(sqlite3_step(stmt)!=SQLITE_DONE){
+
             autor = sqlite3_column_text(stmt, 0);
             anopub = sqlite3_column_int(stmt, 1);
             titulo = sqlite3_column_text(stmt, 2);
