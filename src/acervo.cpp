@@ -17,6 +17,10 @@ bool Acervo::operator<(const Acervo &acervo_custom) const
     {
         return true;
     }
+    else
+    {
+        return false;
+    }
 }
 
 std::string Acervo::get_autor() const

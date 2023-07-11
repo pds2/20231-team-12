@@ -145,18 +145,42 @@ void Bibliotecario::devolucao_de_exemplar(int codigo, Aluno &aluno)
 
 int Bibliotecario::salvar_bibl_no_arquivo()
 {
-    std::ofstream bibli_out;
-    bibli_out.open("usuarios.csv", std::ios_base::app);
-    if (!bibli_out)
+    std::fstream bibli_file("usuarios.csv", std::ios_base::in | std::ios_base::out | std::ios_base::app);
+
+    if (!bibli_file)
     {
-        std::cout << "arquivo nao existe" << std::endl;
+        std::cout << "nao foi possivel abrir o arquivo" << std::endl;
+        return 0;
+    }
+
+    std::string line;
+    bool bibliotecarioExists = false;
+
+    while (std::getline(bibli_file, line))
+    {
+        std::istringstream iss(line);
+        std::string email;
+        std::getline(iss, email, ',');
+        if (email == this->get_email_perfil_usuario())
+        {
+            bibliotecarioExists = true;
+            break;
+        }
+    }
+
+    if (bibliotecarioExists)
+    {
+        std::cout << "bibliotecario ja existe" << std::endl;
         return 0;
     }
     else
     {
-        bibli_out << this->get_ID_perfil_usuario() << ","
-                  << this->get_email_perfil_usuario() << "," << this->get_senha_perfil_usuario() << "," << this->get_senha_perfil_usuario() << std::endl;
-        bibli_out.close();
+        bibli_file.clear();
+        bibli_file.seekp(0, std::ios_base::end);
+        bibli_file << this->get_ID_perfil_usuario() << ","
+                   << this->get_email_perfil_usuario() << ","
+                   << this->get_senha_perfil_usuario() << "," << this->get_papel_usuario() << "\n";
+        bibli_file.close();
         return 1;
     }
 }
