@@ -25,6 +25,7 @@ private:
 
 public:
     Sistema();
+    ~Sistema();
 
     void tela_cadastro();
     int tela_login();

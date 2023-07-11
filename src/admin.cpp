@@ -3,7 +3,6 @@
 Admin::Admin(std::string email, int senha) : Perfil_usuario(email, senha)
 {
     this->_papel = ADMIN;
-    std::cout << "Admin criado." << std::endl;
 }
 
 void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
@@ -33,13 +32,15 @@ void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
     */
     if (tipo_de_user = (int)ALUNO)
     {
-        Aluno novo_aluno = Aluno(email, senha);
-        novo_aluno.salvar_aluno_no_arquivo();
+        Aluno *novo_aluno = new Aluno(email, senha);
+        novo_aluno->salvar_aluno_no_arquivo();
+        delete novo_aluno;
     }
     else if (tipo_de_user = (int)BIBLIOTECARIO)
     {
-        Bibliotecario novo_bibliotecario = Bibliotecario(email, senha);
-        novo_bibliotecario.salvar_bibl_no_arquivo();
+        Bibliotecario *novo_bibliotecario = new Bibliotecario(email, senha);
+        novo_bibliotecario->salvar_bibl_no_arquivo();
+        delete novo_bibliotecario;
     }
 }
 
@@ -50,49 +51,52 @@ void Admin::deletar_usuario(std::string email)
     {
         throw id_invalido_e();
     }
-
-    // bool b = true;
-    //  for(*todos os usuario do bd*) if(usuario.get_ID_perfil_usuario()==id) b = false;
-    // if (b)
-    //    throw id_nao_existe_e();
-
-    /*for(*todos os usuario do bd*) {
-        if(id do usuario == id) {
-            if(usuario for aluno) devolver todos os livros que estão com o aluno
-            deletar o usuario
-        }
-    }*/
-
-    std::ifstream arquivo_usuarios("usuarios.csv");
-    std::ofstream arquivo_atualizado("usuarios_temp.csv");
-    std::string linha;
-
-    while (getline(arquivo_usuarios, linha))
+    else
     {
-        std::istringstream iss(linha);
-        std::string campo;
-        bool email_encontrado = false;
 
-        while (getline(iss, campo, ','))
+        // bool b = true;
+        //  for(*todos os usuario do bd*) if(usuario.get_ID_perfil_usuario()==id) b = false;
+        // if (b)
+        //    throw id_nao_existe_e();
+
+        /*for(*todos os usuario do bd*) {
+            if(id do usuario == id) {
+                if(usuario for aluno) devolver todos os livros que estão com o aluno
+                deletar o usuario
+            }
+        }*/
+
+        std::ifstream arquivo_usuarios("usuarios.csv");
+        std::ofstream arquivo_atualizado("usuarios_temp.csv");
+        std::string linha;
+
+        while (getline(arquivo_usuarios, linha))
         {
-            if (campo == email)
+            std::istringstream iss(linha);
+            std::string campo;
+            bool email_encontrado = false;
+
+            while (getline(iss, campo, ','))
             {
-                email_encontrado = true;
-                break;
+                if (campo == email)
+                {
+                    email_encontrado = true;
+                    break;
+                }
+            }
+
+            if (!email_encontrado)
+            {
+                arquivo_atualizado << linha << '\n';
             }
         }
 
-        if (!email_encontrado)
-        {
-            arquivo_atualizado << linha << '\n';
-        }
+        arquivo_usuarios.close();
+        arquivo_atualizado.close();
+
+        remove("usuarios.csv");
+        rename("usuarios_temp.csv", "usuarios.csv");
     }
-
-    arquivo_usuarios.close();
-    arquivo_atualizado.close();
-
-    remove("usuarios.csv");
-    rename("usuarios_temp.csv", "usuarios.csv");
 }
 
 void Admin::consultar_acervo(std::string)

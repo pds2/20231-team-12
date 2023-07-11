@@ -6,6 +6,8 @@ Bibliotecario::Bibliotecario(std::string email, int senha) : Perfil_usuario(emai
     salvar_bibl_no_arquivo();
 }
 
+Bibliotecario::~Bibliotecario() {}
+
 void Bibliotecario::consultar_acervo(std::string titulo)
 {
     std::ifstream arquivo_acervo("acervo.csv");

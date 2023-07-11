@@ -15,6 +15,7 @@ class Bibliotecario : public Perfil_usuario
 {
 public:
     Bibliotecario(std::string, int);
+    ~Bibliotecario();
 
     void consultar_acervo(std::string) override;
     void adicionar_acervo(Acervo);

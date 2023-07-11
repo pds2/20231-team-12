@@ -30,6 +30,8 @@ public:
      */
     Aluno(std::string email, int senha);
 
+    ~Aluno();
+
     /*
      * @brief Mostra todos os livros emprestados.
      */
@@ -44,10 +46,7 @@ public:
     void devolver_livro(int codigo);
 
     void consultar_acervo(std::string) override;
-    /*
-     * @brief Consulta a multa de um livro pelo codigo.
-     */
-    void consultar_multa(int);
+
     /*
      * @brief Consulta a multa de todos os livros emprestados.
      */

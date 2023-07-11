@@ -20,7 +20,7 @@ private:
 
 public:
     // Construtor
-    Acervo(std::string autor, int ano_publicacao, std::string titulo, int genero, int codigo);
+    Acervo(int codigo, std::string autor, std::string titulo, int ano_publicacao, int genero);
     ~Acervo();
 
     // getters

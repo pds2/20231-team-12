@@ -10,18 +10,16 @@ class Exemplar : public Acervo
 private:
     double multa;
     bool emprestado;
-    int dataAquisicao;
+    int dataEmprestimo;
     int codigoEspecifico;
 
 public:
-    Exemplar(std::string autor, int anoPublicacao, std::string titulo, int genero, float codigo,
-             bool emprestado, int dataAquisicao, int codigoEspecifico);
-
+    Exemplar(int codigo, int codigoEspecifico, std::string autor, std::string titulo, int ano_publicacao, int genero);
+    ~Exemplar();
     // Métodos getters
     bool isEmprestado() const;
-    int getDataAquisicao() const;
-    int getCodigoEspecifico() const;
     int getDataEmprestimo() const;
+    int getCodigoEspecifico() const;
     double getMulta() const;
 
     // métodos

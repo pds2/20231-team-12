@@ -8,6 +8,8 @@ Aluno::Aluno(std::string email, int senha) : Perfil_usuario(email, senha)
     this->_papel = ALUNO;
 }
 
+Aluno::~Aluno() {}
+
 /*
 void Aluno::livros_emprestados()
 {
@@ -53,9 +55,45 @@ void Aluno::devolver_livro(int codigo)
 }
 */
 
-void Aluno::consultar_acervo(std::string)
+void Aluno::consultar_acervo(std::string titulo)
 {
-    //...
+    std::ifstream arquivo_acervo("acervo.csv");
+    if (!arquivo_acervo)
+    {
+        std::cout << "Falha ao abrir o arquivo" << std::endl;
+        return;
+    }
+
+    std::string linha;
+    while (getline(arquivo_acervo, linha))
+    {
+        std::istringstream iss(linha);
+        std::string codigo, autor, titulo_csv, ano_publicacao, genero;
+
+        if (getline(iss, codigo, ',') &&
+            getline(iss, autor, ',') &&
+            getline(iss, titulo_csv, ',') &&
+            getline(iss, ano_publicacao, ',') &&
+            getline(iss, genero, ','))
+        {
+            if (titulo_csv == titulo)
+            {
+                int codigo_int = std::stoi(codigo);
+                int ano_publicacao_int = std::stoi(ano_publicacao);
+                int genero_int = std::stoi(genero);
+
+                std::cout << "Acervo encontrado:\n";
+                std::cout << "Código: " << codigo_int << '\n';
+                std::cout << "Título: " << titulo << '\n';
+                std::cout << "Autor: " << autor << '\n';
+                std::cout << "Ano de Publicação: " << ano_publicacao_int << '\n';
+                std::cout << "Gênero: " << genero_int << '\n';
+                std::cout << "-------------------\n";
+            }
+        }
+    }
+
+    arquivo_acervo.close();
 }
 
 /*
@@ -81,6 +119,9 @@ void Aluno::consultar_multa(int codigo)
     }
 }
 
+
+
+//SO ESSA AQUI
 void Aluno::consultar_multa_total()
 {
     double total = 0;
@@ -98,3 +139,22 @@ void Aluno::consultar_multa_total()
         std::cout << "Não há nenhuma multa no nome do aluno." << std::endl;
 }
 */
+
+int Aluno::salvar_aluno_no_arquivo()
+{
+    std::ofstream aluno_out;
+    aluno_out.open("usuarios.csv", std::ios_base::app);
+    if (!aluno_out)
+    {
+        std::cout << "arquivo nao existe" << std::endl;
+        return 0;
+    }
+    else
+    {
+        aluno_out << this->get_ID_perfil_usuario() << ","
+                  << this->get_email_perfil_usuario() << "," << this->get_senha_perfil_usuario() << "," << this->get_senha_perfil_usuario() << std::endl;
+
+        aluno_out.close();
+        return 1;
+    }
+}

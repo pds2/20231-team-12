@@ -10,6 +10,8 @@ Perfil_usuario::Perfil_usuario()
     _papel = ALUNO;
 }
 
+Perfil_usuario::~Perfil_usuario() {}
+
 Perfil_usuario::Perfil_usuario(std::string email, int senha) : _email_perfil_usuario(email), _senha_pefil_usuario(senha)
 {
     _ID_perfil_usuario = CONTADOR_ID_perfil_usuario;

@@ -1,6 +1,6 @@
 #include "../include/sistema.hpp"
 
-void Sistema::Sistema()
+Sistema::Sistema()
 {
     // abre arquivo users, pega todos os users e deixa no ram
     // abre arquivo acervos, abre arquivo exemplares
