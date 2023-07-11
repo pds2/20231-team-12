@@ -10,7 +10,7 @@ Bibliotecario::~Bibliotecario() {}
 
 void Bibliotecario::consultar_acervo(std::string titulo) // pra bibliotecario retorna tudo sobre o acervo e quantidade de exemplares totais e emprestados
 {
-    std::ifstream arquivo_acervo("acervo.csv");
+    std::ifstream arquivo_acervo("files/acervo.csv");
     if (!arquivo_acervo)
     {
         std::cout << "Falha ao abrir o arquivo" << std::endl;
@@ -61,8 +61,8 @@ void Bibliotecario::adicionar_exemplar(int codigo, int codigoEspecifico, std::st
 void Bibliotecario::remover_acervo(int codigo_acervo)
 {
 
-    std::ifstream arquivo_acervo("acervos.csv");
-    std::ofstream arquivo_atualizado("acervos_temp.csv");
+    std::ifstream arquivo_acervo("files/acervos.csv");
+    std::ofstream arquivo_atualizado("files/acervos_temp.csv");
     std::string linha;
     std::string codigo_string = std::to_string(codigo_acervo);
 
@@ -92,14 +92,14 @@ void Bibliotecario::remover_acervo(int codigo_acervo)
     arquivo_acervo.close();
     arquivo_atualizado.close();
 
-    remove("acervos.csv");
-    rename("acervos_temp.csv", "acervos.csv");
+    remove("files/acervos.csv");
+    rename("files/acervos_temp.csv", "files/acervos.csv");
 }
 
 void Bibliotecario::remover_exemplar(int codigo_exemplar)
 {
-    std::ifstream arquivo_acervo("acervos.csv");
-    std::ofstream arquivo_atualizado("acervos_temp.csv");
+    std::ifstream arquivo_acervo("files/acervos.csv");
+    std::ofstream arquivo_atualizado("files/acervos_temp.csv");
     std::string linha;
     std::string codigo_string = std::to_string(codigo_exemplar);
 
@@ -129,8 +129,8 @@ void Bibliotecario::remover_exemplar(int codigo_exemplar)
     arquivo_acervo.close();
     arquivo_atualizado.close();
 
-    remove("acervos.csv");
-    rename("acervos_temp.csv", "acervos.csv");
+    remove("files/acervos.csv");
+    rename("files/acervos_temp.csv", "files/acervos.csv");
 }
 
 void Bibliotecario::emprestimo_de_exemplar(Exemplar *livro, Aluno &aluno)
@@ -145,7 +145,7 @@ void Bibliotecario::devolucao_de_exemplar(int codigo, Aluno &aluno)
 
 int Bibliotecario::salvar_bibl_no_arquivo()
 {
-    std::fstream bibli_file("usuarios.csv", std::ios_base::in | std::ios_base::out | std::ios_base::app);
+    std::fstream bibli_file("files/usuarios.csv", std::ios_base::in | std::ios_base::out | std::ios_base::app);
 
     if (!bibli_file)
     {

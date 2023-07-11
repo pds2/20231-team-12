@@ -7,9 +7,19 @@ Sistema::Sistema()
     // pega acervos, PROCURA NO ARQUIVO INTEIRO se ele tem algum exemplar
     // tem: cadastra ele (se nao tiver exemplar continua um vetor vazio)
     // FEITO
+
+    std::cout << "ola! Bem vindo ao sistema de biblioteca do grupo 12.\n"
+              << std::endl;
+    std::cout << "carregando livros:\n"
+              << std::endl;
+
     carregar_acervos();
+    std::cout << "carregando usuarios:\n"
+              << std::endl;
     carregar_usuarios();
 }
+
+Sistema::~Sistema() {}
 
 //    Acervo(int codigo, std::string autor, std::string titulo, int ano_publicacao, int genero);
 
@@ -63,13 +73,13 @@ void Sistema::carregar_acervos()
 {
 
     // carrega os dois arquivos
-    std::ifstream arquivo_acervos("acervos.csv");
+    std::ifstream arquivo_acervos("files/acervos.csv");
     if (!arquivo_acervos)
     {
         std::cout << "Falha ao abrir o arquivo acervos.csv" << std::endl;
         std::__throw_bad_exception(); // trocar isso por um erro de verdade pessoal
     }
-    std::ifstream arquivo_exemplares("exemplares.csv");
+    std::ifstream arquivo_exemplares("files/exemplares.csv");
     if (!arquivo_exemplares)
     {
         std::cout << "Falha ao abrir o arquivo exemplares.csv" << std::endl;
@@ -142,7 +152,7 @@ void Sistema::carregar_acervos()
 // Load usuarios from "usuarios.csv"
 void Sistema::carregar_usuarios()
 {
-    std::ifstream arquivo_usuarios("usuarios.csv");
+    std::ifstream arquivo_usuarios("files/usuarios.csv");
     if (!arquivo_usuarios)
     {
         std::cout << "Falha ao abrir o arquivo usuarios.csv" << std::endl;
@@ -191,6 +201,66 @@ void Sistema::carregar_usuarios()
 
 int Sistema::tela_cadastro()
 {
-    std::cout << "ola" << std::endl;
+    int entrada = 0;
+    std::cout << "possui cadastro? 0 - nao, 1 - sim:\n"
+              << std::endl;
+    std::cin >> entrada;
+    if (entrada == 0)
+    {
+        std::string email;
+        int senha;
+        std::cout << "digite seu email:" << std::endl;
+        std::cin >> email;
+        std::cout << "digite sua senha (somente números):" << std::endl;
+        std::cin >> senha;
+        Aluno *novo_aluno = new Aluno(email, senha); // sempre cria so aluno
+        this->usuarios[email].push_back(novo_aluno);
+        // tratar excessoes, senha negativa
+        return 1;
+    }
+    else if (entrada == 1)
+    {
+        return 1;
+    }
+    
     return 0;
 }
+
+int Sistema::tela_login()
+{
+    std::string email;
+    int senha;
+
+    std::cout << "Digite seu email:" << std::endl;
+    std::cin >> email;
+    std::cout << "Digite sua senha (somente números):" << std::endl;
+    std::cin >> senha;
+
+    auto it = usuarios.find(email);
+    if (it != usuarios.end())
+    {
+        std::vector<Perfil_usuario *> &perfis = it->second;
+        for (Perfil_usuario *perfil : perfis)
+        {
+            if (perfil->get_senha_perfil_usuario() == senha)
+            {
+
+                return 1;
+            }
+        }
+
+        std::cout << "Senha incorreta" << std::endl;
+    }
+    else
+    {
+        std::cout << "Email não encontrado" << std::endl;
+    }
+
+    return 0; // Failed login
+}
+
+void Sistema::tela_aluno(int aluno) {}
+
+void Sistema::tela_bibliotecario(int bibliotecario) {}
+
+void Sistema::tela_admin(int admin) {}

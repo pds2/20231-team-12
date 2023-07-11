@@ -36,5 +36,6 @@ public:
     void tela_aluno(int);
     void tela_bibliotecario(int);
     void tela_admin(int);
+    void inicia_sistema();
 };
 #endif
