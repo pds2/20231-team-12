@@ -116,7 +116,6 @@ void Perfil_usuario::bd_inserir_tabela_usuarios(const char* f, Perfil_usuario* u
 }
 
 
-
 void Perfil_usuario::bd_destruir_tabela_usuarios(const char* f){
 
     string sql_comando = "Drop Table Usuarios;";
@@ -124,7 +123,6 @@ void Perfil_usuario::bd_destruir_tabela_usuarios(const char* f){
     executar_sql(f, sql_comando, alerta_erro);
 
 }
-
 
 bool Perfil_usuario::checkUsuario(const char* f, Perfil_usuario* user){
 

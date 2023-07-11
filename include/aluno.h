@@ -62,13 +62,14 @@ public:
 protected:
     //Persistence
     static void executar_sql(const char* f, string comandosql, string avisoerro);
-    void bd_inserir_aluno(const char* f, Aluno* aluno);
     void bd_inserir_tabela_usuarios(const char* f, Perfil_usuario* user);
-    void bd_criar_tabela_exemplaresaluno(const char* f);
+    void bd_inserir_aluno(const char* f, Aluno* aluno);
     static void bd_inserir_alunoexemplar(const char* f, Aluno* aluno, Exemplar* item);
     void bd_acessar_tabela_exemplaresaluno(const char* f, Aluno* aluno);
+    void bd_acessar_acervoportitulo(const char* f, std::string titulo);
     void bd_remover_exemplaraluno(const char *f, int exemplarid);
-    bool checkUsuario(const char* f, Perfil_usuario* user);
+    bool checkUsuarioid(const char* f, Perfil_usuario* user);
+    bool checkUsuarioemail(const char* f, Perfil_usuario* user);
     bool checkTabelaExiste(const char*f, string nome_tabela);
     void updateExemplarEmprestado(const char* f, Exemplar* item, int umouzero);
     void UpdateMultaExemplarAluno(const char* f, Exemplar* item);

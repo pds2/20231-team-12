@@ -49,12 +49,13 @@ public:
     virtual void consultar_acervo(std::string titulo) override;
     ~Admin();
 protected:
-    //Persistence
+    //Persistence.
     static void executar_sql(const char* f, string comandosql, string avisoerro);
     void bd_inserir_admin(const char* f, Admin* adm);
     void bd_inserir_aluno(const char* f, Aluno* aluno);
     void bd_inserir_bibliotecario(const char* f, Bibliotecario* bibliotecario);
     void bd_acessar_tabela_usuarios(const char* f);
+    void bd_acessar_acervoportitulo(const char* f, std::string titulo);
     void bd_remover_usuario(const char* f, Perfil_usuario* user);
     void bd_remover_usuarioporid(const char* f, int id);
     void bd_remover_usuarioporemail(const char* f, string email);

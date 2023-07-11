@@ -64,7 +64,6 @@ protected:
     void bd_destruir_tabela_usuarios(const char* f);
     bool checkUsuario(const char* f, Perfil_usuario* user);
     bool checkTabelaExiste(const char*f, string nome_tabela);
-
 };
 
 #endif

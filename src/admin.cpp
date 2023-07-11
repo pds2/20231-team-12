@@ -1,4 +1,4 @@
-#include "admin.h"
+#include "../include/admin.h"
 
 Admin::Admin(std::string email, int senha) : Perfil_usuario(email, senha)
 {
@@ -57,18 +57,6 @@ void Admin::deletar_usuario(std::string email)
         throw id_invalido_e();
     }
 
-    // bool b = true;
-    //  for(*todos os usuario do bd*) if(usuario.get_ID_perfil_usuario()==id) b = false;
-    // if (b)
-    //    throw id_nao_existe_e();
-
-    /*for(*todos os usuario do bd*) {
-        if(id do usuario == id) {
-            if(usuario for aluno) devolver todos os livros que estão com o aluno
-            deletar o usuario
-        }
-    }*/
-
     bd_remover_usuarioporemail(file, email);
 
     std::ifstream arquivo_usuarios("usuarios.csv");
@@ -105,54 +93,7 @@ void Admin::deletar_usuario(std::string email)
 
 void Admin::consultar_acervo(std::string titulo)
 {
-    sqlite3* bibdados;
-    sqlite3_open(file, &bibdados);
-    sqlite3_stmt* stmt;
-
-    string sql_comando = "SELECT * FROM Acervos where titulo='"+titulo+"';";
-
-    sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt,0);
-
-    int anopub, codigo, codigo2;
-    const unsigned char* autor;
-    const unsigned char* titulo;
-    const unsigned char* genero;
-    int numacervo = 0;
-    int numexemplares = 0;
-    const unsigned char* codigo_exemplar;
-    const unsigned char* emprestado;
-
-    while(sqlite3_step(stmt)!=SQLITE_DONE){
-        codigo = sqlite3_column_int(stmt, 4);
-        
-        string sql_comando = "SELECT * FROM Acervos where ID="+to_string(codigo)+";";
-        sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt,0);
-
-        while(sqlite3_step(stmt)!=SQLITE_DONE){
-
-            autor = sqlite3_column_text(stmt, 0);
-            anopub = sqlite3_column_int(stmt, 1);
-            titulo = sqlite3_column_text(stmt, 2);
-            genero = sqlite3_column_text(stmt, 3);
-            codigo2 = sqlite3_column_int(stmt, 4);
-            codigo_exemplar = sqlite3_column_text(stmt, 5);
-            emprestado = sqlite3_column_text(stmt, 6);
-            numexemplares++;
-
-            cout << "Exemplar "+to_string(numexemplares)+": " << endl;
-            cout << "autor: " << autor << endl;
-            cout << "ano de publicacao: " << anopub << endl;
-            cout << "titulo: " << titulo << endl;
-            cout << "genero: " << genero << endl;
-            cout << "codigo: " << codigo2 << endl;
-            cout << "codigo do exemplar: " << codigo_exemplar << endl; 
-            cout << "emprestado: " << emprestado << endl;
-            cout << "\n";
-        }
-        
-        sqlite3_finalize(stmt);
-        sqlite3_close(bibdados);
-    }
+    bd_acessar_acervoportitulo(file, titulo);
 }
 
 Admin::~Admin()
@@ -279,6 +220,59 @@ void Admin::bd_acessar_tabela_usuarios(const char* f){
 
 }
 
+void Admin::bd_acessar_acervoportitulo(const char* f, std::string titulo)
+{
+    sqlite3* bibdados;
+    sqlite3_open(f, &bibdados);
+    sqlite3_stmt* stmt;
+    sqlite3_stmt* stmt2;
+
+    string sql_comando = "SELECT * FROM Acervos where titulo='"+titulo+"';";
+
+    sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt,0);
+
+    int anopub, codigo, codigo2;
+    const unsigned char* autor;
+    const unsigned char* titulo2;
+    const unsigned char* genero;
+    int numexemplares = 0;
+    const unsigned char* codigo_exemplar;
+    const unsigned char* emprestado;
+
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        codigo = sqlite3_column_int(stmt, 4);
+        
+        string sql_comando = "SELECT * FROM Exemplares where codigo="+to_string(codigo)+";";
+        sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt2,0);
+
+        while(sqlite3_step(stmt2)!=SQLITE_DONE){
+
+            autor = sqlite3_column_text(stmt, 0);
+            anopub = sqlite3_column_int(stmt, 1);
+            titulo2 = sqlite3_column_text(stmt, 2);
+            genero = sqlite3_column_text(stmt, 3);
+            codigo2 = sqlite3_column_int(stmt, 4);
+            codigo_exemplar = sqlite3_column_text(stmt, 5);
+            emprestado = sqlite3_column_text(stmt, 6);
+            numexemplares++;
+
+            cout << "Exemplar "+to_string(numexemplares)+": " << endl;
+            cout << "autor: " << autor << endl;
+            cout << "ano de publicacao: " << anopub << endl;
+            cout << "titulo: " << titulo << endl;
+            cout << "genero: " << genero << endl;
+            cout << "codigo: " << codigo2 << endl;
+            cout << "codigo do exemplar: " << codigo_exemplar << endl; 
+            cout << "emprestado: " << emprestado << endl;
+            cout << "\n";
+        }
+        
+        sqlite3_finalize(stmt2);
+    }
+        sqlite3_finalize(stmt);
+        sqlite3_close(bibdados);
+}
+
 void Admin::bd_remover_usuario(const char* f, Perfil_usuario* user){
 
     int iduser = user->get_ID_perfil_usuario();
@@ -301,7 +295,6 @@ void Admin::bd_remover_usuarioporemail(const char* f, string email){
     bool check = checkTabelaExiste(f, "Usuarios");
 
     if(check==(1||true)){
-
         sqlite3* bibdb;
         sqlite3_open(f, &bibdb);
         sqlite3_stmt* stmt;
@@ -333,7 +326,7 @@ void Admin::bd_remover_usuarioporemail(const char* f, string email){
 
         sqlite3_free(stmt);
         sqlite3_close(bibdb);
-        
+
         string sql_comando = "Delete from Usuarios where email="+email+"; ";
         string alerta_erro = "ERRO AO REMOVER USUARIO: "+email+" ";
 
@@ -342,7 +335,6 @@ void Admin::bd_remover_usuarioporemail(const char* f, string email){
     else{
         cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Usuarios" << endl;
     }
-
 }
 
 void Admin::bd_remover_aluno_e_devolver_exemplares(const char* f, Aluno *user){
