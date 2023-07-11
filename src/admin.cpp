@@ -101,6 +101,7 @@ void Admin::deletar_usuario(std::string email)
 
 void Admin::consultar_acervo(std::string)
 {
+    // nao pode acontecer nada aqui, admin nao liga pra livro
 }
 
 Admin::~Admin()

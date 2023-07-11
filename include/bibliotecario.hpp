@@ -26,8 +26,8 @@ public:
     // std::vector consulta_geral_acervos(); // nao precisa ser um vector, mas vai ser uma lista de todos os livros
     // usar esse metodo pra deletar em massa? pessoa digita 1, 3, 4 etc e deleta ali os da lista
 
-    void emprestimo_de_exemplar(int, Aluno &); // empresta um exemplar especifico a um aluno
-    void devolucao_de_exemplar(int, Aluno &);  // retorna o exemplar à biblioteca
+    void emprestimo_de_exemplar(Exemplar *, Aluno &); // empresta um exemplar especifico a um aluno
+    void devolucao_de_exemplar(Exemplar *, Aluno &);  // retorna o exemplar à biblioteca
 
     int salvar_bibl_no_arquivo();
 };

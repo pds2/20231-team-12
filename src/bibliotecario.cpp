@@ -8,7 +8,7 @@ Bibliotecario::Bibliotecario(std::string email, int senha) : Perfil_usuario(emai
 
 Bibliotecario::~Bibliotecario() {}
 
-void Bibliotecario::consultar_acervo(std::string titulo)
+void Bibliotecario::consultar_acervo(std::string titulo) // pra bibliotecario retorna tudo sobre o acervo e quantidade de exemplares totais e emprestados
 {
     std::ifstream arquivo_acervo("acervo.csv");
     if (!arquivo_acervo)
@@ -65,11 +65,11 @@ void Bibliotecario::remover_exemplar(int codigo_exemplar)
 {
 }
 
-void Bibliotecario::emprestimo_de_exemplar(int exemplar, Aluno &aluno)
+void Bibliotecario::emprestimo_de_exemplar(Exemplar *livro, Aluno &aluno)
 {
 }
 
-void Bibliotecario::devolucao_de_exemplar(int exemplar, Aluno &aluno)
+void Bibliotecario::devolucao_de_exemplar(Exemplar *livro, Aluno &aluno)
 {
 }
 

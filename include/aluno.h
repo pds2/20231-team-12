@@ -35,15 +35,15 @@ public:
     /*
      * @brief Mostra todos os livros emprestados.
      */
-    void get_livros_emprestados();
+    std::vector<Exemplar *> get_livros_com_aluno();
     /*
      * @brief Pega o numero de livros que o aluno possui.
      */
     int get_n_exemplares();
 
-    void emprestar_livro(Exemplar livro);
+    void emprestar_livro(Exemplar *livro);
     // nao acho que devolve um acervo, se bem que precisa
-    void devolver_livro(int codigo);
+    void devolver_livro(Exemplar *livro);
 
     void consultar_acervo(std::string) override;
 

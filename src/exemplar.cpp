@@ -6,6 +6,7 @@ Exemplar::Exemplar(int codigo, int codigoEspecifico, std::string autor, std::str
     : Acervo(codigo, autor, titulo, ano_publicacao, genero), emprestado(0),
       codigoEspecifico(codigoEspecifico), dataEmprestimo(0)
 {
+    salva_exemplar_no_arquivo();
 }
 
 int Exemplar::getCodigoEspecifico() const
@@ -125,7 +126,7 @@ int Exemplar::salva_exemplar_no_arquivo()
     else
     {
         exemplar_out << this->get_codigo() << "," << this->codigoEspecifico << this->get_titulo() << "," << this->get_autor() << ","
-                     << this->get_ano_publicacao() << "," << this->get_genero();
+                     << this->get_ano_publicacao() << "," << this->get_genero() << this->emprestado << this->dataEmprestimo;
         exemplar_out.close();
         return 1;
     }

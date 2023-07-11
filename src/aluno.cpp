@@ -6,9 +6,17 @@
 Aluno::Aluno(std::string email, int senha) : Perfil_usuario(email, senha)
 {
     this->_papel = ALUNO;
+    salvar_aluno_no_arquivo();
 }
 
-Aluno::~Aluno() {}
+Aluno::~Aluno()
+{
+    for (auto it : livros_com_aluno)
+    {
+        delete it;
+    }
+    livros_com_aluno.clear();
+}
 
 /*
 void Aluno::livros_emprestados()
@@ -27,35 +35,37 @@ int Aluno::get_n_exemplares()
     return this->livros_com_aluno.size();
 }
 
-/*
-void Aluno::emprestar_livro(Exemplar livro)
+void Aluno::emprestar_livro(Exemplar *livro)
 {
-    if (exemplares.size() > 5)
+    if (this->livros_com_aluno.size() > 5)
         throw ja_possui_mutos_livros_e();
-    for (auto l : exemplares)
-        if (l.calculaMulta() != 0)
+    for (auto l : livros_com_aluno)
+        if (l->calculaMulta() != 0)
             throw aluno_com_multa_e();
-    exemplares.push_back(livro);
+    livros_com_aluno.push_back(livro);
 }
 
 void Aluno::devolver_livro(int codigo)
 {
     bool p = true;
-    for (auto l : exemplares)
-        if (l.getCodigoEspecifico() == codigo)
+    for (auto l : this->livros_com_aluno)
+        if (l->get_codigo() == codigo)
             p = false;
     if (p)
-        throw nao_possui_esse_livro_e();
-
-    for (auto it = exemplares.begin(); it != exemplares.end(); it++)
     {
-        if (it->getCodigoEspecifico() == codigo)
-            exemplares.erase(it);
+        throw nao_possui_esse_livro_e();
+    }
+
+    int i = 0;
+    for (auto l : livros_com_aluno)
+    {
+        if (l->get_codigo() == codigo)
+            livros_com_aluno.erase(livros_com_aluno.begin() + i);
+        i++;
     }
 }
-*/
 
-void Aluno::consultar_acervo(std::string titulo)
+void Aluno::consultar_acervo(std::string titulo) // pro aluno so retorna codigo, titulo e autor, e # exemplares disponiveis
 {
     std::ifstream arquivo_acervo("acervo.csv");
     if (!arquivo_acervo)
@@ -86,9 +96,6 @@ void Aluno::consultar_acervo(std::string titulo)
                 std::cout << "Código: " << codigo_int << '\n';
                 std::cout << "Título: " << titulo << '\n';
                 std::cout << "Autor: " << autor << '\n';
-                std::cout << "Ano de Publicação: " << ano_publicacao_int << '\n';
-                std::cout << "Gênero: " << genero_int << '\n';
-                std::cout << "-------------------\n";
             }
         }
     }

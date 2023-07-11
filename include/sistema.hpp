@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "../include/admin.h"
 #include "../include/acervo.h"
@@ -27,7 +28,7 @@ public:
     Sistema();
     ~Sistema();
 
-    void tela_cadastro();
+    int tela_cadastro();
     int tela_login();
     void tela_aluno(int);
     void tela_bibliotecario(int);
