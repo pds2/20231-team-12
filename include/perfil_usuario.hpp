@@ -8,6 +8,8 @@
 
 using namespace std;
 
+#include "acervo.h"
+#include "exemplar.h"
 
 // TODOS os tipos de usuarios tem os mesmos atributos. o que muda sao os metodos que cada um pode fazer/tem acesso
 // nao sei onde a gente usaria virtual e override, talvez para retornar livros visiveis para bibliotecarios mas ocultos
@@ -46,10 +48,10 @@ public:
     int get_senha_perfil_usuario();
     // essa é virtual pura, cada classe que herda vai declarar uma coisa diferente
     // nao pode criar um usuario sem papel
-    virtual Papel_do_usuario set_papel_usuario() = 0;
+    virtual Papel_do_usuario set_papel_usuario() const = 0;
     Papel_do_usuario get_papel_usuario();
 
-    virtual Acervo consultar_acervo(Acervo) = 0;
+    virtual void consultar_acervo(Acervo) = 0;
 
     // destrutor
     ~Perfil_usuario();

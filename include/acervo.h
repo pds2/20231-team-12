@@ -6,6 +6,9 @@
 #include <string>
 #include "../sqlite/sqlite3.h"
 //dedados.h"
+#include <iostream>
+
+using namespace std;
 
 // criar os codigos especificos de cada genero em um arquivo separado
 
@@ -42,7 +45,7 @@ protected:
     /* const char* f eh referente ao arquivo .db que vai ser criado e/ou aberto.
     * por exemplo const char* file = "biblioteca.db";
     */
-    void executar_sql(const char* f, string comandosql, string avisoerro);
+    static void executar_sql(const char* f, string comandosql, string avisoerro);
     /*@brief cria a tabela acervos. */
     void bd_criar_tabela_acervos(const char* f);
 

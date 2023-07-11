@@ -12,7 +12,7 @@ class Bibliotecario : public Perfil_usuario
 public:
     Bibliotecario(std::string, int);
 
-    Acervo consultar_acervo(Acervo) override;
+    void consultar_acervo(Acervo) override;
     void adicionar_acervo(Acervo);
     void adicionar_exemplar(Exemplar);
     void remover_acervo(int);   // remove acervo específico, pelo número CDU

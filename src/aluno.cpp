@@ -3,13 +3,15 @@
 #include <iostream>
 #include <iomanip>
 
-Aluno::Aluno(unsigned int id, std::string email, int senha) : Perfil_usuario(id, email, senha)
+Aluno::Aluno(std::string email, int senha) : Perfil_usuario(email, senha)
 {
     bd_criar_tabela_usuarios(file);
     bd_inserir_aluno(file, this);
     bd_criar_tabela_exemplaresaluno(file);
+    this->_papel = ALUNO;
 }
 
+/*
 void Aluno::livros_emprestados()
 {
     if (exemplares.size() == 0)
@@ -20,12 +22,14 @@ void Aluno::livros_emprestados()
         std::cout << l.getTitulo() << ", escrito por " << l.getAutor() << std::endl; // imprimir os dados dos livros
     }
 }
+*/
 
-unsigned int Aluno::get_n_exemplares()
+int Aluno::get_n_exemplares()
 {
-    return exemplares.size();
+    return this->livros_com_aluno.size();
 }
 
+/*
 void Aluno::emprestar_livro(Exemplar livro)
 {
     if (exemplares.size() > 5)
@@ -51,12 +55,14 @@ void Aluno::devolver_livro(int codigo)
             exemplares.erase(it);
     }
 }
+*/
 
-void Aluno::consultar_acervo()
+void Aluno::consultar_acervo(Acervo)
 {
     //...
 }
 
+/**/
 void Aluno::consultar_multa(int codigo)
 {
     bool p = true;
@@ -83,12 +89,12 @@ void Aluno::consultar_multa_total()
 {
     double total = 0;
     std::cout << std::fixed << std::setprecision(2);
-    for (auto l : exemplares)
+    for (auto l : this->livros_com_aluno)
     {
-        double m = l.calculaMulta();
+        double m = l->calculaMulta();
         total += m;
         if (m != 0)
-            std::cout << "A multa de " << l.getTitulo() << " é de R$" << m << "." << std::endl;
+            std::cout << "A multa de " << l->getTitulo() << " é de R$" << m << "." << std::endl;
     }
     if (total != 0)
         std::cout << "O total da(s) multa(s) de todos os livros é R$" << total << "." << std::endl;

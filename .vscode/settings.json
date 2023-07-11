@@ -2,28 +2,44 @@
     "files.associations": {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         "xstring": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
 =======
+=======
+        "numbers": "cpp",
+>>>>>>> 25284003c06d82735f3aa196587dd7945937ce62
         "array": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
         "*.tcc": "cpp",
+<<<<<<< HEAD
 >>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
         "cctype": "cpp",
+=======
+        "cctype": "cpp",
+        "chrono": "cpp",
+>>>>>>> 25284003c06d82735f3aa196587dd7945937ce62
         "clocale": "cpp",
         "cmath": "cpp",
         "compare": "cpp",
         "concepts": "cpp",
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "cstdarg": "cpp",
 >>>>>>> c08a5ddf6fdc1e401968fd7bbcf64b6c10236287
+=======
+        "condition_variable": "cpp",
+        "csignal": "cpp",
+        "cstdarg": "cpp",
+>>>>>>> 25284003c06d82735f3aa196587dd7945937ce62
         "cstddef": "cpp",
         "cstdint": "cpp",
         "cstdio": "cpp",
         "cstdlib": "cpp",
+<<<<<<< HEAD
 <<<<<<< HEAD
         "cstring": "cpp",
         "ctime": "cpp",
@@ -65,6 +81,19 @@
         "list": "cpp",
         "string": "cpp",
         "unordered_map": "cpp",
+=======
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "cwchar": "cpp",
+        "cwctype": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+>>>>>>> 25284003c06d82735f3aa196587dd7945937ce62
         "vector": "cpp",
         "exception": "cpp",
         "algorithm": "cpp",
@@ -74,16 +103,27 @@
         "memory_resource": "cpp",
         "numeric": "cpp",
         "random": "cpp",
+<<<<<<< HEAD
+=======
+        "ratio": "cpp",
+>>>>>>> 25284003c06d82735f3aa196587dd7945937ce62
         "string_view": "cpp",
         "system_error": "cpp",
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
+<<<<<<< HEAD
         "initializer_list": "cpp",
+=======
+        "fstream": "cpp",
+        "initializer_list": "cpp",
+        "iomanip": "cpp",
+>>>>>>> 25284003c06d82735f3aa196587dd7945937ce62
         "iosfwd": "cpp",
         "iostream": "cpp",
         "istream": "cpp",
         "limits": "cpp",
+<<<<<<< HEAD
         "new": "cpp",
         "numbers": "cpp",
         "ostream": "cpp",
@@ -100,4 +140,19 @@
     },
     "C_Cpp.errorSquiggles": "disabled"
 >>>>>>> afa5cbe83728dd4b40b5b37e415d8c51434ac38f
+=======
+        "mutex": "cpp",
+        "new": "cpp",
+        "ostream": "cpp",
+        "semaphore": "cpp",
+        "sstream": "cpp",
+        "stdexcept": "cpp",
+        "stop_token": "cpp",
+        "streambuf": "cpp",
+        "thread": "cpp",
+        "cinttypes": "cpp",
+        "typeinfo": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
+>>>>>>> 25284003c06d82735f3aa196587dd7945937ce62
 }

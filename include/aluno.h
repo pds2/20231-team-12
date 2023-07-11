@@ -3,8 +3,10 @@
 
 #include <list>
 #include <string>
+#include <vector>
 
 #include "exemplar.h"
+#include "acervo.h"
 #include "perfil_usuario.hpp"
 //dedados.h"
 
@@ -27,7 +29,7 @@ public:
     /*
      * Constroi um aluno.
      */
-    Aluno(unsigned int id, std::string email, int senha);
+    Aluno(std::string email, int senha);
 
     /*
      * @brief Mostra todos os livros emprestados.
@@ -38,19 +40,17 @@ public:
      */
     int get_n_exemplares();
 
-    // SO BIBLIOTECARIO PODE FAZER ISSO !!!!!!!!!!!!
-
     // nao acho que devolve um acervo, se bem que precisa
 
-    Acervo consultar_acervo(Acervo) override;
+    void consultar_acervo(Acervo) override;
     /*
      * @brief Consulta a multa de um livro pelo codigo.
      */
-    void consultar_multa(Exemplar);
+    void consultar_multa(int);
     /*
      * @brief Consulta a multa de todos os livros emprestados.
      */
-    void consultar_multa_total(std::vector);
+    void consultar_multa_total();
 
     int salvar_aluno_no_arquivo();
 

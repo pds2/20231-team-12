@@ -44,6 +44,7 @@ public:
     /*
      * @brief Destroi o admin.
      */
+    virtual void consultar_acervo() override;
     ~Admin();
 protected:
     //Persistence
