@@ -57,7 +57,6 @@ protected:
     //metodos para inserir.
     /*@brief Insere acervos na tabela acervos se nao existe um acervo com o mesmo codigo. */
     void bd_inserir_tabela_acervos(const char* f, Acervo* livro);
-    /*@brief Insere exemplares na tabela exemplares sem restricoes.*/
 
     //metodos para acessar/selecionar.
     /*@brief Acessa e imprimi todos os dados na tabela acervos.*/

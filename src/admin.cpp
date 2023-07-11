@@ -338,7 +338,7 @@ void Admin::bd_remover_usuarioporemail(const char* f, string email){
             papel = sqlite3_column_text(stmt, 3);
             papelint = sqlite3_column_int(stmt, 3);
 
-            if(papel == "ALUNO" || papelint == 2){
+            if(papelint == 2){
                 Aluno a1(email,senha);
                 bd_remover_aluno_e_devolver_exemplares(file, &a1);
             }
@@ -348,10 +348,10 @@ void Admin::bd_remover_usuarioporemail(const char* f, string email){
         sqlite3_free(stmt);
         sqlite3_close(bibdb);
 
-        string sql_comando = "Delete from Usuarios where email="+email+"; ";
-        string alerta_erro = "ERRO AO REMOVER USUARIO: "+email+" ";
+        string sql_comando2 = "Delete from Usuarios where email="+email+"; ";
+        string alerta_erro2 = "ERRO AO REMOVER USUARIO: "+email+" ";
 
-        executar_sql(f, sql_comando, alerta_erro); 
+        executar_sql(f, sql_comando2, alerta_erro2); 
     }
     else{
         cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Usuarios" << endl;
