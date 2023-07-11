@@ -28,8 +28,9 @@ protected:
 
 public:
     // Construtor
-    Acervo(std::string autor, int ano_publicacao, std::string titulo, int genero, int codigo);
+    Acervo(int codigo, std::string autor, std::string titulo, int ano_publicacao, int genero);
     ~Acervo();
+    bool operator<(const Acervo &acervo_custom) const;
 
     // getters
     std::string get_autor() const;

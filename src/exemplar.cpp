@@ -2,37 +2,33 @@
 #include <iostream>
 #include <ctime>
 
-BD bibdados;
-
-Exemplar::Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,
-                   bool emprestado, int dataAquisicao, int codigoEspecifico, int dataDevolucao)
-    : Acervo(autor, anoPublicacao, titulo, genero, codigo), emprestado(emprestado), dataAquisicao(dataAquisicao),
-      codigoEspecifico(codigoEspecifico), dataDevolucao(dataDevolucao)
+Exemplar::Exemplar(int codigo, int codigoEspecifico, std::string autor, std::string titulo, int ano_publicacao, int genero)
+    : Acervo(codigo, autor, titulo, ano_publicacao, genero), emprestado(0),
+      codigoEspecifico(codigoEspecifico), dataEmprestimo(0)
 {
+    salva_exemplar_no_arquivo();
     bd_criar_tabela_exemplares(file);
     bd_inserir_tabela_exemplares(file, this);
 }
 
-int Exemplar::getDataAquisicao() const
-{
-    return dataAquisicao;
-}
+Exemplar::~Exemplar() {}
 
 int Exemplar::getCodigoEspecifico() const
 {
-    return codigoEspecifico;
+    return this->codigoEspecifico;
 }
 
-int Exemplar::getDataDevolucao() const
+int Exemplar::getDataEmprestimo() const
 {
-    return dataDevolucao;
+    return this->dataEmprestimo;
 }
 int Exemplar::calculaDataDevolucao()
 {
+    int dataDevolucao;
     std::tm aquisicao_time = {0};
-    aquisicao_time.tm_mday = dataAquisicao % 100;
-    aquisicao_time.tm_mon = (dataAquisicao / 100) % 100 - 1;
-    aquisicao_time.tm_year = dataAquisicao / 10000 - 1900;
+    aquisicao_time.tm_mday = dataEmprestimo % 100;
+    aquisicao_time.tm_mon = (dataEmprestimo / 100) % 100 - 1;
+    aquisicao_time.tm_year = dataEmprestimo / 10000 - 1900;
 
     std::time_t aquisicao_timestamp = std::mktime(&aquisicao_time);
 
@@ -50,7 +46,7 @@ int Exemplar::calculaDataDevolucao()
 }
 int Exemplar::calculaMulta()
 {
-
+    int dataDevolucao;
     // pega a data de devolucao que devera estar em formato 18/06/2023 -> 18062023
     dataDevolucao = calculaDataDevolucao();
 
@@ -123,6 +119,23 @@ int Exemplar::calculaMulta()
     return multa;
 }
 
+int Exemplar::salva_exemplar_no_arquivo()
+{
+    std::ofstream exemplar_out;
+    exemplar_out.open("exemplares.csv", std::ios_base::app);
+    if (!exemplar_out)
+    {
+        std::cout << "arquivo nao existe" << std::endl;
+        return 0;
+    }
+    else
+    {
+        exemplar_out << this->get_codigo() << "," << this->codigoEspecifico << this->get_titulo() << "," << this->get_autor() << ","
+                     << this->get_ano_publicacao() << "," << this->get_genero() << this->emprestado << this->dataEmprestimo;
+        exemplar_out.close();
+        return 1;
+    }
+}
 
 //PERSISTENCE:
 
@@ -354,5 +367,4 @@ void Exemplar::UpdateMultaExemplarAluno(const char* f, Exemplar* item){
     string alerta_erro = "ERRO AO ATUALIZAR multa em AlunoExemplares: ";
     
     executar_sql(f, sql_comando, alerta_erro);
-
 }

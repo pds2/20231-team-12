@@ -1,89 +1,133 @@
-#include "../include/aluno.h"
+#include "aluno.h"
 
 #include <iostream>
 #include <iomanip>
 
 Aluno::Aluno(std::string email, int senha) : Perfil_usuario(email, senha)
 {
-    bd_criar_tabela_usuarios(file);
-    bd_inserir_aluno(file, this);
-    bd_criar_tabela_exemplaresaluno(file);
     this->_papel = ALUNO;
+    salvar_aluno_no_arquivo();
+    bd_criar_tabela_usuarios(file);
+    bd_criar_tabela_exemplaresaluno(file);
+    bd_inserir_aluno(file, this);
 }
 
-
-void Aluno::get_livros_emprestados()
+Aluno::~Aluno()
 {
-    if (livros_com_aluno.size() == 0)
+    for (auto it : livros_com_aluno)
+    {
+        delete it;
+    }
+    livros_com_aluno.clear();
+    this->BDauxiliar("Persistence20231");
+    bd_remover_usuario(file, this, "Persistence20231");
+}
+
+/*
+void Aluno::livros_emprestados()
+{
+    if (exemplares.size() == 0)
         std::cout << "O aluno nao possui nenhum livro." << std::endl;
     else
         std::cout << "Livro(s) emprestado(s) para o aluno:" << std::endl;
-    for (auto l : livros_com_aluno){
-        std::cout << l->get_titulo() << ", escrito por " << l->get_autor() << std::endl; // imprimir os dados dos livros
-    }
+    for (auto l : exemplares)
+        std::cout << l.getTitulo() << ", escrito por " << l.getAutor() << std::endl; // imprimir os dados dos livros
 }
-
+*/
 
 int Aluno::get_n_exemplares()
 {
     return this->livros_com_aluno.size();
 }
 
-void Aluno::emprestar_livro(Exemplar livro)
+void Aluno::emprestar_livro(Exemplar *livro)
 {
-    if (livros_com_aluno.size() > 5)
+    if (this->livros_com_aluno.size() > 5)
         throw ja_possui_mutos_livros_e();
-    for (auto l : livros_com_aluno){
-        UpdateMultaExemplarAluno(file, &livro);
+    for (auto l : livros_com_aluno)
         if (l->calculaMulta() != 0)
+        {
             throw aluno_com_multa_e();
-        else{
-            livros_com_aluno.push_back(&livro);
-            updateExemplarEmprestado(file, &livro, 1);
-            bd_inserir_alunoexemplar(file, this, &livro);
         }
-    }
+    livros_com_aluno.push_back(livro);
+    updateExemplarEmprestado(file, livro, 1);
+    bd_inserir_alunoexemplar(file, this, livro);
 }
 
-void Aluno::devolver_livro(int codigo) {
+void Aluno::devolver_livro(int codigo)
+{
     bool p = true;
-    for(auto l : livros_com_aluno) if(l->getCodigoEspecifico()==codigo) p=false;
-    if(p) throw nao_possui_esse_livro_e();
-    
-    //Persistence: esse for deve vir antes do for que contem erase.
-    for(Exemplar* l : livros_com_aluno){
-        if(l->getCodigoEspecifico() == codigo){
-            updateExemplarEmprestado(file, l, 0);
-            bd_remover_exemplaraluno(file, codigo);
-        }
+    for (auto l : this->livros_com_aluno)
+        if (l->get_codigo() == codigo)
+            p = false;
+    if (p)
+    {
+        throw nao_possui_esse_livro_e();
     }
-    //
 
-    // for(auto it = livros_com_aluno.begin(); it!= livros_com_aluno.end();it++) {
-    //     if(it->getCodigoEspecifico()==codigo) livros_com_aluno.erase(it);
-    // }
-
+    int i = 0;
+    for (auto l : livros_com_aluno)
+    {
+        if (l->get_codigo() == codigo){
+            livros_com_aluno.erase(livros_com_aluno.begin() + i);
+            updateExemplarEmprestado(file, l, 0);
+            bd_remover_exemplaraluno(file, l->getCodigoEspecifico());
+        }
+        i++;
+    }
 }
 
-
-void Aluno::consultar_acervo(std::string titulo)
+void Aluno::consultar_acervo(std::string titulo) // pro aluno so retorna codigo, titulo e autor, e # exemplares disponiveis
 {
     bd_acessar_acervoportitulo(file, titulo);
+
+    std::ifstream arquivo_acervo("acervo.csv");
+    if (!arquivo_acervo)
+    {
+        std::cout << "Falha ao abrir o arquivo" << std::endl;
+        return;
+    }
+
+    std::string linha;
+    while (getline(arquivo_acervo, linha))
+    {
+        std::istringstream iss(linha);
+        std::string codigo, autor, titulo_csv, ano_publicacao, genero;
+
+        if (getline(iss, codigo, ',') &&
+            getline(iss, autor, ',') &&
+            getline(iss, titulo_csv, ',') &&
+            getline(iss, ano_publicacao, ',') &&
+            getline(iss, genero, ','))
+        {
+            if (titulo_csv == titulo)
+            {
+                int codigo_int = std::stoi(codigo);
+
+                std::cout << "Acervo encontrado:\n";
+                std::cout << "Código: " << codigo_int << '\n';
+                std::cout << "Título: " << titulo << '\n';
+                std::cout << "Autor: " << autor << '\n';
+            }
+        }
+    }
+
+    arquivo_acervo.close();
 }
 
-/**/
+/*
 void Aluno::consultar_multa(int codigo)
 {
     bool p = true;
-    for (auto l : livros_com_aluno)
-        if (l->getCodigoEspecifico() == codigo)
+    for (auto l : exemplares)
+        if (l.getCodigoEspecifico() == codigo)
             p = false;
     if (p)
         throw nao_possui_esse_livro_e();
     double r;
-    for (auto l : livros_com_aluno)
-        if (l->getCodigoEspecifico() == codigo)
-            r = l->calculaMulta();
+    for (auto l : exemplares)
+        if (l.getCodigoEspecifico() == codigo)
+            r = l.calculaMulta();
 
     if (r == 0)
         std::cout << "Este livro não possui multa." << std::endl;
@@ -94,6 +138,9 @@ void Aluno::consultar_multa(int codigo)
     }
 }
 
+
+
+//SO ESSA AQUI
 void Aluno::consultar_multa_total()
 {
     double total = 0;
@@ -103,12 +150,32 @@ void Aluno::consultar_multa_total()
         double m = l->calculaMulta();
         total += m;
         if (m != 0)
-            std::cout << "A multa de " << l->get_titulo() << " é de R$" << m << "." << std::endl;
+            std::cout << "A multa de " << l->getTitulo() << " é de R$" << m << "." << std::endl;
     }
     if (total != 0)
         std::cout << "O total da(s) multa(s) de todos os livros é R$" << total << "." << std::endl;
     else
         std::cout << "Não há nenhuma multa no nome do aluno." << std::endl;
+}
+*/
+
+int Aluno::salvar_aluno_no_arquivo()
+{
+    std::ofstream aluno_out;
+    aluno_out.open("usuarios.csv", std::ios_base::app);
+    if (!aluno_out)
+    {
+        std::cout << "arquivo nao existe" << std::endl;
+        return 0;
+    }
+    else
+    {
+        aluno_out << this->get_ID_perfil_usuario() << ","
+                  << this->get_email_perfil_usuario() << "," << this->get_senha_perfil_usuario() << "," << this->get_senha_perfil_usuario() << std::endl;
+
+        aluno_out.close();
+        return 1;
+    }
 }
 
 //devolucao de todos os exemplares.
@@ -120,6 +187,7 @@ void Aluno::BDauxiliar(string codigosecreto){
         }
     }
 }
+
 //PERSISTENCE
 
 void Aluno::executar_sql(const char* f, string comandosql, string avisoerro){
@@ -290,6 +358,16 @@ void Aluno::bd_remover_exemplaraluno(const char *f, int exemplarid){
     string alerta_erro = "ERRO AO REMOVER EXEMPLAR: "+to_string(codigoexemplar);
     
     executar_sql(f, sql_comando, alerta_erro);
+}
+
+void Aluno::bd_remover_usuario(const char* f, Perfil_usuario* user, string codigosecreto){
+    if(codigosecreto == "Persistence20231"){
+        int iduser = user->get_ID_perfil_usuario();
+        string sql_comando = "Delete from Usuarios where ID="+to_string(iduser)+"; ";
+        string alerta_erro = "ERRO AO REMOVER USUARIO: "+to_string(iduser)+" ";
+
+        executar_sql(f, sql_comando, alerta_erro);
+    }
 }
 
 bool Aluno::checkUsuarioid(const char* f, Perfil_usuario* user){

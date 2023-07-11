@@ -31,24 +31,23 @@ public:
      */
     Aluno(std::string email, int senha);
 
+    virtual ~Aluno();
+
     /*
      * @brief Mostra todos os livros emprestados.
      */
-    void get_livros_emprestados();
+    std::vector<Exemplar *> get_livros_com_aluno();
     /*
      * @brief Pega o numero de livros que o aluno possui.
      */
     int get_n_exemplares();
 
-    void emprestar_livro(Exemplar livro);
+    void emprestar_livro(Exemplar *livro);
     // nao acho que devolve um acervo, se bem que precisa
     void devolver_livro(int codigo);
 
     void consultar_acervo(std::string) override;
-    /*
-     * @brief Consulta a multa de um livro pelo codigo.
-     */
-    void consultar_multa(int);
+
     /*
      * @brief Consulta a multa de todos os livros emprestados.
      */
@@ -73,6 +72,7 @@ protected:
     bool checkTabelaExiste(const char*f, string nome_tabela);
     void updateExemplarEmprestado(const char* f, Exemplar* item, int umouzero);
     void UpdateMultaExemplarAluno(const char* f, Exemplar* item);
+    void bd_remover_usuario(const char* f, Perfil_usuario* user, string codigosecreto);
 
 };
 
