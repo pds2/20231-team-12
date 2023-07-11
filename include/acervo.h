@@ -4,6 +4,7 @@
 // #include "bancodedados.h"
 #include <fstream>
 #include <string>
+#include <iostream>
 
 // criar os codigos especificos de cada genero em um arquivo separado
 

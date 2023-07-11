@@ -24,7 +24,7 @@ std::string Acervo::get_titulo() const
     return _titulo;
 }
 
-CODIGOS_GENEROS_ACERVO Acervo::get_genero() const
+int Acervo::get_genero() const
 {
     return _genero;
 }

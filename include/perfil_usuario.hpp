@@ -2,6 +2,8 @@
 #define PERFIL_USUARIO_H
 
 #include <iostream>
+#include "acervo.h"
+#include "exemplar.h"
 
 // TODOS os tipos de usuarios tem os mesmos atributos. o que muda sao os metodos que cada um pode fazer/tem acesso
 // nao sei onde a gente usaria virtual e override, talvez para retornar livros visiveis para bibliotecarios mas ocultos
@@ -42,7 +44,7 @@ public:
     virtual Papel_do_usuario set_papel_usuario() = 0;
     Papel_do_usuario get_papel_usuario();
 
-    virtual Acervo consultar_acervo(Acervo) = 0;
+    virtual void consultar_acervo(Acervo) = 0;
 
     // destrutor
     ~Perfil_usuario();

@@ -40,6 +40,7 @@ public:
     /*
      * Destroi o admin.
      */
+    virtual void consultar_acervo() override;
     ~Admin();
 };
 
