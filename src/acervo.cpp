@@ -9,6 +9,16 @@ Acervo::Acervo(int codigo, std::string autor, std::string titulo,
 {
 }
 
+Acervo::~Acervo() {}
+
+bool Acervo::operator<(const Acervo &acervo_custom) const
+{
+    if (acervo_custom.get_codigo() < this->_codigo)
+    {
+        return true;
+    }
+}
+
 std::string Acervo::get_autor() const
 {
     return _autor;

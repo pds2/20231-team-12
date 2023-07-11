@@ -30,13 +30,13 @@ void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
         // adiciona o bibliotecario ao bd.
     }
     */
-    if (tipo_de_user = (int)ALUNO)
+    if (tipo_de_user = ALUNO)
     {
         Aluno *novo_aluno = new Aluno(email, senha);
         novo_aluno->salvar_aluno_no_arquivo();
         delete novo_aluno;
     }
-    else if (tipo_de_user = (int)BIBLIOTECARIO)
+    else if (tipo_de_user = BIBLIOTECARIO)
     {
         Bibliotecario *novo_bibliotecario = new Bibliotecario(email, senha);
         novo_bibliotecario->salvar_bibl_no_arquivo();

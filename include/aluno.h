@@ -30,7 +30,7 @@ public:
      */
     Aluno(std::string email, int senha);
 
-    ~Aluno();
+    virtual ~Aluno();
 
     /*
      * @brief Mostra todos os livros emprestados.
@@ -43,7 +43,7 @@ public:
 
     void emprestar_livro(Exemplar *livro);
     // nao acho que devolve um acervo, se bem que precisa
-    void devolver_livro(Exemplar *livro);
+    void devolver_livro(int codigo);
 
     void consultar_acervo(std::string) override;
 

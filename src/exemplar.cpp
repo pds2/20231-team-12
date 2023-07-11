@@ -9,6 +9,8 @@ Exemplar::Exemplar(int codigo, int codigoEspecifico, std::string autor, std::str
     salva_exemplar_no_arquivo();
 }
 
+Exemplar::~Exemplar() {}
+
 int Exemplar::getCodigoEspecifico() const
 {
     return this->codigoEspecifico;
