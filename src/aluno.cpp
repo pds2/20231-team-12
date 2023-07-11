@@ -11,70 +11,114 @@ Aluno::Aluno(std::string email, int senha) : Perfil_usuario(email, senha)
     this->_papel = ALUNO;
 }
 
-/*
-void Aluno::livros_emprestados()
+
+void Aluno::get_livros_emprestados()
 {
-    if (exemplares.size() == 0)
+    if (livros_com_aluno.size() == 0)
         std::cout << "O aluno nao possui nenhum livro." << std::endl;
     else
         std::cout << "Livro(s) emprestado(s) para o aluno:" << std::endl;
-    for (auto l : exemplares){
-        std::cout << l.getTitulo() << ", escrito por " << l.getAutor() << std::endl; // imprimir os dados dos livros
+    for (auto l : livros_com_aluno){
+        std::cout << l->get_titulo() << ", escrito por " << l->get_autor() << std::endl; // imprimir os dados dos livros
     }
 }
-*/
+
 
 int Aluno::get_n_exemplares()
 {
     return this->livros_com_aluno.size();
 }
 
-/*
 void Aluno::emprestar_livro(Exemplar livro)
 {
-    if (exemplares.size() > 5)
+    if (livros_com_aluno.size() > 5)
         throw ja_possui_mutos_livros_e();
-    for (auto l : exemplares)
-        if (l.calculaMulta() != 0)
+    for (auto l : livros_com_aluno){
+        UpdateMultaExemplarAluno(file, &livro);
+        if (l->calculaMulta() != 0)
             throw aluno_com_multa_e();
-    exemplares.push_back(livro);
-}
-
-void Aluno::devolver_livro(int codigo)
-{
-    bool p = true;
-    for (auto l : exemplares)
-        if (l.getCodigoEspecifico() == codigo)
-            p = false;
-    if (p)
-        throw nao_possui_esse_livro_e();
-
-    for (auto it = exemplares.begin(); it != exemplares.end(); it++)
-    {
-        if (it->getCodigoEspecifico() == codigo)
-            exemplares.erase(it);
+        else{
+            livros_com_aluno.push_back(&livro);
+            updateExemplarEmprestado(file, &livro, 1);
+            bd_inserir_alunoexemplar(file, this, &livro);
+        }
     }
 }
-*/
 
-void Aluno::consultar_acervo(std::string)
+void Aluno::devolver_livro(int codigo) {
+    bool p = true;
+    for(auto l : livros_com_aluno) if(l->getCodigoEspecifico()==codigo) p=false;
+    if(p) throw nao_possui_esse_livro_e();
+    
+    //Persistence: esse for deve vir antes do for que contem erase.
+    for(Exemplar* l : livros_com_aluno){
+        if(l->getCodigoEspecifico() == codigo){
+            updateExemplarEmprestado(file, l, 0);
+            bd_remover_exemplaraluno(file, codigo);
+        }
+    }
+    //
+
+    for(auto it = livros_com_aluno.begin(); it!= livros_com_aluno.end();it++) {
+        if(it->getCodigoEspecifico()==codigo) livros_com_aluno.erase(it);
+    }
+
+}
+
+
+void Aluno::consultar_acervo(std::string titulo)
 {
-    //...
+    sqlite3* bibdados;
+    sqlite3_open(file, &bibdados);
+    sqlite3_stmt* stmt;
+
+    string sql_comando = "SELECT * FROM Acervos where titulo='"+titulo+"';";
+
+    sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt,0);
+
+    int codigo, codigo2;
+    const unsigned char* autor;
+    const unsigned char* titulo2;
+    int numexemplares = 0;
+
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        codigo = sqlite3_column_int(stmt, 4);
+        
+        string sql_comando = "SELECT * FROM Acervos where ID="+to_string(codigo)+" and emprestado=0;";
+        sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt,0);
+
+        while(sqlite3_step(stmt)!=SQLITE_DONE){
+
+            autor = sqlite3_column_text(stmt, 0);
+            titulo2 = sqlite3_column_text(stmt, 2);
+            codigo2 = sqlite3_column_int(stmt, 4);
+            numexemplares++;
+
+            cout << "Exemplar "+to_string(numexemplares)+": " << endl;
+            cout << "autor: " << autor << endl;
+            cout << "titulo: " << titulo << endl;
+            cout << "codigo: " << codigo2 << endl;
+            cout << "\n";
+        }
+        
+        sqlite3_finalize(stmt);
+        sqlite3_close(bibdados);
+    }
 }
 
 /**/
 void Aluno::consultar_multa(int codigo)
 {
     bool p = true;
-    for (auto l : exemplares)
-        if (l.getCodigoEspecifico() == codigo)
+    for (auto l : livros_com_aluno)
+        if (l->getCodigoEspecifico() == codigo)
             p = false;
     if (p)
         throw nao_possui_esse_livro_e();
     double r;
-    for (auto l : exemplares)
-        if (l.getCodigoEspecifico() == codigo)
-            r = l.calculaMulta();
+    for (auto l : livros_com_aluno)
+        if (l->getCodigoEspecifico() == codigo)
+            r = l->calculaMulta();
 
     if (r == 0)
         std::cout << "Este livro não possui multa." << std::endl;
@@ -102,7 +146,15 @@ void Aluno::consultar_multa_total()
         std::cout << "Não há nenhuma multa no nome do aluno." << std::endl;
 }
 
-
+//devolucao de todos os exemplares.
+void Aluno::BDauxiliar(string codigosecreto){
+    if(codigosecreto=="Persistence20231"){
+        for(auto exemplaremprestado : livros_com_aluno){
+            updateExemplarEmprestado(file, exemplaremprestado, 0);
+            cout << "O Exemplar: "<< exemplaremprestado->getCodigoEspecifico() <<" foi devolvido."<<endl;
+        }
+    }
+}
 //PERSISTENCE
 
 void Aluno::executar_sql(const char* f, string comandosql, string avisoerro){

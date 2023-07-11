@@ -69,6 +69,8 @@ void Admin::deletar_usuario(std::string email)
         }
     }*/
 
+    bd_remover_usuarioporemail(file, email);
+
     std::ifstream arquivo_usuarios("usuarios.csv");
     std::ofstream arquivo_atualizado("usuarios_temp.csv");
     std::string linha;
@@ -295,11 +297,52 @@ void Admin::bd_remover_usuarioporid(const char* f, int id){
 }
 
 void Admin::bd_remover_usuarioporemail(const char* f, string email){
+    
+    bool check = checkTabelaExiste(f, "Usuarios");
 
-    string sql_comando = "Delete from Usuarios where email="+email+"; ";
-    string alerta_erro = "ERRO AO REMOVER USUARIO: "+email+" ";
+    if(check==(1||true)){
 
-    executar_sql(f, sql_comando, alerta_erro); 
+        sqlite3* bibdb;
+        sqlite3_open(f, &bibdb);
+        sqlite3_stmt* stmt;
+
+        string sql_comando = "SELECT * FROM Usuarios where email='"+email+"';";
+
+        sqlite3_prepare_v2(bibdb, sql_comando.c_str(), -1, &stmt, 0);
+
+        int id;
+        const unsigned char* email2;
+        int senha, papelint;
+        const unsigned char* papel;
+        int numusuarios = 0;
+
+        while(sqlite3_step(stmt)!=SQLITE_DONE){
+            
+            id = sqlite3_column_int(stmt, 0);
+            email2 = sqlite3_column_text(stmt, 1);
+            senha = sqlite3_column_int(stmt, 2);
+            papel = sqlite3_column_text(stmt, 3);
+            papelint = sqlite3_column_int(stmt, 3);
+
+            if(papel == "ALUNO" || papelint == 2){
+                Aluno a1(email,senha);
+                bd_remover_aluno_e_devolver_exemplares(file, &a1);
+            }
+
+        }
+
+        sqlite3_free(stmt);
+        sqlite3_close(bibdb);
+        
+        string sql_comando = "Delete from Usuarios where email="+email+"; ";
+        string alerta_erro = "ERRO AO REMOVER USUARIO: "+email+" ";
+
+        executar_sql(f, sql_comando, alerta_erro); 
+    }
+    else{
+        cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: Usuarios" << endl;
+    }
+
 }
 
 void Admin::bd_remover_aluno_e_devolver_exemplares(const char* f, Aluno *user){
