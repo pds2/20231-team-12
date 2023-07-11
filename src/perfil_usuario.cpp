@@ -1,6 +1,6 @@
 #include "../include/perfil_usuario.hpp"
 
-int Perfil_usuario::CONTADOR_ID_perfil_usuario = 0;
+unsigned int Perfil_usuario::CONTADOR_ID_perfil_usuario = 0;
 
 Perfil_usuario::Perfil_usuario()
 {

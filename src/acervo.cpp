@@ -5,7 +5,7 @@ Acervo::Acervo(std::string autor, int ano_publicacao, std::string titulo,
                                          _ano_publicacao(ano_publicacao),
                                          _titulo(titulo),
                                          _genero(genero),
-                                         _codigo(codigo),
+                                         _codigo(codigo)
 {
 }
 
@@ -37,7 +37,7 @@ int Acervo::get_codigo() const
 int Acervo::salvar_acervo_no_arquivo()
 {
     std::ofstream acervo_out;
-    acervo_out.open("acervos.csv", std::ios::app);
+    acervo_out.open("acervos.csv", std::ios_base::app);
     if (!acervo_out)
     {
         std::cout << "arquivo nao existe" << std::endl;
@@ -45,7 +45,7 @@ int Acervo::salvar_acervo_no_arquivo()
     }
     else
     {
-        acervo_out >> this->_codigo >> this->_titulo >> this->_autor >> this->_ano_publicacao >> this->_genero;
+        acervo_out << this->_codigo << "," << this->_titulo << "," << this->_autor << "," << this->_ano_publicacao << "," << this->_genero;
         acervo_out.close();
         return 1;
     }

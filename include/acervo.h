@@ -31,12 +31,6 @@ public:
     int get_codigo() const;
 
     int salvar_acervo_no_arquivo();
-
-    /*
-    protected:
-        const char *file = "biblioteca.db";
-        BD bibdados;
-    */
 };
 
 #endif // ACERVO_H

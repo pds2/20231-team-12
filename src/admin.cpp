@@ -95,7 +95,7 @@ void Admin::deletar_usuario(std::string email)
     rename("usuarios_temp.csv", "usuarios.csv");
 }
 
-void Admin::consultar_acervo(Acervo)
+void Admin::consultar_acervo(std::string)
 {
 }
 

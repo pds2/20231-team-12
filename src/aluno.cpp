@@ -53,7 +53,7 @@ void Aluno::devolver_livro(int codigo)
 }
 */
 
-void Aluno::consultar_acervo(Acervo)
+void Aluno::consultar_acervo(std::string)
 {
     //...
 }

@@ -41,10 +41,9 @@ public:
     int get_senha_perfil_usuario();
     // essa é virtual pura, cada classe que herda vai declarar uma coisa diferente
     // nao pode criar um usuario sem papel
-    virtual Papel_do_usuario set_papel_usuario() = 0;
     Papel_do_usuario get_papel_usuario();
 
-    virtual void consultar_acervo(Acervo) = 0;
+    virtual void consultar_acervo(std::string) = 0;
 
     // destrutor
     ~Perfil_usuario();
