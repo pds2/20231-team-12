@@ -10,7 +10,7 @@ public:
     /**
      * @brief Construtor da classe
      */
-    Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,
+    Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, int codigo,
              bool emprestado, int codigoEspecifico);
 
 
@@ -18,7 +18,7 @@ public:
     /**
      * @brief Verifica se o exemplar está emprestado.
      */
-    bool isEmprestado() const;
+    bool isEmprestado();
 
     /**
      * @brief Pega a data de empréstimo do exemplar.

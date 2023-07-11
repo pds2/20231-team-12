@@ -10,7 +10,7 @@
 
 TEST_CASE("Teste de cálculo da data de devolução") {
     // Cria um exemplar com data de aquisição fixa (04/07/2023)
-    Exemplar exemplar("Autor", 2023, "Título", "Gênero", 1.0, false, 1);
+    Exemplar exemplar("Autor", 2023, "Título", "Gênero", 12, false, 1);
 
       exemplar.setDataEmprestimo(20230704);
     // Calcula a data de devolução do exemplar
@@ -20,31 +20,31 @@ TEST_CASE("Teste de cálculo da data de devolução") {
     CHECK(dataDevolucaoCalculada == 20230804);
 }
 
-TEST_CASE("Exemplar Calcula Data Devolucao") {
-    Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345.67, false, 1); //data aquisição 17/06/2023
 
-    exemplar.setDataEmprestimo(20230617);
+TEST_CASE("Exemplar Calcula Data Devolucao") {
+    Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345, false, 1); 
+
+    exemplar.setDataEmprestimo(20230617); //data aquisição 17/06/2023
 
     CHECK(exemplar.calculaDataDevolucaoSistema() == 20230717); // data devolução 17/07/2023
 }
 
-TEST_CASE("Exemplar Calcula Data Devolucao") {
-    Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345.67, false, 1); //data aquisição 17/06/2023
 
-    exemplar.setDataEmprestimo(20240219);
+TEST_CASE("Exemplar Calcula Data Devolucao") {
+    Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345, false, 1); 
+
+    exemplar.setDataEmprestimo(20240219);//data aquisição 19/02/2024
 
     CHECK(exemplar.calculaDataDevolucaoSistema() == 20240319); // data devolução 19/03/2023 - passou
 }
 
 TEST_CASE("Exemplar Calcula Data Devolucao") {
-    Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345.67, false, 1); //data aquisição 17/06/2023
+    Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345, false, 1); //data aquisição 17/06/2023
 
-  exemplar.setDataEmprestimo(20240218);
+  exemplar.setDataEmprestimo(20240218); //data aquisição 18/02/2024
 
-    CHECK(exemplar.calculaDataDevolucaoSistema() == 20240318); //
+    CHECK(exemplar.calculaDataDevolucaoSistema() == 20240318); 
 }
-
-
 
 
 //Teste passou, dia 08/07/2023 deve ficar em comentário, pois ele vai mudando conforme a data
@@ -61,7 +61,6 @@ TEST_CASE("Exemplar - Teste do método getMulta - Com multa") {
         CHECK(exemplar.getMulta() == 3); // Supondo que o valor da multa seja 3
 } 
 */
-
 
 
 //Pegando os dias passados desde o dia do teste como se ele tivesse aumentando a multa ainda a mais no assertion a cada dia
@@ -95,7 +94,7 @@ TEST_CASE("Exemplar - Teste do método getMulta e método Calcula Multa - Com mu
 //Teste passou, dia 08/07/2023 deve ficar em comentário, pois ele vai mudando conforme a data e vai gerar multa
 /*
 TEST_CASE("Exemplar Calcula Multa - test do getMulta - Sem multa") {
-    Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345.67, false, 1);
+    Exemplar exemplar("Autor", 2021, "Titulo", "Genero", 12345, false, 1);
     // Data de aquisição: 09/06/2023
     // Data de devolução: 09/07/2023 (1 mês após aquisição)
     exemplar.setDataEmprestimo(20230609);
@@ -107,7 +106,18 @@ TEST_CASE("Exemplar Calcula Multa - test do getMulta - Sem multa") {
 }
 */
 
+TEST_CASE("Teste de métodos getters e construtor") {
+    Exemplar exemplar("Kiera Cass", 2008, "A seleção", "Romance", 0124, true, 3);
 
+    // Verifica se os valores fornecidos no construtor são armazenados corretamente
+    CHECK(exemplar.getAutor() == "Kiera Cass");
+    CHECK(exemplar.getAnoPublicacao() == 2008);
+    CHECK(exemplar.getTitulo() == "A seleção");
+    CHECK(exemplar.getGenero() == "Romance");
+    CHECK(exemplar.getCodigo() == 0124);
+    CHECK(exemplar.isEmprestado() == true);
+    CHECK(exemplar.getCodigoEspecifico() == 3);
+}
 
 
 

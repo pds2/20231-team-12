@@ -6,7 +6,7 @@
 
 #include <iomanip>
 
-Exemplar::Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, float codigo,
+Exemplar::Exemplar(std::string autor, int anoPublicacao, std::string titulo, std::string genero, int codigo,
                    bool emprestado,  int codigoEspecifico)
     : Acervo(autor, anoPublicacao, titulo, genero, codigo), emprestado(emprestado),
       codigoEspecifico(codigoEspecifico)  {
@@ -25,7 +25,14 @@ void Exemplar::setDataEmprestimo(int dataEmprestimo) {
 int Exemplar::getCodigoEspecifico() const {
     return codigoEspecifico;
 }
+
+bool Exemplar::isEmprestado() {
+    return emprestado;
+}
+
 int Exemplar::calculaDataDevolucaoSistema() {
+
+    //coisas da bliblioteca chrono para pegar o tempo atual
     std::tm aquisicao_time = { 0 };
     aquisicao_time.tm_mday = getdataEmprestimo() % 100;
     aquisicao_time.tm_mon = (getdataEmprestimo() / 100) % 100 - 1;
@@ -74,8 +81,6 @@ void Exemplar::calculaMulta() {
     // Calcula a diferença entre a data atual e a data de devolução em dias
     std::chrono::duration<int, std::ratio<86400>> duracao = std::chrono::duration_cast<std::chrono::duration<int, std::ratio<86400>>>(dataAtualPonto - dataDevolucaoPonto);
     int diasAtraso = duracao.count();
-
-    cout<< "Dias de atraso: "<< diasAtraso << endl;
 
     // Se não houver atraso, a multa é zero
     if (diasAtraso <= 0) {
