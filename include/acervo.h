@@ -9,13 +9,19 @@ using namespace std;
  * @brief Classe Acervo, base
  */
 class Acervo {
+
+private:
+    string autor;
+    int anoPublicacao;
+    string titulo;
+    string genero;
+    int codigo;
+
 public:
     /**
      * @brief Construtor da classe
      */
     Acervo(string autor, int anoPublicacao, string titulo, string genero, int codigo);
-
-    virtual ~Acervo();
 
     //getters
      /**
@@ -43,14 +49,8 @@ public:
      */
     int getCodigo() const;
 
+    virtual ~Acervo();
 
-
-private:
-    string autor;
-    int anoPublicacao;
-    string titulo;
-    string genero;
-    int codigo;
 };
 
 #endif  // ACERVO_H

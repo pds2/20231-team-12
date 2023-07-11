@@ -97,4 +97,6 @@ int Exemplar::getMulta() {
     return multa; //pega o valor da multa que foi colculado no método calculaMulta
 }
 
+Exemplar::~Exemplar(){
 
+}

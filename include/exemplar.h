@@ -5,6 +5,13 @@
 
 
 class Exemplar : public Acervo {
+
+    private:
+    bool emprestado;
+    int dataEmprestimo;
+    int codigoEspecifico;
+    int multa;
+
 public:
 
     /**
@@ -61,11 +68,7 @@ public:
     void calculaMulta();
 
 
-private:
-    bool emprestado;
-    int dataEmprestimo;
-    int codigoEspecifico;
-    int multa;
+    ~Exemplar();
     
     
 };

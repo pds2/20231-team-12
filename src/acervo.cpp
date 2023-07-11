@@ -4,8 +4,7 @@ Acervo::Acervo(std::string autor, int anoPublicacao, std::string titulo, std::st
     : autor(autor), anoPublicacao(anoPublicacao), titulo(titulo), genero(genero), codigo(codigo) {
 }
 
-Acervo::~Acervo() {
-}
+
 
 std::string Acervo::getAutor() const {
     return autor;
@@ -25,4 +24,7 @@ std::string Acervo::getGenero() const {
 
 int Acervo::getCodigo() const {
     return codigo;
+}
+
+Acervo::~Acervo() {
 }
