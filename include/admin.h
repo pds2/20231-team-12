@@ -8,19 +8,10 @@
 #include "aluno.h"
 #include "bibliotecario.hpp"
 
-class email_ja_cadastrado_e
+class email_invalido_e
 {
 };
-class id_invalido_e
-{
-};
-class id_nao_existe_e
-{
-};
-class id_ja_cadastrado_e
-{
-};
-class papel_invalido_e
+class tipo_invalido_e
 {
 };
 

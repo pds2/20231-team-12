@@ -18,6 +18,9 @@ class ja_possui_mutos_livros_e
 class nao_possui_esse_livro_e
 {
 };
+class ja_possui_esse_livro_e
+{
+};
 
 class Aluno : public Perfil_usuario
 {
