@@ -46,7 +46,7 @@ public:
     virtual void consultar_acervo(std::string) = 0;
 
     // destrutor
-    ~Perfil_usuario();
+    virtual ~Perfil_usuario();
 };
 
 #endif
