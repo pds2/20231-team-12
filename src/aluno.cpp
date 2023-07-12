@@ -30,6 +30,16 @@ void Aluno::livros_emprestados()
 }
 */
 
+void Aluno::get_livros_com_aluno()
+{
+    for (auto it : this->livros_com_aluno)
+    {
+        std::cout << std::endl
+                  << it->get_titulo() << " ," << it->get_autor() << std::endl;
+    }
+    std::cout << "sem livros" << std::endl;
+}
+
 int Aluno::get_n_exemplares()
 {
     return this->livros_com_aluno.size();
@@ -40,13 +50,9 @@ void Aluno::emprestar_livro(Exemplar *livro)
     if (this->livros_com_aluno.size() > 5)
         throw ja_possui_mutos_livros_e();
     for (auto l : livros_com_aluno)
-
     {
-        if(l->calculaMulta() != 0) throw aluno_com_multa_e();
-        if(l->get_codigo()==livro->get_codigo()) throw ja_possui_esse_livro_e();
+        livros_com_aluno.push_back(livro);
     }
-
-    livros_com_aluno.push_back(livro);
 }
 
 void Aluno::devolver_livro(int codigo)
@@ -152,9 +158,7 @@ void Aluno::consultar_multa_total()
 int Aluno::salvar_aluno_no_arquivo()
 {
     std::ofstream aluno_out;
-
-    aluno_out.open("files/usuarios.csv", std::ios_base::app);
-
+    aluno_out.open("usuarios.csv", std::ios_base::app);
     if (!aluno_out)
     {
         std::cout << "arquivo nao existe" << std::endl;

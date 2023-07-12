@@ -30,19 +30,13 @@ void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
         // adiciona o bibliotecario ao bd.
     }
     */
-
-    if(tipo_de_user != 0 && tipo_de_user !=2) throw tipo_invalido_e();
-
     if (tipo_de_user == ALUNO)
-
     {
         Aluno *novo_aluno = new Aluno(email, senha);
         novo_aluno->salvar_aluno_no_arquivo();
         delete novo_aluno;
     }
-
     else if (tipo_de_user == BIBLIOTECARIO)
-
     {
         Bibliotecario *novo_bibliotecario = new Bibliotecario(email, senha);
         novo_bibliotecario->salvar_bibl_no_arquivo();
@@ -52,10 +46,10 @@ void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
 
 void Admin::deletar_usuario(std::string email)
 {
-    // verifica se o email não é do próprio admin
+    // verifica se o id não é do próprio admin, e depois se existe algum usuario com esse id
     if (this->get_email_perfil_usuario() == email)
     {
-        throw email_invalido_e();
+        throw id_invalido_e();
     }
     else
     {

@@ -1,3 +1,23 @@
+# Sistema de biblioteca - Equipe 12
+
+Esse sistema permite que bibliotecários e alunos acessem o catálogo da biblioteca, através do seu login. 
+* Um aluno pode verificar seus livros empredos e pesquisar no catálogo;
+* Um bibliotecário pode adicionar, remover, emprestar e devolver livros;
+* Um admin pode deletar usuários.
+
+# Como compilar:
+É nessessário ter um sistema Linux instalado.
+Não é necessário instalar dependências externas.
+
+<p> Clone o repositório.
+<p> Abra o terminal de sua preferênia, entre na pasta do repositório e rode os comandos:
+```shell
+make main
+```
+```shell
+bin/main
+```
+
 # User stories:
 Como bibliotecário, eu quero ver quantos e quais tipos de livros no catálogo estão emprestados para saber quais livros têm maior procura.
 
