@@ -26,15 +26,47 @@ private:
     std::map<std::string, std::vector<Perfil_usuario *>> usuarios;
 
 public:
+    /*
+     * @brief Constrói um sistema.
+     */
     Sistema();
+    /*
+     * @brief Destrói o sistema.
+     */
     ~Sistema();
 
+
+    /*
+     * @brief Carrega os acervos cadastrados.
+     */
     void carregar_acervos();
+    /*
+     * @brief Carrega os usuários cadastrados.
+     */
     void carregar_usuarios();
+    /*
+     * @brief Faz a tela de cadastro do sistema.
+     */
+
     int tela_cadastro();
+    /*
+     * @brief Faz a tela de login no sistema;
+     */
     int tela_login();
+    /*
+     * @brief Faz a tela de uso do sistema para um aluno.
+     */
     void tela_aluno(int);
+    /*
+     * @brief Faz a tela de uso do sistema para um bibliotecário.
+     */
     void tela_bibliotecario(int);
+    /*
+     * @brief Faz a tela de uso do sistema para um admin.
+     */
     void tela_admin(int);
+    void inicia_sistema();
 };
+
 #endif
+

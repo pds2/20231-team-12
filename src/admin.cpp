@@ -36,14 +36,20 @@ void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
         // adiciona o bibliotecario ao bd.
     }
     */
-    if (tipo_de_user = ALUNO)
+
+    if(tipo_de_user != 0 && tipo_de_user !=2) throw tipo_invalido_e();
+
+    if (tipo_de_user == ALUNO)
+
     {
         Aluno *novo_aluno = new Aluno(email, senha);
         novo_aluno->salvar_aluno_no_arquivo();
         bd_inserir_aluno(file, novo_aluno);
         delete novo_aluno;
     }
-    else if (tipo_de_user = BIBLIOTECARIO)
+
+    else if (tipo_de_user == BIBLIOTECARIO)
+
     {
         Bibliotecario *novo_bibliotecario = new Bibliotecario(email, senha);
         novo_bibliotecario->salvar_bibl_no_arquivo();
@@ -54,10 +60,10 @@ void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
 
 void Admin::deletar_usuario(std::string email)
 {
-    // verifica se o id não é do próprio admin, e depois se existe algum usuario com esse id
+    // verifica se o email não é do próprio admin
     if (this->get_email_perfil_usuario() == email)
     {
-        throw id_invalido_e();
+        throw email_invalido_e();
     }
 
     bd_remover_usuarioporemail(file, email);
@@ -70,19 +76,19 @@ void Admin::deletar_usuario(std::string email)
     {
 
         // bool b = true;
-        //  for(*todos os usuario do bd*) if(usuario.get_ID_perfil_usuario()==id) b = false;
+        //  for(todos os usuario do bd) if(usuario.get_ID_perfil_usuario()==id) b = false;
         // if (b)
         //    throw id_nao_existe_e();
 
-        /*for(*todos os usuario do bd*) {
+        /*for(*todos os usuario do bd) {
             if(id do usuario == id) {
                 if(usuario for aluno) devolver todos os livros que estão com o aluno
                 deletar o usuario
             }
         }*/
 
-        std::ifstream arquivo_usuarios("usuarios.csv");
-        std::ofstream arquivo_atualizado("usuarios_temp.csv");
+        std::ifstream arquivo_usuarios("files/usuarios.csv");
+        std::ofstream arquivo_atualizado("files/usuarios_temp.csv");
         std::string linha;
 
         while (getline(arquivo_usuarios, linha))
@@ -109,8 +115,8 @@ void Admin::deletar_usuario(std::string email)
         arquivo_usuarios.close();
         arquivo_atualizado.close();
 
-        remove("usuarios.csv");
-        rename("usuarios_temp.csv", "usuarios.csv");
+        remove("files/usuarios.csv");
+        rename("files/usuarios_temp.csv", "files/usuarios.csv");
     }
 }
 

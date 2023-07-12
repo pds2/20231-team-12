@@ -50,7 +50,7 @@ int main()
     Bibliotecario b3("niltondboa@email.com",6203);
 
     al1.consultar_acervo("Como Programar");
-    b1.emprestimo_de_exemplar(&e1,al1);
+    b1.emprestimo_de_exemplar(e1,al1);
 
     // const char* file = "biblioteca.db";
     // updateExemplarEmprestado(file, &e1, 1);

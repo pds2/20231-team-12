@@ -40,19 +40,37 @@ public:
     // default, para testes
     Perfil_usuario();
 
-    // só da pra criar um usuario com os 4 atributos juntos, nunca pode faltar um
+    /*
+     * @brief Constroi um perfil do usuário.
+     * @param string Email do usuário.
+     * @param int senha do usuário.
+     */
     Perfil_usuario(std::string, int);
 
+    /*
+     * @brief Pega o id do usuário.
+     */
     unsigned int get_ID_perfil_usuario();
+    /*
+     * @brief Pega o email do usuário.
+     */
     std::string get_email_perfil_usuario();
+    /*
+     * @brief Pega a senha do usuário.
+     */
     int get_senha_perfil_usuario();
-    // essa é virtual pura, cada classe que herda vai declarar uma coisa diferente
-    // nao pode criar um usuario sem papel
+    /*
+     * @brief Pega o papel do usuário.
+     */
     Papel_do_usuario get_papel_usuario();
-
+    /*
+     * @brief Consulta um acervo (não definido para perfil_usuário).
+     */
     virtual void consultar_acervo(std::string) = 0;
 
-    // destrutor
+    /*
+     * @brief Destrói o perfil do usuário.
+     */
     ~Perfil_usuario();
 
 protected:
