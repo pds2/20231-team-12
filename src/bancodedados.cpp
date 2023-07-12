@@ -40,7 +40,7 @@ void BD::bd_criar_tabela_acervos(const char* f){
     "autor TEXT NOT NULL,"
     "anopublicacao INTEGER NOT NULL,"
     "titulo TEXT NOT NULL,"
-    "genero TEXT NOT NULL,"
+    "genero INT  NOT NULL,"
     "codigo INTEGER NOT NULL)";
 
     string aviso_erro = "ERRO AO CRIAR A TABELA ACERVOS: ";
@@ -68,7 +68,7 @@ void BD::bd_criar_tabela_exemplares(const char* f){
     "autor TEXT NOT NULL,"
     "anopublicacao INTEGER NOT NULL,"
     "titulo TEXT NOT NULL,"
-    "genero TEXT NOT NULL,"
+    "genero INT  NOT NULL,"
     "codigo INTEGER NOT NULL,"
     "codigoexemplar TEXT NOT NULL,"
     "emprestado TEXT NOT NULL)";
@@ -154,9 +154,9 @@ void BD::bd_inserir_aluno(const char* f, Aluno* aluno){
     bd_inserir_tabela_usuarios(f, aluno);
 
     int alunoid = aluno->get_ID_perfil_usuario();
-    string papel = "ALUNO";
+    int papel = 2;
 
-    string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(alunoid)+"; ";
+    string sql_comando = "UPDATE Usuarios set papel="+to_string(papel)+" where ID="+to_string(alunoid)+"; ";
 
     string alerta_erro = "ERRO AO INSERIR aluno EM Usuarios: ";
 
@@ -274,7 +274,7 @@ void BD::bd_acessar_tabela_usuarios(const char* f){
         int id;
         const unsigned char* email;
         int senha;
-        const unsigned char* papel;
+        int papel;
         int numusuarios = 0;
 
         while(sqlite3_step(stmt)!=SQLITE_DONE){
@@ -282,7 +282,7 @@ void BD::bd_acessar_tabela_usuarios(const char* f){
             id = sqlite3_column_int(stmt, 0);
             email = sqlite3_column_text(stmt, 1);
             senha = sqlite3_column_int(stmt, 2);
-            papel = sqlite3_column_text(stmt, 3);
+            papel = sqlite3_column_int(stmt, 3);
             numusuarios++;
 
             cout << "Usuario "+to_string(numusuarios)+": " << endl;
@@ -567,7 +567,7 @@ bool BD::checkUsuario(const char* f, Perfil_usuario* user){
         emailigual = sqlite3_column_text(stmt, 1);
 
         if(idigual == iduser){
-            cout << "ERRO: Usuario ja cadastrado com id: "+to_string(idigual)+", email: " << emailigual << "." << endl;
+            // cout << "ERRO: Usuario ja cadastrado com id: "+to_string(idigual)+", email: " << emailigual << "." << endl;
             sqlite3_finalize(stmt);
             sqlite3_close(bibdb);
             return true;

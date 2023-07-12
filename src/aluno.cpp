@@ -44,11 +44,12 @@ void Aluno::emprestar_livro(Exemplar *livro)
 {
     if (this->livros_com_aluno.size() > 5)
         throw ja_possui_mutos_livros_e();
-    for (auto l : livros_com_aluno)
+    for (auto l : livros_com_aluno){
         if (l->calculaMulta() != 0)
         {
             throw aluno_com_multa_e();
         }
+    }
     livros_com_aluno.push_back(livro);
     updateExemplarEmprestado(file, livro, 1);
     bd_inserir_alunoexemplar(file, this, livro);
@@ -219,7 +220,7 @@ void Aluno::executar_sql(const char* f, string comandosql, string avisoerro){
 
 void Aluno::bd_inserir_tabela_usuarios(const char* f, Perfil_usuario* user){
 
-    bool check = checkUsuario(f, user);
+    bool check = checkUsuarioid(f, user);
     //se nao existe um usuario com o mesmo id segue a execucao.
     if(check==(0||false)){
         sqlite3* bibdb;
@@ -228,9 +229,10 @@ void Aluno::bd_inserir_tabela_usuarios(const char* f, Perfil_usuario* user){
         string email = user->get_email_perfil_usuario();
         int id = user->get_ID_perfil_usuario();
         int senha = user->get_senha_perfil_usuario();
-        string papel = "indefinido";
+        int papel = 9;
 
-        string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+",'"+papel+"');";
+        string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+","+
+        to_string(papel)+");";
 
         string alerta_erro = "ERRO AO INSERIR EM USUARIOS: ";
 
@@ -244,9 +246,9 @@ void Aluno::bd_inserir_aluno(const char* f, Aluno* aluno){
     bd_inserir_tabela_usuarios(f, aluno);
 
     int alunoid = aluno->get_ID_perfil_usuario();
-    string papel = "ALUNO";
+    int papel = 2;
 
-    string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(alunoid)+"; ";
+    string sql_comando = "UPDATE Usuarios set papel="+to_string(papel)+" where ID="+to_string(alunoid)+"; ";
 
     string alerta_erro = "ERRO AO INSERIR aluno EM Usuarios: ";
 
@@ -256,21 +258,20 @@ void Aluno::bd_inserir_aluno(const char* f, Aluno* aluno){
 
 void Aluno::bd_inserir_alunoexemplar(const char* f, Aluno* aluno, Exemplar* item){
 
-    int alunoid = aluno->get_ID_perfil_usuario();
-    int codigoexemplar = item->getCodigoEspecifico();
-    int multa = item->calculaMulta();
+    string alunoemail = aluno->get_email_perfil_usuario();
+    int codigoexemplar = item->get_codigo();
+    int multa = 0;
+    
+    string sql_comando = "INSERT INTO AlunosExemplares VALUES('"+alunoemail+"',"+to_string(codigoexemplar)+","+to_string(multa)+"); ";
 
-    string sql_comando = "INSERT INTO AlunoExemplares VALUES("+to_string(alunoid)+","+to_string(codigoexemplar)+","+
-    to_string(multa)+"); ";
-
-    string alerta_erro = "ERRO AO INSERIR EM ALUNOEXEMPLARES: ";
+    string alerta_erro = "ERRO AO INSERIR EM AlunosExemplares: ";
 
     executar_sql(f, sql_comando, alerta_erro);
 }
 
 void Aluno::bd_acessar_tabela_exemplaresaluno(const char* f, Aluno* aluno){
 
-    bool check = checkTabelaExiste(f,"AlunoExemplares");
+    bool check = checkTabelaExiste(f,"AlunosExemplares");
     
     if(check==(1||true)){
 
@@ -280,7 +281,7 @@ void Aluno::bd_acessar_tabela_exemplaresaluno(const char* f, Aluno* aluno){
 
         int id = aluno->get_ID_perfil_usuario();
 
-        string sql_consulta = "SELECT * FROM AlunoExemplares where alunoid="+to_string(id)+";";
+        string sql_consulta = "SELECT * FROM AlunosExemplares where alunoid="+to_string(id)+";";
 
         sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
 
@@ -305,7 +306,7 @@ void Aluno::bd_acessar_tabela_exemplaresaluno(const char* f, Aluno* aluno){
         sqlite3_close(bibdb);
     }
     else {
-        cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: AlunoExemplares" << endl;
+        cerr << "ERRO AO ACESSAR TABELA INEXISTENTE: AlunosExemplares" << endl;
     }
 }
 
@@ -328,6 +329,8 @@ void Aluno::bd_acessar_acervoportitulo(const char* f, std::string titulo){
     while(sqlite3_step(stmt)!=SQLITE_DONE){
         codigo = sqlite3_column_int(stmt, 4);
         
+        sqlite3_finalize(stmt);
+    
         string sql_comando = "SELECT * FROM Exemplares where codigo="+to_string(codigo)+" and emprestado=0;";
         sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt2,0);
 
@@ -338,14 +341,16 @@ void Aluno::bd_acessar_acervoportitulo(const char* f, std::string titulo){
             codigo2 = sqlite3_column_int(stmt, 4);
             numexemplares++;
 
-            cout << "Exemplar "+to_string(numexemplares)+": " << endl;
-            cout << "autor: " << autor << endl;
-            cout << "titulo: " << titulo << endl;
-            cout << "codigo: " << codigo2 << endl;
-            cout << "\n";
+            if(codigo2==codigo){
+                cout << "Exemplar "+to_string(numexemplares)+": " << endl;
+                cout << "autor: " << autor << endl;
+                cout << "titulo: " << titulo << endl;
+                cout << "codigo: " << codigo2 << endl;
+                cout << "\n";
+            }
+
         }
         
-        sqlite3_finalize(stmt);
         sqlite3_finalize(stmt2);
         sqlite3_close(bibdados);
     }
@@ -354,7 +359,7 @@ void Aluno::bd_acessar_acervoportitulo(const char* f, std::string titulo){
 void Aluno::bd_remover_exemplaraluno(const char *f, int exemplarid){
 
     int codigoexemplar = exemplarid;
-    string sql_comando = "Delete from AlunoExemplares where codigoexemplar="+to_string(codigoexemplar)+"; ";
+    string sql_comando = "Delete from AlunosExemplares where codigoexemplar="+to_string(codigoexemplar)+"; ";
     string alerta_erro = "ERRO AO REMOVER EXEMPLAR: "+to_string(codigoexemplar);
     
     executar_sql(f, sql_comando, alerta_erro);
@@ -389,7 +394,7 @@ bool Aluno::checkUsuarioid(const char* f, Perfil_usuario* user){
         emailigual = sqlite3_column_text(stmt, 1);
 
         if(idigual == iduser){
-            cout << "ERRO: Usuario ja cadastrado com id: "+to_string(idigual)+", email: '" << emailigual << "'." << endl;
+            // cout << "ERRO: Usuario ja cadastrado com id: "+to_string(idigual)+", email: '" << emailigual << "'." << endl;
             sqlite3_finalize(stmt);
             sqlite3_close(bibdb);
             return true;
@@ -422,7 +427,7 @@ bool Aluno::checkUsuarioemail(const char* f, Perfil_usuario* user){
         emailigual = sqlite3_column_text(stmt, 1);
 
         if(emailigual!=0){
-            cout << "ERRO: Usuario ja cadastrado com o email: '"+email+"', id: " << to_string(idigual) << "." << endl;
+            // cout << "ERRO: Usuario ja cadastrado com o email: '"+email+"', id: " << to_string(idigual) << "." << endl;
             sqlite3_finalize(stmt);
             sqlite3_close(bibdb);
             return true;
@@ -465,9 +470,10 @@ void Aluno::updateExemplarEmprestado(const char* f, Exemplar* item, int umouzero
     sqlite3* bibdb;
     sqlite3_open(f, &bibdb);
 
+    int opcao = umouzero;
     int codigoespecifico = item->getCodigoEspecifico();
 
-    string sql_comando = "UPDATE Exemplares set emprestado="+to_string(umouzero)+" where codigoexemplar="+to_string(codigoespecifico)+";";
+    string sql_comando = "UPDATE Exemplares set emprestado="+to_string(opcao)+" where codigoexemplar="+to_string(codigoespecifico)+"; ";
     string alerta_erro = "ERRO AO ATUALIZAR Emprestado em Exemplares: "+to_string(codigoespecifico);
 
     executar_sql(f, sql_comando, alerta_erro);
@@ -479,10 +485,10 @@ void Aluno::UpdateMultaExemplarAluno(const char* f, Exemplar* item){
     int multadoexemplar = item->calculaMulta();
     int iddoexemplar = item->getCodigoEspecifico();
 
-    string sql_comando = "UPDATE AlunoExemplares set multa="+to_string(multadoexemplar)+" where codigoexemplar="+
+    string sql_comando = "UPDATE AlunosExemplares set multa="+to_string(multadoexemplar)+" where codigoexemplar="+
     to_string(iddoexemplar)+"; ";
 
-    string alerta_erro = "ERRO AO ATUALIZAR multa em AlunoExemplares: ";
+    string alerta_erro = "ERRO AO ATUALIZAR multa em AlunosExemplares: ";
     
     executar_sql(f, sql_comando, alerta_erro);
 

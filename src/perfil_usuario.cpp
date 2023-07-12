@@ -76,7 +76,7 @@ void Perfil_usuario::bd_criar_tabela_usuarios(const char* f){
     "ID INT NOT NULL,"
     "email TEXT NOT NULL,"
     "senha INTEGER NOT NULL,"
-    "papel TEXT)";
+    "papel INT)";
 
     string alerta_erro = "ERRO AO CRIAR A TABELA USUARIOS: ";
 
@@ -85,12 +85,12 @@ void Perfil_usuario::bd_criar_tabela_usuarios(const char* f){
 
 void Perfil_usuario::bd_criar_tabela_exemplaresaluno(const char* f){
 
-    string sql_comando = "CREATE TABLE IF NOT EXISTS AlunoExemplares("
-    "alunoid INT NOT NULL,"
-    "codigoexemplar TEXT NOT NULL,"
-    "multa INT NOT NULL)";
+    string sql_comando = "CREATE TABLE IF NOT EXISTS AlunosExemplares("
+    "alunoemail TEXT NOT NULL,"
+    "codigo INT NOT NULL,"
+    "multa INT)";
 
-    string alerta_erro = "ERRO AO CRIAR A TABELA ALUNOEXEMPLARES: ";
+    string alerta_erro = "ERRO AO CRIAR A TABELA AlunosExemplares: ";
 
     executar_sql(f, sql_comando, alerta_erro);
 }
@@ -106,9 +106,9 @@ void Perfil_usuario::bd_inserir_tabela_usuarios(const char* f, Perfil_usuario* u
         string email = user->get_email_perfil_usuario();
         int id = user->get_ID_perfil_usuario();
         int senha = user->get_senha_perfil_usuario();
-        string papel = "indefinido";
+        int papel = 9;
 
-        string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+",'"+papel+"');";
+        string sql_comando = "INSERT INTO Usuarios VALUES("+to_string(id)+",'"+email+"',"+to_string(senha)+","+to_string(papel)+");";
 
         string alerta_erro = "ERRO AO INSERIR EM USUARIOS: ";
 
@@ -145,7 +145,7 @@ bool Perfil_usuario::checkUsuario(const char* f, Perfil_usuario* user){
         emailigual = sqlite3_column_text(stmt, 1);
 
         if(idigual == iduser){
-            cout << "ERRO: Usuario ja cadastrado com id: "+to_string(idigual)+", email: " << emailigual << "." << endl;
+            // cout << "ERRO: Usuario ja cadastrado com id: "+to_string(idigual)+", email: " << emailigual << "." << endl;
             sqlite3_finalize(stmt);
             sqlite3_close(bibdb);
             return true;

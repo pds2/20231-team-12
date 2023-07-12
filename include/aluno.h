@@ -24,7 +24,7 @@ class Aluno : public Perfil_usuario
 {
 private:
     std::vector<Exemplar *> livros_com_aluno;
-
+    const char* file = "biblioteca.db";
 public:
     /*
      * Constroi um aluno.
@@ -63,7 +63,7 @@ protected:
     static void executar_sql(const char* f, string comandosql, string avisoerro);
     void bd_inserir_tabela_usuarios(const char* f, Perfil_usuario* user);
     void bd_inserir_aluno(const char* f, Aluno* aluno);
-    static void bd_inserir_alunoexemplar(const char* f, Aluno* aluno, Exemplar* item);
+    void bd_inserir_alunoexemplar(const char* f, Aluno* aluno, Exemplar* item);
     void bd_acessar_tabela_exemplaresaluno(const char* f, Aluno* aluno);
     void bd_acessar_acervoportitulo(const char* f, std::string titulo);
     void bd_remover_exemplaraluno(const char *f, int exemplarid);

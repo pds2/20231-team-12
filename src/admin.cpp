@@ -5,8 +5,10 @@ Admin::Admin(std::string email, int senha) : Perfil_usuario(email, senha)
     this->_papel = ADMIN;
     std::cout << "Admin criado." << std::endl;
     bd_criar_tabela_usuarios(file);
-    bd_inserir_admin(file, this);
-
+    bool check = CheckAdmin(file, this);
+    if(check==(0||false)){
+        bd_inserir_admin(file, this);
+    }
 }
 
 void Admin::adicionar_usuario(int tipo_de_user, std::string email, int senha)
@@ -155,9 +157,9 @@ void Admin::bd_inserir_admin(const char* f, Admin* adm){
     bd_inserir_tabela_usuarios(f, adm);
 
     int admid = adm->get_ID_perfil_usuario();
-    string papel = "ADMIN";
+    int papel = 1;
 
-    string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(admid)+"; ";
+    string sql_comando = "UPDATE Usuarios set papel="+to_string(papel)+" where ID="+to_string(admid)+";";
 
     string alerta_erro = "ERRO AO INSERIR Admin EM Usuarios: ";
     
@@ -170,9 +172,9 @@ void Admin::bd_inserir_aluno(const char* f, Aluno* aluno){
     bd_inserir_tabela_usuarios(f, aluno);
 
     int alunoid = aluno->get_ID_perfil_usuario();
-    string papel = "ALUNO";
+    int papel = 2;;
 
-    string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(alunoid)+"; ";
+    string sql_comando = "UPDATE Usuarios set papel="+to_string(papel)+" where ID="+to_string(alunoid)+";";
 
     string alerta_erro = "ERRO AO INSERIR aluno EM Usuarios: ";
 
@@ -185,9 +187,9 @@ void Admin::bd_inserir_bibliotecario(const char* f, Bibliotecario* bibliotecario
     bd_inserir_tabela_usuarios(f, bibliotecario);
 
     int bibliotecarioid = bibliotecario->get_ID_perfil_usuario();
-    string papel = "BIBLIOTECARIO";
+    int papel = 0;
 
-    string sql_comando = "UPDATE Usuarios set papel='"+papel+"' where ID="+to_string(bibliotecarioid)+";";
+    string sql_comando = "UPDATE Usuarios set papel="+to_string(papel)+" where ID="+to_string(bibliotecarioid)+";";
 
     string alerta_erro = "ERRO AO INSERIR bibliotecario EM Usuarios: ";
 
@@ -212,7 +214,7 @@ void Admin::bd_acessar_tabela_usuarios(const char* f){
         int id;
         const unsigned char* email;
         int senha;
-        const unsigned char* papel;
+        int papel;
         int numusuarios = 0;
 
         while(sqlite3_step(stmt)!=SQLITE_DONE){
@@ -220,7 +222,7 @@ void Admin::bd_acessar_tabela_usuarios(const char* f){
             id = sqlite3_column_int(stmt, 0);
             email = sqlite3_column_text(stmt, 1);
             senha = sqlite3_column_int(stmt, 2);
-            papel = sqlite3_column_text(stmt, 3);
+            papel = sqlite3_column_int(stmt, 3);
             numusuarios++;
 
             cout << "Usuario "+to_string(numusuarios)+": " << endl;
@@ -255,13 +257,14 @@ void Admin::bd_acessar_acervoportitulo(const char* f, std::string titulo)
     int anopub, codigo, codigo2;
     const unsigned char* autor;
     const unsigned char* titulo2;
-    const unsigned char* genero;
+    int genero;
     int numexemplares = 0;
     const unsigned char* codigo_exemplar;
-    const unsigned char* emprestado;
+    int emprestado ;
 
     while(sqlite3_step(stmt)!=SQLITE_DONE){
         codigo = sqlite3_column_int(stmt, 4);
+        sqlite3_finalize(stmt);
         
         string sql_comando = "SELECT * FROM Exemplares where codigo="+to_string(codigo)+";";
         sqlite3_prepare_v2(bibdados, sql_comando.c_str(),-1,&stmt2,0);
@@ -271,10 +274,10 @@ void Admin::bd_acessar_acervoportitulo(const char* f, std::string titulo)
             autor = sqlite3_column_text(stmt, 0);
             anopub = sqlite3_column_int(stmt, 1);
             titulo2 = sqlite3_column_text(stmt, 2);
-            genero = sqlite3_column_text(stmt, 3);
+            genero = sqlite3_column_int(stmt, 3);
             codigo2 = sqlite3_column_int(stmt, 4);
             codigo_exemplar = sqlite3_column_text(stmt, 5);
-            emprestado = sqlite3_column_text(stmt, 6);
+            emprestado = sqlite3_column_int(stmt, 6);
             numexemplares++;
 
             cout << "Exemplar "+to_string(numexemplares)+": " << endl;
@@ -290,7 +293,6 @@ void Admin::bd_acessar_acervoportitulo(const char* f, std::string titulo)
         
         sqlite3_finalize(stmt2);
     }
-        sqlite3_finalize(stmt);
         sqlite3_close(bibdados);
 }
 
@@ -326,8 +328,8 @@ void Admin::bd_remover_usuarioporemail(const char* f, string email){
 
         int id;
         const unsigned char* email2;
-        int senha, papelint;
-        const unsigned char* papel;
+        int senha;
+        int papel;
         int numusuarios = 0;
 
         while(sqlite3_step(stmt)!=SQLITE_DONE){
@@ -335,10 +337,9 @@ void Admin::bd_remover_usuarioporemail(const char* f, string email){
             id = sqlite3_column_int(stmt, 0);
             email2 = sqlite3_column_text(stmt, 1);
             senha = sqlite3_column_int(stmt, 2);
-            papel = sqlite3_column_text(stmt, 3);
-            papelint = sqlite3_column_int(stmt, 3);
+            papel = sqlite3_column_int(stmt, 3);
 
-            if(papelint == 2){
+            if(papel == 2){
                 Aluno a1(email,senha);
                 bd_remover_aluno_e_devolver_exemplares(file, &a1);
             }
@@ -383,7 +384,7 @@ bool Admin::checkUsuario(const char* f, Perfil_usuario* user){
         emailigual = sqlite3_column_text(stmt, 1);
 
         if(idigual == iduser){
-            cout << "ERRO: Usuario ja cadastrado com id: "+to_string(idigual)+", email: " << emailigual << "." << endl;
+            // cout << "ERRO: Usuario ja cadastrado com id: "+to_string(idigual)+", email: " << emailigual << "." << endl;
             sqlite3_finalize(stmt);
             sqlite3_close(bibdb);
             return true;
@@ -440,10 +441,39 @@ void Admin::UpdateMultaExemplarAluno(const char* f, Exemplar* item){
     int multadoexemplar = item->calculaMulta();
     int iddoexemplar = item->getCodigoEspecifico();
 
-    string sql_comando = "UPDATE AlunoExemplares set multa="+to_string(multadoexemplar)+" where codigoexemplar="+
+    string sql_comando = "UPDATE AlunosExemplares set multa="+to_string(multadoexemplar)+" where codigoexemplar="+
     to_string(iddoexemplar)+"; ";
 
-    string alerta_erro = "ERRO AO ATUALIZAR multa em AlunoExemplares: ";
+    string alerta_erro = "ERRO AO ATUALIZAR multa em AlunosExemplares: ";
     
     executar_sql(f, sql_comando, alerta_erro);
+}
+
+bool Admin::CheckAdmin(const char* f, Admin* adm){
+    
+    sqlite3* bibdb;
+    sqlite3_open(f, &bibdb);
+    sqlite3_stmt* stmt;
+
+    string sql_consulta = "SELECT * FROM Usuarios; ";
+
+    sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
+    int papeligual = 0;
+    const unsigned char* emailigual;
+
+    while(sqlite3_step(stmt)!=SQLITE_DONE){
+        papeligual = sqlite3_column_int(stmt, 3);
+
+        if(papeligual==1){
+            cout << "ERRO: ADMIN ja cadastrado." << endl;
+            sqlite3_finalize(stmt);
+            sqlite3_close(bibdb);
+            return true;
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(bibdb);
+
+    return false;
 }

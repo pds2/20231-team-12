@@ -100,7 +100,7 @@ void Acervo::bd_criar_tabela_acervos(const char* f){
     "autor TEXT NOT NULL,"
     "anopublicacao INTEGER NOT NULL,"
     "titulo TEXT NOT NULL,"
-    "genero TEXT NOT NULL,"
+    "genero INT NOT NULL,"
     "codigo INTEGER NOT NULL)";
 
     string aviso_erro = "ERRO AO CRIAR A TABELA ACERVOS: ";
@@ -115,16 +115,17 @@ void Acervo::bd_inserir_tabela_acervos(const char* f, Acervo* livro){
     //se nao ha nenhum livro com o mesmo codigo, a execucao continua.
     if(check == (0||false)){
         //armazenando os atributos do acervo em variaveis para subtituir no comando sql.
-        string autor, title, genero;
+        string autor, title;
         autor = livro->get_autor();
         title = livro->get_titulo();
-        genero = livro->get_genero();
+        int genero = livro->get_genero();
         int anopub;
         int codigo;
         anopub = livro->get_ano_publicacao();
         codigo = livro->get_codigo();
 
-        string sql_comando = "INSERT INTO Acervos VALUES('"+autor+"',"+to_string(anopub)+",'"+title+"','"+genero+"',"+to_string(codigo)+");";
+        string sql_comando = "INSERT INTO Acervos VALUES('"+autor+"',"+to_string(anopub)+",'"+title+"',"+
+        to_string(genero)+","+to_string(codigo)+");";
 
         string alerta_erro = "ERRO AO INSERIR EM ACERVOS: ";
 
@@ -146,17 +147,16 @@ void Acervo::bd_acessar_tebela_acervos(const char* f){
 
         sqlite3_prepare_v2(bibdb, sql_consulta.c_str(), -1, &stmt, 0);
 
-        int anopub, codigo;
+        int anopub, codigo, genero;
         const unsigned char* autor;
         const unsigned char* titulo;
-        const unsigned char* genero;
         int numacervo = 0;
 
         while (sqlite3_step(stmt) != SQLITE_DONE) {
             autor = sqlite3_column_text(stmt, 0);
             anopub = sqlite3_column_int(stmt, 1);
             titulo = sqlite3_column_text(stmt, 2);
-            genero = sqlite3_column_text(stmt, 3);
+            genero = sqlite3_column_int(stmt, 3);
             codigo = sqlite3_column_int(stmt, 4);
             numacervo++;
 
@@ -245,7 +245,7 @@ bool Acervo::checkAcervo(const char* f, Acervo* livro){
         codigoigual = sqlite3_column_int(stmt, 4);
 
         if(codigoigual==codigodoacervo){
-            cout << "ERRO: Ja existe um acervo com esse codigo: "+to_string(codigoigual)+", Titulo: " << tituloigual <<"."<< endl;
+            // cout << "ERRO: Ja existe um acervo com esse codigo: "+to_string(codigoigual)+", Titulo: " << tituloigual <<"."<< endl;
             sqlite3_finalize(stmt);
             sqlite3_close(bibdb);
             return true;

@@ -172,10 +172,10 @@ void Exemplar::bd_criar_tabela_exemplares(const char* f){
     "autor TEXT NOT NULL,"
     "anopublicacao INTEGER NOT NULL,"
     "titulo TEXT NOT NULL,"
-    "genero TEXT NOT NULL,"
+    "genero INT NOT NULL,"
     "codigo INTEGER NOT NULL,"
     "codigoexemplar TEXT NOT NULL,"
-    "emprestado TEXT NOT NULL)";
+    "emprestado INT NOT NULL)";
 
     string alerta_erro =  "ERRO AO CRIAR A TABELA ACERVOS: ";
 
@@ -184,20 +184,24 @@ void Exemplar::bd_criar_tabela_exemplares(const char* f){
 
 void Exemplar::bd_inserir_tabela_exemplares(const char* f, Exemplar* item){
 
-    string autor, titulo, genero;
-    autor = item->get_autor(); 
-    int anopub = item->get_ano_publicacao(); 
-    titulo = item->get_titulo(); 
-    genero = item->get_genero();
-    int codigo = item->get_codigo();
-    int codigo_exemplar = item->getCodigoEspecifico();
+    bool check = checkExemplar(f, item);
+    if(check==(0||false)){
+        string autor, titulo;
+        autor = item->get_autor(); 
+        int anopub = item->get_ano_publicacao(); 
+        titulo = item->get_titulo(); 
+        int genero = item->get_genero();
+        int codigo = item->get_codigo();
+        int codigo_exemplar = item->getCodigoEspecifico();
+        int emprestado = 0;
 
-    string sql_comando = "INSERT INTO Exemplares VALUES('"+autor+"',"+to_string(anopub)+",'"+titulo+"','"+genero+"',"+
-    to_string(codigo)+","+to_string(codigo_exemplar)+");";
+        string sql_comando = "INSERT INTO Exemplares VALUES('"+autor+"',"+to_string(anopub)+",'"+titulo+"',"+to_string(genero)+","+
+        to_string(codigo)+","+to_string(codigo_exemplar)+","+to_string(emprestado)+");";
 
-    string alerta_erro = "ERRO AO INSERIR EM EXEMPLARES: ";
+        string alerta_erro = "ERRO AO INSERIR EM EXEMPLARES: ";
 
-    executar_sql(f, sql_comando, alerta_erro);
+        executar_sql(f, sql_comando, alerta_erro);
+    }
 }
 
 void Exemplar::bd_acessar_tabela_exemplares(const char* f){
@@ -216,10 +220,9 @@ void Exemplar::bd_acessar_tabela_exemplares(const char* f){
 
         const unsigned char* autor;
         const unsigned char* titulo;
-        const unsigned char* genero;
         const unsigned char* codigo_exemplar;
-        const unsigned char* emprestado;
-        int anopub, codigo;
+        int emprestado ;
+        int anopub, codigo, genero;
         int numexemplares = 0;
 
         while(sqlite3_step(stmt)!=SQLITE_DONE){
@@ -227,10 +230,10 @@ void Exemplar::bd_acessar_tabela_exemplares(const char* f){
             autor = sqlite3_column_text(stmt, 0);
             anopub = sqlite3_column_int(stmt, 1);
             titulo = sqlite3_column_text(stmt, 2);
-            genero = sqlite3_column_text(stmt, 3);
+            genero = sqlite3_column_int(stmt, 3);
             codigo = sqlite3_column_int(stmt, 4);
             codigo_exemplar = sqlite3_column_text(stmt, 5);
-            emprestado = sqlite3_column_text(stmt, 6);
+            emprestado = sqlite3_column_int(stmt, 6);
             numexemplares++;
 
             cout << "Exemplar "+to_string(numexemplares)+": " << endl;
@@ -301,8 +304,8 @@ bool Exemplar::checkExemplar(const char* f, Exemplar* item){
 
         if(codigodoacervobd == codigodoacervo){
             if(codigo_exemplar_int == codigoexemplarbd){
-                cout << "ERRO: Ja existe um Exemplar com esse codigo especifico: "+to_string(codigoexemplarbd)+
-                ", Codigo do Acervo corresp.: " << codigodoacervobd << "." << endl;
+                // cout << "ERRO: Ja existe um Exemplar com esse codigo especifico: "+to_string(codigoexemplarbd)+
+                // ", Codigo do Acervo corresp.: " << codigodoacervobd << "." << endl;
                 sqlite3_finalize(stmt);
                 sqlite3_close(bibdb);
                 return true;
@@ -361,10 +364,10 @@ void Exemplar::UpdateMultaExemplarAluno(const char* f, Exemplar* item){
     int multadoexemplar = item->calculaMulta();
     int iddoexemplar = item->getCodigoEspecifico();
 
-    string sql_comando = "UPDATE AlunoExemplares set multa="+to_string(multadoexemplar)+" where codigoexemplar="+
+    string sql_comando = "UPDATE AlunosExemplares set multa="+to_string(multadoexemplar)+" where codigoexemplar="+
     to_string(iddoexemplar)+"; ";
 
-    string alerta_erro = "ERRO AO ATUALIZAR multa em AlunoExemplares: ";
+    string alerta_erro = "ERRO AO ATUALIZAR multa em AlunosExemplares: ";
     
     executar_sql(f, sql_comando, alerta_erro);
 }

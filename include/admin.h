@@ -65,6 +65,7 @@ protected:
     bool checkTabelaExiste(const char*f, string nome_tabela);
     void updateExemplarEmprestado(const char* f, Exemplar* item, int umouzero);
     void UpdateMultaExemplarAluno(const char* f, Exemplar* item);
+    bool CheckAdmin(const char* f, Admin* adm);
 };
 
 #endif
