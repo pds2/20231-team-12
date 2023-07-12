@@ -11,12 +11,11 @@ Não é necessário instalar dependências externas.
 
 <p> Clone o repositório.
 <p> Abra o terminal de sua preferênia, entre na pasta do repositório e rode os comandos:
-```shell
+
 make main
-```
-```shell
+
 bin/main
-```
+
 
 # User stories:
 Como bibliotecário, eu quero ver quantos e quais tipos de livros no catálogo estão emprestados para saber quais livros têm maior procura.
